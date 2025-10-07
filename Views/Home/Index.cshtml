@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "FNaFle";
+    int streak = 5; // Placeholder for Night count
+}
+
+<div class="background-blur"></div>
+
+<div class="top-bar">
+    <div class="night-box">
+        <span class="night-label">Night</span>
+        <span class="night-value">@streak</span>
+    </div>
+
+    <div class="auth-container">
+        <a href="/Identity/Account/Login" class="auth-box">Login</a>
+        <a href="/Identity/Account/Register" class="auth-box">Register</a>
+    </div>
+</div>
+
+<div class="homepage">
+    <div class="logo-container">
+        <h1 class="game-title">FNaFle</h1>
+        <p class="subtitle">Can you beat the night?</p>
+    </div>
+
+    <div class="modes-vertical">
+        <a href="#" class="mode-button classic"><span>Classic</span></a>
+        <a href="#" class="mode-button camera"><span>Camera</span></a>
+        <a href="#" class="mode-button lore"><span>Lore</span></a>
+        <a href="#" class="mode-button infinite"><span>Infinite</span></a>
+        <a href="#" class="mode-button ranked"><span>Ranked</span></a>
+    </div>
+
+    <div class="rules-box">
+        <strong>Game Rules:</strong><br />
+        Survive each night by managing your resources and avoiding animatronics.<br />
+        Use cameras wisely and keep track of your power to last until 6 AM.
+    </div>
+
+    <footer class="footer">
+        <p>Not affiliated with Scott Cawthon or FNaF. Made for fun.</p>
+    </footer>
+</div>
+
