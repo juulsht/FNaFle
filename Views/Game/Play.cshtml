@@ -1,0 +1,120 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Play FNaFle";
+    var results = ViewBag.Results as Dictionary<string, string>;
+    var previousGuesses = ViewBag.PreviousGuesses as List<Dictionary<string, string>>;
+    var dailyCharacter = ViewBag.DailyCharacter;
+    if (previousGuesses == null) previousGuesses = new List<Dictionary<string, string>>();
+}
+
+<!-- Background same as home page -->
+<div class="background-blur"></div>
+
+<div class="homepage" style="margin-top:50px; text-align:center;">
+
+    <div class="logo-container">
+        <h1 class="game-title">FNaFle</h1>
+        <p class="subtitle">Can you beat the night?</p>
+    </div>
+
+    <!-- Guess input -->
+    <form asp-action="Play" method="post" style="margin-bottom:30px;">
+        <input type="text" name="guessName" placeholder="Enter character name" class="mode-input" required />
+        <button type="submit" class="mode-button classic" style="margin-left:10px;">Guess</button>
+    </form>
+
+    @if (ViewBag.Error != null)
+    {
+        <p style="color:red; font-weight:bold;">@ViewBag.Error</p>
+    }
+
+    @if (results != null)
+    {
+        <h2 style="margin-top:20px;">Your Last Guess: <span style="color:#FFD700">@ViewBag.GuessName</span></h2>
+
+        <!-- Last guess table -->
+        <table class="guess-table" style="margin: 0 auto; margin-bottom:20px;">
+            <thead>
+                <tr>
+                    <th>Attribute</th>
+                    <th>Match</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var kvp in results)
+                {
+                    var isCorrect = false;
+                    switch (kvp.Key)
+                    {
+                        case "Gender":
+                            isCorrect = kvp.Value == dailyCharacter.Gender;
+                            break;
+                        case "Generation":
+                            isCorrect = kvp.Value == dailyCharacter.Generation;
+                            break;
+                        case "Species":
+                            isCorrect = kvp.Value == dailyCharacter.Species;
+                            break;
+                        case "Location":
+                            isCorrect = kvp.Value == dailyCharacter.Location;
+                            break;
+                        case "Status":
+                            isCorrect = kvp.Value == dailyCharacter.Status;
+                            break;
+                    }
+                    var bgColor = isCorrect ? "#6aaa64" : "#787c7e";
+                    <tr>
+                        <td>@kvp.Key</td>
+                        <td style="background-color:@bgColor; color:white;">@kvp.Value</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <!-- Previous guesses -->
+        @if (previousGuesses.Count > 0)
+        {
+            <h3>Previous Guesses</h3>
+            @foreach (var guess in previousGuesses)
+            {
+                <table class="guess-table" style="margin: 0 auto; margin-bottom:15px;">
+                    <thead>
+                        <tr>
+                            <th>Attribute</th>
+                            <th>Match</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var kvp in guess)
+                        {
+                            var isCorrect = false;
+                            switch (kvp.Key)
+                            {
+                                case "Gender":
+                                    isCorrect = kvp.Value == dailyCharacter.Gender;
+                                    break;
+                                case "Generation":
+                                    isCorrect = kvp.Value == dailyCharacter.Generation;
+                                    break;
+                                case "Species":
+                                    isCorrect = kvp.Value == dailyCharacter.Species;
+                                    break;
+                                case "Location":
+                                    isCorrect = kvp.Value == dailyCharacter.Location;
+                                    break;
+                                case "Status":
+                                    isCorrect = kvp.Value == dailyCharacter.Status;
+                                    break;
+                            }
+                            var bgColor = isCorrect ? "#6aaa64" : "#787c7e";
+                            <tr>
+                                <td>@kvp.Key</td>
+                                <td style="background-color:@bgColor; color:white;">@kvp.Value</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        }
+    }
+</div>

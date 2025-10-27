@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using FNaFle.Models;
 
 namespace FNaFle.Data
 {
@@ -9,5 +10,7 @@ namespace FNaFle.Data
             : base(options)
         {
         }
+
+        public DbSet<Character> Characters { get; set; }
     }
 }
