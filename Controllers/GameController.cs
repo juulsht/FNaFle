@@ -1,7 +1,6 @@
 ﻿using FNaFle.Data;
 using FNaFle.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 public class GameController : Controller
@@ -15,10 +14,8 @@ public class GameController : Controller
         _context = context;
     }
 
-    // GET: /Game/Play
     public IActionResult Play()
     {
-        // Pick a random daily character if none exists
         int? dailyId = HttpContext.Session.GetInt32(DailyCharacterKey);
         Character dailyCharacter = null;
 
@@ -29,9 +26,7 @@ public class GameController : Controller
                 .FirstOrDefault();
 
             if (dailyCharacter != null)
-            {
                 HttpContext.Session.SetInt32(DailyCharacterKey, dailyCharacter.Id);
-            }
         }
         else
         {
@@ -44,7 +39,6 @@ public class GameController : Controller
             return View();
         }
 
-        // Load previous guesses
         var previousGuessesJson = HttpContext.Session.GetString(PreviousGuessesKey);
         var previousGuesses = !string.IsNullOrEmpty(previousGuessesJson)
             ? JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(previousGuessesJson)
@@ -56,25 +50,28 @@ public class GameController : Controller
         return View();
     }
 
-    // POST: /Game/Play
     [HttpPost]
     public IActionResult Play(string guessName)
     {
-        if (string.IsNullOrEmpty(guessName))
-        {
-            ViewBag.Error = "Please enter a character name!";
-            return Play(); // reuse GET to reload daily character and previous guesses
-        }
-
         int? dailyId = HttpContext.Session.GetInt32(DailyCharacterKey);
         if (dailyId == null)
-            return RedirectToAction("Play");
+        {
+            ViewBag.Error = "No daily character set!";
+            return View();
+        }
 
         var dailyCharacter = _context.Characters.FirstOrDefault(c => c.Id == dailyId.Value);
         if (dailyCharacter == null)
         {
             ViewBag.Error = "Daily character not found!";
-            return Play();
+            return View();
+        }
+
+        if (string.IsNullOrEmpty(guessName))
+        {
+            ViewBag.Error = "Please enter a character name!";
+            ViewBag.DailyCharacter = dailyCharacter;
+            return View();
         }
 
         var guessedCharacter = _context.Characters
@@ -83,10 +80,14 @@ public class GameController : Controller
         if (guessedCharacter == null)
         {
             ViewBag.Error = "Character not found!";
-            return Play();
+            var prevGuessesJson = HttpContext.Session.GetString(PreviousGuessesKey);
+            ViewBag.PreviousGuesses = !string.IsNullOrEmpty(prevGuessesJson)
+                ? JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(prevGuessesJson)
+                : new List<Dictionary<string, string>>();
+            ViewBag.DailyCharacter = dailyCharacter;
+            return View();
         }
 
-        // Store guessed values
         var results = new Dictionary<string, string>
         {
             { "Gender", guessedCharacter.Gender },
@@ -99,20 +100,28 @@ public class GameController : Controller
         ViewBag.GuessName = guessedCharacter.Name;
         ViewBag.Results = results;
         ViewBag.DailyCharacter = dailyCharacter;
+        ViewBag.IsCorrectGuess = guessedCharacter.Id == dailyCharacter.Id;
 
-        // Previous guesses
-        var previousGuessesJson = HttpContext.Session.GetString(PreviousGuessesKey);
-        var previousGuesses = !string.IsNullOrEmpty(previousGuessesJson)
-            ? JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(previousGuessesJson)
-            : new List<Dictionary<string, string>>();
+        if (ViewBag.IsCorrectGuess)
+        {
+            // Clear previous guesses if player guessed correctly
+            HttpContext.Session.SetString(PreviousGuessesKey, JsonConvert.SerializeObject(new List<Dictionary<string, string>>()));
+            ViewBag.PreviousGuesses = new List<Dictionary<string, string>>();
+        }
+        else
+        {
+            // Add to previous guesses if incorrect
+            var prevGuessesJson2 = HttpContext.Session.GetString(PreviousGuessesKey);
+            var previousGuesses = !string.IsNullOrEmpty(prevGuessesJson2)
+                ? JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(prevGuessesJson2)
+                : new List<Dictionary<string, string>>();
 
-        previousGuesses.Add(results);
+            previousGuesses.Add(results);
+            HttpContext.Session.SetString(PreviousGuessesKey, JsonConvert.SerializeObject(previousGuesses));
 
-        // Save back to session
-        HttpContext.Session.SetString(PreviousGuessesKey, JsonConvert.SerializeObject(previousGuesses));
-
-        // Exclude last guess from previous guesses in the display
-        ViewBag.PreviousGuesses = previousGuesses.Take(previousGuesses.Count - 1).ToList();
+            // Exclude last guess in display
+            ViewBag.PreviousGuesses = previousGuesses.Take(previousGuesses.Count - 1).ToList();
+        }
 
         return View();
     }

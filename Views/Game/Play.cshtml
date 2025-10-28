@@ -4,117 +4,104 @@
     var results = ViewBag.Results as Dictionary<string, string>;
     var previousGuesses = ViewBag.PreviousGuesses as List<Dictionary<string, string>>;
     var dailyCharacter = ViewBag.DailyCharacter;
+    var isCorrectGuess = ViewBag.IsCorrectGuess as bool? ?? false;
+
     if (previousGuesses == null) previousGuesses = new List<Dictionary<string, string>>();
 }
 
-<!-- Background same as home page -->
 <div class="background-blur"></div>
 
-<div class="homepage" style="margin-top:50px; text-align:center;">
+<div class="homepage">
 
     <div class="logo-container">
         <h1 class="game-title">FNaFle</h1>
         <p class="subtitle">Can you beat the night?</p>
     </div>
 
-    <!-- Guess input -->
-    <form asp-action="Play" method="post" style="margin-bottom:30px;">
-        <input type="text" name="guessName" placeholder="Enter character name" class="mode-input" required />
-        <button type="submit" class="mode-button classic" style="margin-left:10px;">Guess</button>
+    <form asp-action="Play" method="post" style="margin-bottom: 30px;">
+        <input type="text" name="guessName" placeholder="Enter character name"
+               class="mode-input"
+               style="padding: 12px 15px; width: 260px; border-radius: 10px; border: 2px solid #ff000080; background-color: #111; color: white; text-align: center; font-size: 16px;" required />
+        <button type="submit" class="mode-button classic" style="margin-left:10px;"><span>Guess</span></button>
     </form>
 
     @if (ViewBag.Error != null)
     {
-        <p style="color:red; font-weight:bold;">@ViewBag.Error</p>
+        <p style="color:#ff0000; font-weight:bold; text-shadow:0 0 10px #ff0000;">@ViewBag.Error</p>
     }
 
-    @if (results != null)
+    @if (isCorrectGuess)
     {
-        <h2 style="margin-top:20px;">Your Last Guess: <span style="color:#FFD700">@ViewBag.GuessName</span></h2>
+        <p style="color:#00FF00; font-weight:bold; font-size:20px; text-shadow:0 0 15px #00FF00;">
+            Great! You guessed it!
+        </p>
+    }
+    else if (results != null)
+    {
+        <h2 style="margin-top:20px; text-shadow:0 0 10px #ff0000;">
+            Your Last Guess:
+            <span style="color:#FFD700;">@ViewBag.GuessName</span>
+        </h2>
 
-        <!-- Last guess table -->
-        <table class="guess-table" style="margin: 0 auto; margin-bottom:20px;">
-            <thead>
-                <tr>
-                    <th>Attribute</th>
-                    <th>Match</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var kvp in results)
+        <div class="guess-row" style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap; margin-top:20px;">
+            @{
+                int delay = 0;
+                foreach (var kvp in results)
                 {
-                    var isCorrect = false;
-                    switch (kvp.Key)
+                    var isCorrect = kvp.Value == (kvp.Key switch
                     {
-                        case "Gender":
-                            isCorrect = kvp.Value == dailyCharacter.Gender;
-                            break;
-                        case "Generation":
-                            isCorrect = kvp.Value == dailyCharacter.Generation;
-                            break;
-                        case "Species":
-                            isCorrect = kvp.Value == dailyCharacter.Species;
-                            break;
-                        case "Location":
-                            isCorrect = kvp.Value == dailyCharacter.Location;
-                            break;
-                        case "Status":
-                            isCorrect = kvp.Value == dailyCharacter.Status;
-                            break;
-                    }
-                    var bgColor = isCorrect ? "#6aaa64" : "#787c7e";
-                    <tr>
-                        <td>@kvp.Key</td>
-                        <td style="background-color:@bgColor; color:white;">@kvp.Value</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+                        "Gender" => dailyCharacter.Gender,
+                        "Generation" => dailyCharacter.Generation,
+                        "Species" => dailyCharacter.Species,
+                        "Location" => dailyCharacter.Location,
+                        "Status" => dailyCharacter.Status,
+                        _ => null
+                    });
 
-        <!-- Previous guesses -->
+                    var boxClass = isCorrect ? "box-correct" : "box-wrong";
+                    <div class="reveal-box @boxClass" style="animation-delay:@($"{delay * 0.3}s")">
+                        <div class="attr-key">@kvp.Key</div>
+                        <div class="attr-value">@kvp.Value</div>
+                    </div>
+                    ;
+                    delay++;
+                }
+            }
+        </div>
+
         @if (previousGuesses.Count > 0)
         {
-            <h3>Previous Guesses</h3>
-            @foreach (var guess in previousGuesses)
-            {
-                <table class="guess-table" style="margin: 0 auto; margin-bottom:15px;">
-                    <thead>
-                        <tr>
-                            <th>Attribute</th>
-                            <th>Match</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var kvp in guess)
-                        {
-                            var isCorrect = false;
-                            switch (kvp.Key)
+            <h3 style="margin-top:40px; color:#ff4444; text-shadow:0 0 10px #ff0000;">Previous Guesses</h3>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:20px; margin-top:15px;">
+                @foreach (var guess in previousGuesses)
+                {
+                    <div class="guess-row" style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap;">
+                        @{
+                            int delayPrev = 0;
+                            foreach (var kvp in guess)
                             {
-                                case "Gender":
-                                    isCorrect = kvp.Value == dailyCharacter.Gender;
-                                    break;
-                                case "Generation":
-                                    isCorrect = kvp.Value == dailyCharacter.Generation;
-                                    break;
-                                case "Species":
-                                    isCorrect = kvp.Value == dailyCharacter.Species;
-                                    break;
-                                case "Location":
-                                    isCorrect = kvp.Value == dailyCharacter.Location;
-                                    break;
-                                case "Status":
-                                    isCorrect = kvp.Value == dailyCharacter.Status;
-                                    break;
+                                var isCorrect = kvp.Value == (kvp.Key switch
+                                {
+                                    "Gender" => dailyCharacter.Gender,
+                                    "Generation" => dailyCharacter.Generation,
+                                    "Species" => dailyCharacter.Species,
+                                    "Location" => dailyCharacter.Location,
+                                    "Status" => dailyCharacter.Status,
+                                    _ => null
+                                });
+
+                                var boxClass = isCorrect ? "box-correct" : "box-wrong";
+                                <div class="reveal-box @boxClass" style="animation-delay:@($"{delayPrev * 0.15}s")">
+                                    <div class="attr-key">@kvp.Key</div>
+                                    <div class="attr-value">@kvp.Value</div>
+                                </div>
+                                ;
+                                delayPrev++;
                             }
-                            var bgColor = isCorrect ? "#6aaa64" : "#787c7e";
-                            <tr>
-                                <td>@kvp.Key</td>
-                                <td style="background-color:@bgColor; color:white;">@kvp.Value</td>
-                            </tr>
                         }
-                    </tbody>
-                </table>
-            }
+                    </div>
+                }
+            </div>
         }
     }
 </div>
