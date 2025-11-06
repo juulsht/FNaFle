@@ -6,15 +6,41 @@
 <div class="background-blur"></div>
 
 <div class="top-bar">
-    <div class="night-box">
-        <span class="night-label">Night</span>
-        <span class="night-value">@streak</span>
+
+    <!-- ✅ LEFT SIDE -->
+    <div class="left-buttons" style="display:flex; gap:12px; align-items:center;">
+
+        <div class="night-box">
+            <span class="night-label">Night</span>
+            <span class="night-value">@streak</span>
+        </div>
+
+        <!-- ✅ LIBRARY BUTTON HERE -->
+        <a asp-controller="Characters" asp-action="Index" class="auth-box">
+            Library
+        </a>
+
     </div>
 
+    <!-- ✅ RIGHT SIDE (Login / Logout) -->
     <div class="auth-container">
-        <a href="/Identity/Account/Login" class="auth-box">Login</a>
-        <a href="/Identity/Account/Register" class="auth-box">Register</a>
+        @if (User.Identity?.IsAuthenticated ?? false)
+        {
+            <form method="post"
+                  asp-area="Identity"
+                  asp-page="/Account/Logout"
+                  asp-route-returnUrl="@Url.Action("Index","Home")"
+                  class="auth-form">
+                <button type="submit" class="auth-box">Logout</button>
+            </form>
+        }
+        else
+        {
+            <a asp-area="Identity" asp-page="/Account/Login" class="auth-box">Login</a>
+            <a asp-area="Identity" asp-page="/Account/Register" class="auth-box">Register</a>
+        }
     </div>
+
 </div>
 
 <div class="homepage">
@@ -24,7 +50,7 @@
     </div>
 
     <div class="modes-vertical">
-        <a href="/Game/Play" class="mode-button classic"><span>Classic</span></a>
+        <a asp-controller="Game" asp-action="Play" class="mode-button classic"><span>Classic</span></a>
         <a href="#" class="mode-button camera"><span>Camera</span></a>
         <a href="#" class="mode-button lore"><span>Lore</span></a>
         <a href="#" class="mode-button infinite"><span>Infinite</span></a>
@@ -41,4 +67,3 @@
         <p>Not affiliated with Scott Cawthon or FNaF. Made for fun.</p>
     </footer>
 </div>
-

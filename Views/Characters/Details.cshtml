@@ -1,0 +1,40 @@
+﻿@model FNaFle.Models.Character
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<a asp-action="Index" class="auth-box">← Back</a>
+
+<div style="display:flex;gap:30px;margin-top:20px;">
+
+    <div style="flex:0 0 300px;">
+        @if (!string.IsNullOrWhiteSpace(Model.ImagePath))
+        {
+            <img src="@Model.ImagePath" style="max-width:100%;border-radius:12px;" />
+        }
+        else
+        {
+            <div style="color:#ccc;text-align:center;padding:40px 0;">No image</div>
+        }
+    </div>
+
+    <div style="flex:1;">
+        <h1>@Model.Name</h1>
+
+        <table>
+            <tr><th>Gender</th><td>@Model.Gender</td></tr>
+            <tr><th>Generation</th><td>@Model.Generation</td></tr>
+            <tr><th>Species</th><td>@Model.Species</td></tr>
+            <tr><th>Location</th><td>@Model.Location</td></tr>
+            <tr><th>Status</th><td>@Model.Status</td></tr>
+        </table>
+
+        @if (User.IsInRole("Admin"))
+        {
+            <div style="margin-top:15px;">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="auth-box">Edit</a>
+                <a asp-action="Delete" asp-route-id="@Model.Id" class="auth-box">Delete</a>
+            </div>
+        }
+    </div>
+</div>

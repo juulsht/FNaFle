@@ -14,5 +14,8 @@ namespace FNaFle.Models
         public string Species { get; set; }      // Bear / Rabbit / etc.
         public string Location { get; set; }     // Pizza Place / Sister Location / etc.
         public string Status { get; set; }       // Active / Phantom / Decommissioned
+
+        [MaxLength(300)]
+        public string? ImagePath { get; set; }   // e.g. "/images/characters/freddy.jpg"
     }
 }

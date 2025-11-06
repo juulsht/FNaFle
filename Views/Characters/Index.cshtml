@@ -1,0 +1,35 @@
+﻿@model IEnumerable<FNaFle.Models.Character>
+@{
+    ViewData["Title"] = "Library";
+}
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+    <h1>Library</h1>
+
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Create" class="auth-box">+ Add Character</a>
+    }
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px;">
+    @foreach (var c in Model)
+    {
+        <a asp-action="Details" asp-route-id="@c.Id"
+           style="text-decoration:none;color:white;background:#111;padding:15px;border-radius:12px;">
+
+            <div style="height:150px;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:8px;">
+                @if (!string.IsNullOrWhiteSpace(c.ImagePath))
+                {
+                    <img src="@c.ImagePath" style="max-height:150px;" />
+                }
+                else
+                {
+                    <span>No Image</span>
+                }
+            </div>
+
+            <h3 style="text-align:center;margin-top:10px;">@c.Name</h3>
+        </a>
+    }
+</div>
