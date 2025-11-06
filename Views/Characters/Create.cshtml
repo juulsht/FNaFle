@@ -1,0 +1,39 @@
+﻿@model FNaFle.Models.Character
+@{
+    ViewData["Title"] = "Add Character";
+}
+
+<h1>Add Character</h1>
+
+<form method="post">
+
+    <label>Name</label>
+    <input asp-for="Name" class="auth-input" />
+    <span asp-validation-for="Name"></span>
+
+    <label>Gender</label>
+    <input asp-for="Gender" class="auth-input" />
+
+    <label>Generation</label>
+    <input asp-for="Generation" class="auth-input" />
+
+    <label>Species</label>
+    <input asp-for="Species" class="auth-input" />
+
+    <label>Location</label>
+    <input asp-for="Location" class="auth-input" />
+
+    <label>Status</label>
+    <input asp-for="Status" class="auth-input" />
+
+    <label>Image Path</label>
+    <input asp-for="ImagePath" class="auth-input" placeholder="/images/characters/freddy.jpg" />
+
+    <button type="submit" class="auth-box">Save</button>
+    <a asp-action="Index" class="auth-box">Cancel</a>
+
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

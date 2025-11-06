@@ -6,22 +6,32 @@ namespace FNaFle
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            // DB
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
                 ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            // Identity WITH ROLES + built-in UI (dev-friendly)
+            builder.Services
+                .AddIdentity<IdentityUser, IdentityRole>(options =>
+                {
+                    options.SignIn.RequireConfirmedAccount = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireUppercase = false;
+                })
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders()
+                .AddDefaultUI();
+
             builder.Services.AddControllersWithViews();
 
-            // Add session services
+            // Session
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
             {
@@ -32,15 +42,15 @@ namespace FNaFle
 
             var app = builder.Build();
 
-            // Seed the database
+            // Seed characters (yours)
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
                 var context = services.GetRequiredService<ApplicationDbContext>();
-                SeedData.Initialize(context); // call your seeder here
+                SeedData.Initialize(context);
             }
 
-            // Configure the HTTP request pipeline.
+            // PIPELINE
             if (app.Environment.IsDevelopment())
             {
                 app.UseMigrationsEndPoint();
@@ -53,12 +63,10 @@ namespace FNaFle
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
 
-            // Enable session before authorization
             app.UseSession();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
@@ -66,7 +74,12 @@ namespace FNaFle
                 pattern: "{controller=Home}/{action=Index}/{id?}");
             app.MapRazorPages();
 
-            app.Run();
+            // Seed roles + admin
+            await IdentitySeeder.SeedAsync(app.Services);
+
+            await app.RunAsync();
         }
     }
 }
+
+

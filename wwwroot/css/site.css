@@ -324,3 +324,76 @@ body {
         filter: brightness(1);
     }
 }
+/* Center card, reuse your background-blur/top-bar look */
+.auth-wrapper {
+    min-height: calc(100vh - 60px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.auth-card {
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    width: min(420px, 92vw);
+    padding: 22px 22px 18px;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+
+.auth-title {
+    margin: 0 0 14px;
+}
+
+.auth-input {
+    width: 100%;
+    margin: 8px 0 12px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #444;
+    background: #111;
+    color: #fff;
+    outline: none;
+}
+
+    .auth-input:focus {
+        border-color: #666;
+    }
+
+.auth-remember {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    margin: 4px 0 12px;
+    user-select: none;
+}
+
+.auth-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+/* Use your existing .auth-box for buttons; ensure it also fits buttons not just links */
+.auth-box {
+    display: inline-block;
+    border: none;
+}
+
+.auth-link {
+    color: #fff;
+    opacity: .85;
+    text-decoration: none;
+}
+
+    .auth-link:hover {
+        opacity: 1;
+        text-decoration: underline;
+    }
+
+/* Validation */
+.text-danger {
+    color: #ff6b6b;
+}
