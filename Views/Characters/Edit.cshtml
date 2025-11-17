@@ -1,36 +1,141 @@
 ﻿@model FNaFle.Models.Character
 @{
-    ViewData["Title"] = "Edit Character";
+    ViewData["Title"] = "Edit " + Model.Name;
 }
 
-<h1>Edit Character</h1>
+<div class="edit-page">
 
-<form method="post">
+    <div class="edit-card">
 
-    <input type="hidden" asp-for="Id" />
+        <h1 class="edit-title">Edit Character</h1>
 
-    <label>Name</label>
-    <input asp-for="Name" class="auth-input" />
+        <form method="post" class="edit-form">
 
-    <label>Gender</label>
-    <input asp-for="Gender" class="auth-input" />
+            <input type="hidden" asp-for="Id" />
 
-    <label>Generation</label>
-    <input asp-for="Generation" class="auth-input" />
+            <!-- IMAGE PREVIEW -->
+            <div class="edit-image-box">
+                @if (!string.IsNullOrWhiteSpace(Model.ImagePath))
+                {
+                    <img src="@Model.ImagePath" class="edit-image" />
+                }
+                else
+                {
+                    <div class="edit-image placeholder">No Image</div>
+                }
+            </div>
 
-    <label>Species</label>
-    <input asp-for="Species" class="auth-input" />
+            <!-- NAME -->
+            <label class="edit-label">Name</label>
+            <input asp-for="Name" class="auth-input" />
 
-    <label>Location</label>
-    <input asp-for="Location" class="auth-input" />
+            <!-- GENDER -->
+            <label class="edit-label">Gender</label>
+            <input asp-for="Gender" class="auth-input" />
 
-    <label>Status</label>
-    <input asp-for="Status" class="auth-input" />
+            <!-- GENERATION -->
+            <label class="edit-label">Generation</label>
+            <input asp-for="Generation" class="auth-input" />
 
-    <label>Image Path</label>
-    <input asp-for="ImagePath" class="auth-input" />
+            <!-- SPECIES -->
+            <label class="edit-label">Species</label>
+            <input asp-for="Species" class="auth-input" />
 
-    <button type="submit" class="auth-box">Save</button>
-    <a asp-action="Index" class="auth-box">Cancel</a>
+            <!-- LOCATION -->
+            <label class="edit-label">Location</label>
+            <input asp-for="Location" class="auth-input" />
 
-</form>
+            <!-- STATUS -->
+            <label class="edit-label">Status</label>
+            <input asp-for="Status" class="auth-input" />
+
+            <!-- IMAGE PATH -->
+            <label class="edit-label">Image Path</label>
+            <input asp-for="ImagePath" class="auth-input" placeholder="/images/characters/freddy.jpg" />
+
+            <!-- ACTION BUTTONS -->
+            <div class="edit-actions">
+                <button type="submit" class="auth-box">Save</button>
+                <a asp-action="Index" class="auth-box">Cancel</a>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<style>
+
+    /* PAGE WRAPPER */
+    .edit-page {
+        padding-top: 140px;
+        display: flex;
+        justify-content: center;
+        padding-bottom: 60px;
+    }
+
+    /* MAIN CARD */
+    .edit-card {
+        width: min(520px, 92vw);
+        background: rgba(0,0,0,0.65);
+        border: 2px solid rgba(255, 0, 0, 0.4);
+        border-radius: 16px;
+        padding: 28px 32px;
+        box-shadow: 0 0 22px rgba(255, 0, 0, 0.25);
+        color: white;
+    }
+
+    /* TITLE */
+    .edit-title {
+        text-align: center;
+        font-size: 38px;
+        margin-bottom: 25px;
+        color: #ff0000;
+        text-shadow: 0 0 14px #ff0000, 0 0 26px #ff0000;
+    }
+
+    /* LABELS */
+    .edit-label {
+        margin-top: 12px;
+        margin-bottom: 4px;
+        display: block;
+        font-weight: bold;
+        color: #ff8a8a;
+        text-shadow: 0 0 6px rgba(255, 0, 0, 0.4);
+    }
+
+    /* IMAGE PREVIEW */
+    .edit-image-box {
+        width: 100%;
+        max-height: 250px;
+        overflow: hidden;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        border: 1px solid rgba(255,0,0,0.3);
+        box-shadow: 0 0 14px rgba(255,0,0,0.25);
+    }
+
+    .edit-image {
+        width: 100%;
+        display: block;
+    }
+
+        .edit-image.placeholder {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(20, 0, 0, 0.6);
+            color: #bbb;
+        }
+
+    /* BUTTON AREA */
+    .edit-actions {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 25px;
+    }
+
+</style>

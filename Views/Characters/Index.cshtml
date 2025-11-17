@@ -3,33 +3,148 @@
     ViewData["Title"] = "Library";
 }
 
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-    <h1>Library</h1>
+<!-- PAGE WRAPPER -->
+<div class="library-page">
 
-    @if (User.IsInRole("Admin"))
-    {
-        <a asp-action="Create" class="auth-box">+ Add Character</a>
-    }
+    <!-- TOP HEADER -->
+    <div class="library-header">
+        <h1 class="library-title">Character Library</h1>
+
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Create" class="auth-box add-char-btn">+ Add Character</a>
+        }
+    </div>
+
+    <!-- GRID -->
+    <div class="library-grid">
+        @foreach (var c in Model)
+        {
+            <a asp-action="Details" asp-route-id="@c.Id" class="character-card">
+
+                <div class="character-image-wrapper">
+                    @if (!string.IsNullOrWhiteSpace(c.ImagePath))
+                    {
+                        <div class="character-image" style="background-image:url('@c.ImagePath');"></div>
+                    }
+                    else
+                    {
+                        <div class="character-image placeholder">No Image</div>
+                    }
+                </div>
+
+                <div class="character-card-info">
+                    <h2>@c.Name</h2>
+                </div>
+
+            </a>
+        }
+    </div>
+
 </div>
 
-<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px;">
-    @foreach (var c in Model)
-    {
-        <a asp-action="Details" asp-route-id="@c.Id"
-           style="text-decoration:none;color:white;background:#111;padding:15px;border-radius:12px;">
+<!-- EXTRA CSS (paste this into your site.css or below this file inside <style>) -->
+<style>
 
-            <div style="height:150px;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:8px;">
-                @if (!string.IsNullOrWhiteSpace(c.ImagePath))
-                {
-                    <img src="@c.ImagePath" style="max-height:150px;" />
-                }
-                else
-                {
-                    <span>No Image</span>
-                }
-            </div>
-
-            <h3 style="text-align:center;margin-top:10px;">@c.Name</h3>
-        </a>
+    /* Page container */
+    .library-page {
+        padding-top: 140px;
+        width: 100%;
+        color: white;
     }
-</div>
+
+    /* Header */
+    .library-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 25px;
+        margin-bottom: 30px;
+    }
+
+    .library-title {
+        font-size: 48px;
+        color: #ff0000;
+        text-shadow: 0 0 12px #ff0000, 0 0 22px #ff0000;
+        letter-spacing: 2px;
+    }
+
+    /* Add Character Button */
+    .add-char-btn {
+        font-size: 16px;
+        padding: 10px 20px;
+    }
+
+    /* Grid Layout */
+    .library-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 28px;
+        padding: 0 25px 60px;
+    }
+
+    /* CARD DESIGN */
+    .character-card {
+        display: block;
+        background: rgba(0, 0, 0, 0.45);
+        border-radius: 14px;
+        text-decoration: none;
+        color: white;
+        overflow: hidden;
+        border: 2px solid rgba(255, 0, 0, 0.35);
+        box-shadow: inset 0 0 8px rgba(100,0,0,0.4), 0 0 12px rgba(255, 0, 0, 0.25);
+        transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+    }
+
+        .character-card:hover {
+            transform: scale(1.06);
+            border-color: #ff0000;
+            box-shadow: 0 0 25px #ff0000, inset 0 0 12px #ff0000;
+        }
+
+    /* IMAGE BOX */
+    .character-image-wrapper {
+        height: 230px;
+        overflow: hidden;
+        border-radius: 10px 10px 0 0;
+    }
+
+    .character-image {
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        filter: brightness(0.8);
+        transition: filter .35s ease, transform .35s ease;
+    }
+
+    .character-card:hover .character-image {
+        filter: brightness(1);
+        transform: scale(1.1);
+    }
+
+    /* Placeholder for characters without images */
+    .character-image.placeholder {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #888;
+        font-size: 18px;
+        background: rgba(20, 20, 20, 0.8);
+    }
+
+    /* NAME TEXT */
+    .character-card-info {
+        text-align: center;
+        padding: 15px;
+    }
+
+        .character-card-info h2 {
+            font-size: 22px;
+            margin: 8px 0 5px;
+            color: white;
+            text-shadow: 0 0 6px #ff0000;
+            letter-spacing: 1px;
+        }
+
+</style>

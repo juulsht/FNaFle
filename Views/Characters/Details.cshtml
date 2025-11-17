@@ -3,38 +3,181 @@
     ViewData["Title"] = Model.Name;
 }
 
-<a asp-action="Index" class="auth-box">← Back</a>
+<div class="details-page">
 
-<div style="display:flex;gap:30px;margin-top:20px;">
+    <!-- Back Button -->
+    <a asp-action="Index" class="auth-box details-back">← Back</a>
 
-    <div style="flex:0 0 300px;">
-        @if (!string.IsNullOrWhiteSpace(Model.ImagePath))
-        {
-            <img src="@Model.ImagePath" style="max-width:100%;border-radius:12px;" />
-        }
-        else
-        {
-            <div style="color:#ccc;text-align:center;padding:40px 0;">No image</div>
-        }
-    </div>
+    <div class="details-card">
 
-    <div style="flex:1;">
-        <h1>@Model.Name</h1>
+        <!-- IMAGE -->
+        <div class="details-image-box">
+            @if (!string.IsNullOrWhiteSpace(Model.ImagePath))
+            {
+                <img src="@Model.ImagePath" class="details-image" />
+            }
+            else
+            {
+                <div class="details-image placeholder">No Image</div>
+            }
+        </div>
 
-        <table>
-            <tr><th>Gender</th><td>@Model.Gender</td></tr>
-            <tr><th>Generation</th><td>@Model.Generation</td></tr>
-            <tr><th>Species</th><td>@Model.Species</td></tr>
-            <tr><th>Location</th><td>@Model.Location</td></tr>
-            <tr><th>Status</th><td>@Model.Status</td></tr>
-        </table>
+        <!-- NAME -->
+        <h1 class="details-title">@Model.Name</h1>
 
+        <!-- STATS PANEL -->
+        <div class="details-stats">
+
+            <div class="details-row">
+                <span class="details-label">Gender</span>
+                <span class="details-value">@Model.Gender</span>
+            </div>
+
+            <div class="details-row">
+                <span class="details-label">Generation</span>
+                <span class="details-value">@Model.Generation</span>
+            </div>
+
+            <div class="details-row">
+                <span class="details-label">Species</span>
+                <span class="details-value">@Model.Species</span>
+            </div>
+
+            <div class="details-row">
+                <span class="details-label">Location</span>
+                <span class="details-value">@Model.Location</span>
+            </div>
+
+            <div class="details-row">
+                <span class="details-label">Status</span>
+                <span class="details-value">@Model.Status</span>
+            </div>
+
+        </div>
+
+        <!-- Admin Buttons -->
         @if (User.IsInRole("Admin"))
         {
-            <div style="margin-top:15px;">
+            <div class="details-actions">
                 <a asp-action="Edit" asp-route-id="@Model.Id" class="auth-box">Edit</a>
-                <a asp-action="Delete" asp-route-id="@Model.Id" class="auth-box">Delete</a>
+                <a asp-action="Delete" asp-route-id="@Model.Id" class="auth-box delete-admin">Delete</a>
             </div>
         }
+
     </div>
+
 </div>
+
+<style>
+
+    /* PAGE WRAPPER */
+    .details-page {
+        padding-top: 140px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-bottom: 80px;
+    }
+
+    /* BACK BUTTON */
+    .details-back {
+        margin-bottom: 25px;
+    }
+
+    /* MAIN DETAILS CARD */
+    .details-card {
+        width: min(750px, 92vw);
+        background: rgba(0,0,0,0.65);
+        border: 2px solid rgba(255,0,0,0.4);
+        padding: 35px;
+        border-radius: 16px;
+        color: white;
+        text-align: center;
+        box-shadow: 0 0 22px rgba(255,0,0,0.3);
+    }
+
+    /* IMAGE */
+    .details-image-box {
+        width: 100%;
+        max-height: 420px;
+        overflow: hidden;
+        border-radius: 12px;
+        margin-bottom: 25px;
+        border: 1px solid rgba(255,0,0,0.3);
+        box-shadow: 0 0 16px rgba(255,0,0,0.25);
+    }
+
+    .details-image {
+        width: 100%;
+        display: block;
+    }
+
+        .details-image.placeholder {
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(20,0,0,0.5);
+            color: #888;
+        }
+
+    /* NAME */
+    .details-title {
+        font-size: 40px;
+        color: #ff0000;
+        text-shadow: 0 0 14px #ff0000, 0 0 26px #ff0000;
+        margin-bottom: 25px;
+        letter-spacing: 1px;
+    }
+
+    /* STAT PANEL */
+    .details-stats {
+        margin-top: 10px;
+        margin-bottom: 35px;
+    }
+
+    /* Each row */
+    .details-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 20px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        background: rgba(20, 0, 0, 0.45);
+        border: 1px solid rgba(255,0,0,0.3);
+        box-shadow: inset 0 0 8px rgba(255, 0, 0, 0.15);
+    }
+
+    /* Label = left side text */
+    .details-label {
+        font-weight: bold;
+        color: #ff7a7a;
+    }
+
+    /* Value = right side */
+    .details-value {
+        font-weight: bold;
+        color: white;
+        opacity: 0.9;
+    }
+
+    /* ADMIN BUTTONS */
+    .details-actions {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    /* Special delete styling */
+    .delete-admin {
+        background: rgba(80, 0, 0, 0.8);
+        border-color: rgba(255,0,0,0.7) !important;
+        box-shadow: 0 0 18px rgba(255, 0, 0, 0.5);
+    }
+
+        .delete-admin:hover {
+            background: rgba(130, 0, 0, 0.9);
+            box-shadow: 0 0 28px #ff0000;
+        }
+
+</style>
