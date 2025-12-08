@@ -12,5 +12,8 @@ namespace FNaFle.Data
         }
 
         public DbSet<Character> Characters { get; set; }
+        public DbSet<DailyGame> DailyGames { get; set; }
+        public DbSet<UserProgress> UserProgress { get; set; }
+
     }
 }

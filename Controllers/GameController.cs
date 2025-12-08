@@ -1,93 +1,118 @@
 ﻿using FNaFle.Data;
 using FNaFle.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore;
 
 public class GameController : Controller
 {
     private readonly ApplicationDbContext _context;
-    private const string DailyCharacterKey = "DailyCharacterId";
-    private const string PreviousGuessesKey = "PreviousGuesses";
+    private readonly UserManager<IdentityUser> _userManager;
 
-    public GameController(ApplicationDbContext context)
+    private readonly TimeSpan resetTime = new TimeSpan(8, 0, 0); // Reset at 08:00
+
+    public GameController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
     {
         _context = context;
+        _userManager = userManager;
     }
 
-    public IActionResult Play()
+    private Character GetTodayCharacter()
     {
-        int? dailyId = HttpContext.Session.GetInt32(DailyCharacterKey);
-        Character dailyCharacter = null;
+        var today = DateTime.UtcNow.Date;
+        var dailyEntry = _context.DailyGames.FirstOrDefault(x => x.Date == today);
 
-        if (dailyId == null)
+        if (dailyEntry == null)
         {
-            dailyCharacter = _context.Characters
-                .OrderBy(c => Guid.NewGuid())
-                .FirstOrDefault();
+            var randomCharacter = _context.Characters.OrderBy(x => Guid.NewGuid()).First();
 
-            if (dailyCharacter != null)
-                HttpContext.Session.SetInt32(DailyCharacterKey, dailyCharacter.Id);
-        }
-        else
-        {
-            dailyCharacter = _context.Characters.FirstOrDefault(c => c.Id == dailyId.Value);
-        }
+            dailyEntry = new DailyGame
+            {
+                CharacterId = randomCharacter.Id,
+                Date = today
+            };
 
-        if (dailyCharacter == null)
-        {
-            ViewBag.Error = "No characters in the database!";
-            return View();
+            _context.DailyGames.Add(dailyEntry);
+            _context.SaveChanges();
         }
 
-        var previousGuessesJson = HttpContext.Session.GetString(PreviousGuessesKey);
-        var previousGuesses = !string.IsNullOrEmpty(previousGuessesJson)
-            ? JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(previousGuessesJson)
-            : new List<Dictionary<string, string>>();
+        return _context.Characters.First(x => x.Id == dailyEntry.CharacterId);
+    }
 
-        ViewBag.PreviousGuesses = previousGuesses;
-        ViewBag.DailyCharacter = dailyCharacter;
+    public async Task<IActionResult> Play()
+    {
+        var character = GetTodayCharacter();
+        var user = await _userManager.GetUserAsync(User);
+
+        UserProgress progress = null;
+
+        if (user != null)
+        {
+            progress = await _context.UserProgress.FirstOrDefaultAsync(x => x.UserId == user.Id);
+
+            if (progress == null)
+            {
+                progress = new UserProgress
+                {
+                    UserId = user.Id,
+                    LastGuessDate = DateTime.UtcNow.Date,
+                    Streak = 0,
+                    HasGuessedCorrectlyToday = false
+                };
+
+                _context.UserProgress.Add(progress);
+                _context.SaveChanges();
+            }
+
+            // Reset streak if user skipped yesterday
+            if (progress.LastGuessDate < DateTime.UtcNow.Date.AddDays(-1))
+            {
+                progress.Streak = 0;
+                progress.HasGuessedCorrectlyToday = false;
+                _context.SaveChanges();
+            }
+        }
+
+        ViewBag.Character = character;
+        ViewBag.Progress = progress;
+        ViewBag.GuessedCorrectlyToday = progress?.HasGuessedCorrectlyToday ?? false;
 
         return View();
     }
 
     [HttpPost]
-    public IActionResult Play(string guessName)
+    public async Task<IActionResult> Play(string guess)
     {
-        int? dailyId = HttpContext.Session.GetInt32(DailyCharacterKey);
-        if (dailyId == null)
+        // Reset stored guesses after 08:00
+        if (DateTime.Now.TimeOfDay >= resetTime)
+            HttpContext.Session.Remove("PreviousGuesses");
+
+        var character = GetTodayCharacter();
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user == null)
         {
-            ViewBag.Error = "No daily character set!";
+            ViewBag.Error = "You must be logged in to play.";
+            ViewBag.Character = character;
             return View();
         }
 
-        var dailyCharacter = _context.Characters.FirstOrDefault(c => c.Id == dailyId.Value);
-        if (dailyCharacter == null)
-        {
-            ViewBag.Error = "Daily character not found!";
-            return View();
-        }
+        var progress = await _context.UserProgress.FirstAsync(x => x.UserId == user.Id);
+        progress.LastGuessDate = DateTime.UtcNow.Date;
 
-        if (string.IsNullOrEmpty(guessName))
-        {
-            ViewBag.Error = "Please enter a character name!";
-            ViewBag.DailyCharacter = dailyCharacter;
-            return View();
-        }
-
+        // FIND THE GUESSED CHARACTER
         var guessedCharacter = _context.Characters
-            .FirstOrDefault(c => c.Name.ToLower() == guessName.ToLower());
+            .FirstOrDefault(x => x.Name.ToLower() == guess.ToLower());
 
         if (guessedCharacter == null)
         {
             ViewBag.Error = "Character not found!";
-            var prevGuessesJson = HttpContext.Session.GetString(PreviousGuessesKey);
-            ViewBag.PreviousGuesses = !string.IsNullOrEmpty(prevGuessesJson)
-                ? JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(prevGuessesJson)
-                : new List<Dictionary<string, string>>();
-            ViewBag.DailyCharacter = dailyCharacter;
+            ViewBag.Character = character;
+            ViewBag.Progress = progress;
             return View();
         }
 
+        // BUILD RESULT BOXES USING THE GUESSED CHARACTER
         var results = new Dictionary<string, string>
         {
             { "Gender", guessedCharacter.Gender },
@@ -97,31 +122,28 @@ public class GameController : Controller
             { "Status", guessedCharacter.Status }
         };
 
-        ViewBag.GuessName = guessedCharacter.Name;
         ViewBag.Results = results;
-        ViewBag.DailyCharacter = dailyCharacter;
-        ViewBag.IsCorrectGuess = guessedCharacter.Id == dailyCharacter.Id;
+        ViewBag.GuessName = guessedCharacter.Name;
 
-        if (ViewBag.IsCorrectGuess)
+        // CHECK WIN CONDITION
+        if (string.Equals(guess, character.Name, StringComparison.OrdinalIgnoreCase))
         {
-            // Clear previous guesses if player guessed correctly
-            HttpContext.Session.SetString(PreviousGuessesKey, JsonConvert.SerializeObject(new List<Dictionary<string, string>>()));
-            ViewBag.PreviousGuesses = new List<Dictionary<string, string>>();
+            progress.HasGuessedCorrectlyToday = true;
+            progress.Streak++;
+            _context.SaveChanges();
+
+            ViewBag.Message = "🎉 Correct! Come back tomorrow after 08:00. :D";
         }
         else
         {
-            // Add to previous guesses if incorrect
-            var prevGuessesJson2 = HttpContext.Session.GetString(PreviousGuessesKey);
-            var previousGuesses = !string.IsNullOrEmpty(prevGuessesJson2)
-                ? JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(prevGuessesJson2)
-                : new List<Dictionary<string, string>>();
-
-            previousGuesses.Add(results);
-            HttpContext.Session.SetString(PreviousGuessesKey, JsonConvert.SerializeObject(previousGuesses));
-
-            // Exclude last guess in display
-            ViewBag.PreviousGuesses = previousGuesses.Take(previousGuesses.Count - 1).ToList();
+            ViewBag.Message = "Wrong, try again?";
         }
+
+        _context.SaveChanges();
+
+        ViewBag.Character = character;
+        ViewBag.Progress = progress;
+        ViewBag.GuessedCorrectlyToday = progress.HasGuessedCorrectlyToday;
 
         return View();
     }
