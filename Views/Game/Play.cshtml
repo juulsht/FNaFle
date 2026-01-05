@@ -9,6 +9,15 @@
 
 <div class="background-blur"></div>
 
+<!-- ✅ TOP BAR WITH HOME BUTTON -->
+<div class="top-bar">
+    <div class="left-buttons" style="display:flex; gap:12px; align-items:center;">
+        <a asp-controller="Home" asp-action="Index" class="auth-box">
+            Home
+        </a>
+    </div>
+</div>
+
 <div class="homepage">
 
     <div class="logo-container">
@@ -35,10 +44,11 @@
         </p>
     }
 
-
     @if (ViewBag.Error != null)
     {
-        <p style="color:#ff0000; font-weight:bold; text-shadow:0 0 10px #ff0000;">@ViewBag.Error</p>
+        <p style="color:#ff0000; font-weight:bold; text-shadow:0 0 10px #ff0000;">
+            @ViewBag.Error
+        </p>
     }
 
     @if (ViewBag.Message != null)
@@ -49,7 +59,7 @@
             font-weight:bold;
             text-shadow:0 0 10px;
             color:@(ViewBag.Message.ToString().Contains("Correct") ? "lightgreen" : "red");
-            ">
+                ">
             @ViewBag.Message
         </p>
     }
@@ -61,7 +71,6 @@
         </h2>
 
         <div class="guess-row" style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap; margin-top:20px;">
-
             @{
                 foreach (var kvp in results)
                 {
@@ -81,7 +90,6 @@
                         <div class="attr-key">@kvp.Key</div>
                         <div class="attr-value">@kvp.Value</div>
                     </div>
-                    ;
                 }
             }
         </div>

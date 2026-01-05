@@ -7,10 +7,20 @@
 <div class="background-blur"></div>
 
 <div class="top-bar">
+
+    <!-- ✅ LEFT SIDE -->
+    <div class="left-buttons" style="display:flex; gap:12px; align-items:center;">
+        <a asp-controller="Home" asp-action="Index" class="auth-box">
+            Home
+        </a>
+    </div>
+
+    <!-- Night placeholder -->
     <div class="night-box">
         <span class="night-label">Night</span>
         <span class="night-value">—</span>
     </div>
+
 </div>
 
 <div class="auth-wrapper">
@@ -20,10 +30,16 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <input asp-for="Input.Email" class="auth-input" placeholder="Email" autocomplete="username" />
+            <input asp-for="Input.Email"
+                   class="auth-input"
+                   placeholder="Email"
+                   autocomplete="username" />
             <span asp-validation-for="Input.Email" class="text-danger"></span>
 
-            <input asp-for="Input.Password" class="auth-input" placeholder="Password" autocomplete="current-password" />
+            <input asp-for="Input.Password"
+                   class="auth-input"
+                   placeholder="Password"
+                   autocomplete="current-password" />
             <span asp-validation-for="Input.Password" class="text-danger"></span>
 
             <label class="auth-remember">
@@ -32,12 +48,17 @@
 
             <div class="auth-actions">
                 <button type="submit" class="auth-box">Login</button>
-                <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="auth-link">Create account</a>
+                <a asp-page="./Register"
+                   asp-route-returnUrl="@Model.ReturnUrl"
+                   class="auth-link">
+                    Create account
+                </a>
             </div>
         </form>
     </div>
 </div>
 
 @section Scripts {
-<partial name="_ValidationScriptsPartial" />
- }
+    <partial name="_ValidationScriptsPartial" />
+}
+

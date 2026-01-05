@@ -8,6 +8,12 @@
 
     <!-- TOP HEADER -->
     <div class="library-header">
+
+        <!-- ✅ HOME BUTTON -->
+        <a asp-controller="Home" asp-action="Index" class="auth-box">
+            Home
+        </a>
+
         <h1 class="library-title">Character Library</h1>
 
         @if (User.IsInRole("Admin"))
