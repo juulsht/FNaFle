@@ -7,7 +7,6 @@
 
 <div class="top-bar">
 
-    <!-- LEFT SIDE -->
     <div class="left-buttons" style="display:flex; gap:12px; align-items:center;">
 
         <div class="night-box">
@@ -15,17 +14,21 @@
             <span class="night-value">@streak</span>
         </div>
 
-        <!-- LIBRARY BUTTON -->
         <a asp-controller="Characters" asp-action="Index" class="auth-box">
             Library
         </a>
 
+        <a asp-controller="Home" asp-action="Leaderboard" class="auth-box">
+            Leaderboard
+        </a>
+
     </div>
 
-    <!-- RIGHT SIDE (Login / Logout) -->
-    <div class="auth-container">
+    <div class="auth-container" style="display:flex; gap:12px; align-items:center;">
         @if (User.Identity?.IsAuthenticated ?? false)
         {
+            <a asp-controller="Home" asp-action="Profile" class="auth-box">Profile</a>
+
             <form method="post"
                   asp-area="Identity"
                   asp-page="/Account/Logout"

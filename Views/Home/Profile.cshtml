@@ -1,0 +1,65 @@
+﻿@model FNaFle.Models.EditProfileViewModel
+
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="library-page">
+
+    <div class="library-header">
+        <a asp-controller="Home" asp-action="Index" class="auth-box">
+            Home
+        </a>
+
+        <h1 class="library-title">Edit Profile</h1>
+
+        <div style="width: 100px;"></div>
+    </div>
+
+    <div class="container d-flex justify-content-center">
+        <div class="character-card" style="max-width: 500px; padding: 40px; background: rgba(0,0,0,0.7);">
+
+            <form asp-action="Profile" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="form-group mb-4">
+                    <label class="text-white mb-2" style="font-size: 1.2rem; letter-spacing: 1px;">
+                        Current Identity: <span style="color: #ff0000; text-shadow: 0 0 5px #ff0000;">@Model.CurrentUsername</span>
+                    </label>
+
+                    <input asp-for="NewUsername" class="form-control profile-input"
+                           placeholder="Enter New Username..." required />
+                    <span asp-validation-for="NewUsername" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="auth-box w-100" style="background: none; border: 2px solid #ff0000; cursor: pointer; transition: 0.3s;">
+                    SAVE CHANGES
+                </button>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Styling the input box to match your FNaF theme */
+    .profile-input {
+        background: rgba(20, 20, 20, 0.9) !important;
+        border: 2px solid rgba(255, 0, 0, 0.35) !important;
+        color: white !important;
+        height: 50px;
+        font-size: 18px;
+        border-radius: 8px;
+        transition: all 0.35s ease;
+    }
+
+        .profile-input:focus {
+            border-color: #ff0000 !important;
+            box-shadow: 0 0 15px #ff0000 !important;
+            outline: none;
+        }
+
+        .profile-input::placeholder {
+            color: #555;
+        }
+</style>

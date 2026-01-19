@@ -13,7 +13,7 @@
 
         <h1 class="library-title">Global Leaderboard</h1>
 
-        <div style="width: 120px;"></div>
+        <div style="width: 100px;"></div>
     </div>
 
     <div class="leaderboard-container">
@@ -24,9 +24,12 @@
         {
             <div class="leaderboard-item">
                 <div class="rank-badge">#@rank</div>
+
                 <div class="player-info">
+                    @* This displays the Username you just set in your Profile! *@
                     <span class="player-name">@user.Username</span>
                 </div>
+
                 <div class="streak-box">
                     <span class="streak-label">STREAK</span>
                     <span class="streak-value">@user.Streak 🔥</span>
@@ -38,7 +41,6 @@
 </div>
 
 <style>
-    /* This connects to your existing theme */
     .leaderboard-container {
         max-width: 800px;
         margin: 0 auto;
@@ -70,7 +72,7 @@
         font-weight: bold;
         color: #ff0000;
         text-shadow: 0 0 8px #ff0000;
-        width: 60px;
+        width: 80px;
     }
 
     .player-info {
@@ -79,18 +81,18 @@
 
     .player-name {
         font-size: 24px;
+        color: white;
         text-shadow: 0 0 6px #ff0000;
         letter-spacing: 1px;
     }
 
     .streak-box {
         text-align: right;
-        display: flex;
-        flex-direction: column;
     }
 
     .streak-label {
-        font-size: 12px;
+        display: block;
+        font-size: 10px;
         color: #888;
         letter-spacing: 2px;
     }
