@@ -27,16 +27,37 @@ namespace FNaFle.Controllers
             if (User.Identity?.IsAuthenticated ?? false)
             {
                 var user = await _userManager.GetUserAsync(User);
+                if (user != null)
+                {
+                    var progress = await _context.UserProgress
+                        .FirstOrDefaultAsync(x => x.UserId == user.Id);
 
-                var progress = await _context.UserProgress
-                    .FirstOrDefaultAsync(x => x.UserId == user.Id);
-
-                if (progress != null)
-                    streak = progress.Streak;
+                    if (progress != null)
+                        streak = progress.Streak;
+                }
             }
 
             ViewBag.Streak = streak;
             return View();
+        }
+
+        // --- NEW LEADERBOARD METHOD ---
+        public async Task<IActionResult> Leaderboard()
+        {
+            var leaderboardData = await _context.UserProgress
+                .Join(_context.Users,
+                    progress => progress.UserId,
+                    user => user.Id,
+                    (progress, user) => new LeaderboardUserViewModel
+                    {
+                        Username = user.UserName ?? "Unknown",
+                        Streak = progress.Streak
+                    })
+                .OrderByDescending(u => u.Streak)
+                .Take(100) // Shows top 100 players
+                .ToListAsync();
+
+            return View(leaderboardData);
         }
 
         public IActionResult Privacy()
