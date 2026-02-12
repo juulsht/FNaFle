@@ -1,40 +1,50 @@
 ﻿@model FNaFle.Models.EditProfileViewModel
-
 @{
-    ViewData["Title"] = "My Profile";
+    ViewData["Title"] = "Security Override";
 }
 
-<div class="library-page">
+<div class="background-blur"></div>
 
-    <div class="library-header">
-        <a asp-controller="Home" asp-action="Index" class="auth-box">
-            Home
+<div class="top-bar">
+    <div class="left-buttons">
+        <a asp-controller="Home" asp-action="Index" class="auth-box" style="text-decoration: none;">
+            ← EXIT TERMINAL
         </a>
+    </div>
+</div>
 
-        <h1 class="library-title">Edit Profile</h1>
-
-        <div style="width: 100px;"></div>
+<div class="homepage" style="padding-top: 100px;">
+    <div class="logo-container" style="margin-bottom: 50px;">
+        <h1 class="game-title" style="font-size: 3.5rem;">User Settings</h1>
+        <p class="subtitle" style="letter-spacing: 5px;">CREDENTIAL OVERRIDE REQUIRED</p>
     </div>
 
     <div class="container d-flex justify-content-center">
-        <div class="character-card" style="max-width: 500px; padding: 40px; background: rgba(0,0,0,0.7);">
+        <div class="profile-terminal">
 
-            <form asp-action="Profile" method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <form asp-action="Profile" method="post" class="w-100">
 
-                <div class="form-group mb-4">
-                    <label class="text-white mb-2" style="font-size: 1.2rem; letter-spacing: 1px;">
-                        Current Identity: <span style="color: #ff0000; text-shadow: 0 0 5px #ff0000;">@Model.CurrentUsername</span>
-                    </label>
-
-                    <input asp-for="NewUsername" class="form-control profile-input"
-                           placeholder="Enter New Username..." required />
-                    <span asp-validation-for="NewUsername" class="text-danger"></span>
+                <div class="terminal-section mb-5">
+                    <label class="terminal-label">CURRENT DESIGNATION</label>
+                    <div class="current-name-display">
+                        @Model.CurrentUsername
+                    </div>
                 </div>
 
-                <button type="submit" class="auth-box w-100" style="background: none; border: 2px solid #ff0000; cursor: pointer; transition: 0.3s;">
-                    SAVE CHANGES
-                </button>
+                <div class="terminal-section mb-5">
+                    <label class="terminal-label">NEW IDENTITY INPUT</label>
+                    <input asp-for="NewUsername" class="terminal-input"
+                           placeholder="Type new designation..." required
+                           autocomplete="off" />
+                    <span class="input-hint">Note: This will be visible on the global leaderboard.</span>
+                </div>
+
+                <div class="terminal-actions mt-5">
+                    <button type="submit" class="mode-button classic" style="width: 100%; height: 60px;">
+                        <span>CONFIRM IDENTITY CHANGE</span>
+                    </button>
+                </div>
+
             </form>
 
         </div>
@@ -42,24 +52,73 @@
 </div>
 
 <style>
-    /* Styling the input box to match your FNaF theme */
-    .profile-input {
-        background: rgba(20, 20, 20, 0.9) !important;
-        border: 2px solid rgba(255, 0, 0, 0.35) !important;
-        color: white !important;
-        height: 50px;
-        font-size: 18px;
-        border-radius: 8px;
-        transition: all 0.35s ease;
+    /* The Terminal Container */
+    .profile-terminal {
+        width: 100%;
+        max-width: 600px;
+        background: rgba(0, 0, 0, 0.85);
+        border: 2px solid #ff0000;
+        box-shadow: 0 0 40px rgba(255, 0, 0, 0.15), inset 0 0 20px rgba(255, 0, 0, 0.1);
+        padding: 50px;
+        border-radius: 10px;
+        backdrop-filter: blur(5px);
     }
 
-        .profile-input:focus {
+    /* Labels and Headings */
+    .terminal-label {
+        display: block;
+        color: #ff0000;
+        font-size: 0.8rem;
+        letter-spacing: 3px;
+        margin-bottom: 15px;
+        text-shadow: 0 0 5px #ff0000;
+    }
+
+    /* Current Name Styling */
+    .current-name-display {
+        font-size: 1.8rem;
+        color: white;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 15px 20px;
+        border-left: 4px solid #ff0000;
+        letter-spacing: 2px;
+    }
+
+    /* The Input Field */
+    .terminal-input {
+        width: 100%;
+        background: #000 !important;
+        border: 1px solid #444 !important;
+        border-bottom: 2px solid #ff0000 !important;
+        color: white !important;
+        font-size: 1.4rem;
+        padding: 15px;
+        transition: all 0.3s ease;
+        outline: none;
+    }
+
+        .terminal-input:focus {
+            background: rgba(255, 0, 0, 0.05) !important;
             border-color: #ff0000 !important;
-            box-shadow: 0 0 15px #ff0000 !important;
-            outline: none;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
         }
 
-        .profile-input::placeholder {
-            color: #555;
+    .input-hint {
+        display: block;
+        margin-top: 10px;
+        color: #555;
+        font-size: 0.75rem;
+        font-style: italic;
+    }
+
+    /* Button Tweak */
+    .mode-button.classic {
+        background: #900;
+        transition: 0.3s;
+    }
+
+        .mode-button.classic:hover {
+            background: #f00;
+            box-shadow: 0 0 20px #f00;
         }
 </style>
