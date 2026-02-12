@@ -1,4 +1,4 @@
-using FNaFle.Data;
+﻿using FNaFle.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -42,12 +42,17 @@ namespace FNaFle
 
             var app = builder.Build();
 
-            // Seed characters (yours)
+            // SEEDING SECTION
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
                 var context = services.GetRequiredService<ApplicationDbContext>();
+
+                // Seed existing characters
                 SeedData.Initialize(context);
+
+                // ✅ NEW: Seed Map Locations for the Map Guess mode
+                DbInitializer.Initialize(context);
             }
 
             // PIPELINE
@@ -81,5 +86,3 @@ namespace FNaFle
         }
     }
 }
-
-

@@ -1,0 +1,206 @@
+﻿@model FNaFle.Models.MapLocation
+
+@{
+    ViewData["Title"] = "Signal Intercept";
+    var message = TempData["Message"] as string;
+    var isCorrect = TempData["IsCorrect"] as bool?;
+}
+
+<div class="background-blur"></div>
+
+<div class="top-bar">
+    <div class="left-buttons">
+        <a asp-controller="Home" asp-action="Index" class="auth-box" style="text-decoration:none;">← EXIT SYSTEM</a>
+    </div>
+</div>
+
+<div class="homepage" style="padding-top: 80px;">
+    <div class="logo-container" style="margin-bottom: 60px;">
+        <h1 class="game-title">Signal Intercept</h1>
+        <p class="subtitle">Identify the Camera Coordinates</p>
+    </div>
+
+    <div class="container d-flex flex-column align-items-center">
+
+        <div class="cctv-frame" style="margin-bottom: 80px;">
+            <div class="scanline"></div>
+            <div class="noise"></div>
+            @if (Model != null)
+            {
+                <img src="@Model.ImageUrl" class="zoomed-map" alt="Camera Feed" />
+            }
+            else
+            {
+                <div class="no-feed">
+                    <p class="text-danger mt-5">NO SIGNAL DETECTED</p>
+                </div>
+            }
+            <div class="cam-overlay">LIVE FEED - REMOTE LOC @(Model?.Id ?? 00)</div>
+        </div>
+
+        <div style="max-width: 800px; width: 100%;">
+            <form asp-action="CheckGuess" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" value="@Model?.Id" />
+
+                <div class="row" style="margin-bottom: 40px;">
+                    <div class="col-md-6 mb-4">
+                        <label class="terminal-label">DESIGNATED GAME</label>
+                        <select name="gameGuess" class="terminal-input" required>
+                            <option value="" disabled selected>-- SELECT GAME --</option>
+                            @if (ViewBag.Games != null)
+                            {
+                                @foreach (var game in ViewBag.Games)
+                                {
+                                    <option value="@game">@game</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <label class="terminal-label">CAMERA ID</label>
+                        <select name="cameraGuess" class="terminal-input" required>
+                            <option value="" disabled selected>-- SELECT CAMERA --</option>
+                            @if (ViewBag.Cameras != null)
+                            {
+                                @foreach (var cam in ViewBag.Cameras)
+                                {
+                                    <option value="@cam">@cam</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="mode-button ranked w-100">
+                    <span>Guess</span>
+                </button>
+            </form>
+
+            @if (!string.IsNullOrEmpty(message))
+            {
+                <div class="mt-4 text-center @(isCorrect == true ? "text-success" : "text-danger")"
+                     style="font-family: monospace; letter-spacing: 2px; font-weight: bold; font-size: 1.4rem; text-shadow: 0 0 10px @(isCorrect == true ? "#0f0" : "#f00");">
+                    @message
+                </div>
+                <div class="text-center mt-3">
+                    <a asp-action="Index" class="text-white-50 small" style="text-decoration:none; font-family: monospace;">[ REQUEST NEW SIGNAL ]</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .cctv-frame {
+        width: 100%;
+        max-width: 700px;
+        height: 400px;
+        border: 15px solid #1a1a1a;
+        border-radius: 10px;
+        background: #050505;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 100px rgba(0,0,0,1);
+    }
+
+    .zoomed-map {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: contrast(1.2) brightness(0.8) grayscale(0.6) sepia(0.1);
+        /* 2.5X ZOOM - Extremely tight zoom */
+        transform: scale(2.5);
+        transition: all 0.5s ease;
+    }
+
+    .cctv-frame::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background: rgba(18, 16, 16, 0.1);
+        opacity: 0;
+        z-index: 2;
+        pointer-events: none;
+        animation: flicker 0.15s infinite;
+    }
+
+    .scanline {
+        width: 100%;
+        height: 100px;
+        background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(255,255,255,0.05) 50%, rgba(0,0,0,0) 100%);
+        position: absolute;
+        top: -100px;
+        z-index: 3;
+        animation: scan 4s linear infinite;
+    }
+
+    @@keyframes scan {
+        0% {
+            top: -100px;
+        }
+
+        100% {
+            top: 100%;
+        }
+    }
+
+    @@keyframes flicker {
+        0% {
+            opacity: 0.1;
+        }
+
+        100% {
+            opacity: 0.2;
+        }
+    }
+
+    .cam-overlay {
+        position: absolute;
+        top: 15px;
+        left: 20px;
+        color: #0f0;
+        font-family: 'Courier New', monospace;
+        font-size: 1rem;
+        text-shadow: 0 0 5px #0f0;
+        z-index: 4;
+    }
+
+    .terminal-label {
+        color: #ff0000;
+        font-size: 0.85rem;
+        letter-spacing: 2px;
+        display: block;
+        margin-bottom: 12px;
+        font-weight: bold;
+    }
+
+    .terminal-input {
+        background: rgba(0, 0, 0, 0.7) !important;
+        border: 1px solid #333 !important;
+        border-bottom: 2px solid #ff0000 !important;
+        color: #fff !important;
+        width: 100%;
+        padding: 15px;
+        font-family: 'Courier New', monospace;
+        outline: none;
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='red'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 15px center;
+        background-size: 20px;
+    }
+
+        .terminal-input option {
+            background: #000;
+            color: #fff;
+        }
+
+        .terminal-input:focus {
+            border-color: #ff0000 !important;
+            box-shadow: 0 0 10px rgba(255,0,0,0.2);
+        }
+</style>
