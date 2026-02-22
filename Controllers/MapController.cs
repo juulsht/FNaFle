@@ -22,45 +22,30 @@ namespace FNaFle.Controllers
 
             if (location == null) return View(null);
 
-            // Fetch unique values for the dropdowns from your DB
-            ViewBag.Games = await _context.MapLocations
+            // Get unique games for the top navigation buttons
+            ViewBag.AllGames = await _context.MapLocations
                 .Select(m => m.GameName)
                 .Distinct()
-                .OrderBy(g => g)
-                .ToListAsync();
-
-            ViewBag.Cameras = await _context.MapLocations
-                .Select(m => m.CameraName)
-                .Distinct()
-                .OrderBy(c => c)
                 .ToListAsync();
 
             return View(location);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CheckGuess(int id, string gameGuess, string cameraGuess)
+        public async Task<IActionResult> CheckVisualGuess(int id, string gameName, string cameraName)
         {
             var actual = await _context.MapLocations.FindAsync(id);
-            if (actual == null) return RedirectToAction(nameof(Index));
+            if (actual == null) return Json(new { success = false, message = "Error: Signal Lost" });
 
-            // Logic check against the database
-            bool gameCorrect = string.Equals(actual.GameName?.Trim(), gameGuess?.Trim(), StringComparison.OrdinalIgnoreCase);
-            bool cameraCorrect = string.Equals(actual.CameraName?.Trim(), cameraGuess?.Trim(), StringComparison.OrdinalIgnoreCase);
+            bool gameCorrect = string.Equals(actual.GameName?.Trim(), gameName?.Trim(), StringComparison.OrdinalIgnoreCase);
+            bool cameraCorrect = string.Equals(actual.CameraName?.Trim(), cameraName?.Trim(), StringComparison.OrdinalIgnoreCase);
 
             if (gameCorrect && cameraCorrect)
             {
-                TempData["IsCorrect"] = true;
-                TempData["Message"] = "Correct!";
-            }
-            else
-            {
-                TempData["IsCorrect"] = false;
-                TempData["Message"] = "Try Again..";
+                return Json(new { success = true, message = "great" });
             }
 
-            return RedirectToAction(nameof(Index));
+            return Json(new { success = false, message = "wrong try again :(" });
         }
     }
 }

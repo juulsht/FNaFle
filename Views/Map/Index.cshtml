@@ -2,8 +2,6 @@
 
 @{
     ViewData["Title"] = "Signal Intercept";
-    var message = TempData["Message"] as string;
-    var isCorrect = TempData["IsCorrect"] as bool?;
 }
 
 <div class="background-blur"></div>
@@ -14,17 +12,27 @@
     </div>
 </div>
 
-<div class="homepage" style="padding-top: 80px;">
-    <div class="logo-container" style="margin-bottom: 60px;">
-        <h1 class="game-title">Signal Intercept</h1>
-        <p class="subtitle">Identify the Camera Coordinates</p>
+<div class="homepage" style="padding-top: 40px;">
+    <div class="logo-container" style="margin-bottom: 20px;">
+        <h1 class="game-title" data-text="Signal Intercept">Signal Intercept</h1>
+    </div>
+
+    <div class="d-flex justify-content-center gap-3 mb-4 flex-wrap">
+        @if (ViewBag.AllGames != null)
+        {
+            foreach (var game in (List<string>)ViewBag.AllGames)
+            {
+                <button class="auth-box" onclick="loadMap('@game')">@game</button>
+            }
+        }
     </div>
 
     <div class="container d-flex flex-column align-items-center">
 
-        <div class="cctv-frame" style="margin-bottom: 80px;">
+        <div class="cctv-frame" style="margin-bottom: 40px;">
             <div class="scanline"></div>
             <div class="noise"></div>
+
             @if (Model != null)
             {
                 <img src="@Model.ImageUrl" class="zoomed-map" alt="Camera Feed" />
@@ -35,63 +43,174 @@
                     <p class="text-danger mt-5">NO SIGNAL DETECTED</p>
                 </div>
             }
-            <div class="cam-overlay">LIVE FEED - REMOTE LOC @(Model?.Id ?? 00)</div>
+
+            <div class="cam-overlay">HINT FEED - ID: @(Model?.Id ?? 0)</div>
         </div>
 
-        <div style="max-width: 800px; width: 100%;">
-            <form asp-action="CheckGuess" method="post">
-                @Html.AntiForgeryToken()
-                <input type="hidden" name="id" value="@Model?.Id" />
+        <div id="mapWrapper" style="display:none;text-align:center;">
+            <h3 class="terminal-label mb-3" id="selectedGameTitle" style="font-size:1.5rem;"></h3>
 
-                <div class="row" style="margin-bottom: 40px;">
-                    <div class="col-md-6 mb-4">
-                        <label class="terminal-label">DESIGNATED GAME</label>
-                        <select name="gameGuess" class="terminal-input" required>
-                            <option value="" disabled selected>-- SELECT GAME --</option>
-                            @if (ViewBag.Games != null)
-                            {
-                                @foreach (var game in ViewBag.Games)
-                                {
-                                    <option value="@game">@game</option>
-                                }
-                            }
-                        </select>
-                    </div>
-                    <div class="col-md-6 mb-4">
-                        <label class="terminal-label">CAMERA ID</label>
-                        <select name="cameraGuess" class="terminal-input" required>
-                            <option value="" disabled selected>-- SELECT CAMERA --</option>
-                            @if (ViewBag.Cameras != null)
-                            {
-                                @foreach (var cam in ViewBag.Cameras)
-                                {
-                                    <option value="@cam">@cam</option>
-                                }
-                            }
-                        </select>
-                    </div>
-                </div>
+            <div class="border-red-container">
+                <img id="layoutImage" src="" alt="Map Layout">
+                <div id="buttonOverlay"></div>
+            </div>
 
-                <button type="submit" class="mode-button ranked w-100">
-                    <span>Guess</span>
-                </button>
-            </form>
-
-            @if (!string.IsNullOrEmpty(message))
-            {
-                <div class="mt-4 text-center @(isCorrect == true ? "text-success" : "text-danger")"
-                     style="font-family: monospace; letter-spacing: 2px; font-weight: bold; font-size: 1.4rem; text-shadow: 0 0 10px @(isCorrect == true ? "#0f0" : "#f00");">
-                    @message
-                </div>
-                <div class="text-center mt-3">
-                    <a asp-action="Index" class="text-white-50 small" style="text-decoration:none; font-family: monospace;">[ REQUEST NEW SIGNAL ]</a>
-                </div>
-            }
+            <div id="resultMessage" class="mt-4 text-center"
+                 style="font-family:monospace;font-size:1.2rem;min-height:1.5em;letter-spacing:2px;font-weight:bold;"></div>
         </div>
+
     </div>
 </div>
 
+<script>
+    const mapData={
+    "FNaF 1":{
+    image:"/images/maps/fnaf1.png",
+    buttons:[
+    {name:"CAM 1A",top:"2.5%",left:"32.2%",w:"12.5%",h:"11%"},
+    {name:"CAM 1B",top:"19.5%",left:"28.5%",w:"12.5%",h:"11%"},
+    {name:"CAM 1C",top:"41.5%",left:"20.5%",w:"12.5%",h:"11%"},
+    {name:"CAM 5",top:"27.2%",left:"1.5%",w:"12.5%",h:"11%"},
+    {name:"CAM 3",top:"69.5%",left:"13.5%",w:"12.5%",h:"11%"},
+    {name:"CAM 7",top:"27.2%",left:"80.5%",w:"12.5%",h:"11%"},
+    {name:"CAM 6",top:"64.2%",left:"80.5%",w:"12.5%",h:"11%"},
+    {name:"CAM 2A",top:"74.5%",left:"32.2%",w:"12.5%",h:"11%"},
+    {name:"CAM 2B",top:"84.5%",left:"32.2%",w:"12.5%",h:"11%"},
+    {name:"CAM 4A",top:"74.5%",left:"57.5%",w:"12.5%",h:"11%"},
+    {name:"CAM 4B",top:"85.8%",left:"57.5%",w:"12.5%",h:"11%"}
+    ]
+    }
+    };
+
+    function loadMap(game){
+    const data=mapData[game];
+    if(!data)return;
+
+    const wrapper=document.getElementById('mapWrapper');
+    wrapper.style.display='block';
+    document.getElementById('selectedGameTitle').innerText=game;
+
+    const img=document.getElementById('layoutImage');
+    img.classList.add("switching");
+    setTimeout(()=>img.classList.remove("switching"),300);
+    img.src=data.image;
+
+    const overlay=document.getElementById('buttonOverlay');
+    overlay.innerHTML='';
+
+    img.onload=function(){
+    data.buttons.forEach(btn=>{
+    const el=document.createElement('div');
+    el.className='map-click-zone';
+    el.style.top=btn.top;
+    el.style.left=btn.left;
+    el.style.width=btn.w;
+    el.style.height=btn.h;
+    el.onclick=()=>submitGuess(game,btn.name);
+    overlay.appendChild(el);
+    });
+    };
+    if(img.complete)img.onload();
+
+    wrapper.scrollIntoView({behavior:'smooth'});
+    }
+
+    function typeText(element,text,color){
+    element.innerText="";
+    element.style.color=color;
+    let i=0;
+    const interval=setInterval(()=>{
+    element.innerText+=text[i];
+    i++;
+    if(i>=text.length)clearInterval(interval);
+    },25);
+    }
+
+    function submitGuess(game,cam){
+    const resultDiv=document.getElementById('resultMessage');
+
+    fetch('/Map/CheckVisualGuess',{
+    method:'POST',
+    headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    body:new URLSearchParams({
+    id:'@Model?.Id',
+    gameName:game,
+    cameraName:cam
+    })
+    })
+    .then(res=>res.json())
+    .then(data=>{
+    if(data.success){
+    typeText(resultDiv,data.message,"#0f0");
+    resultDiv.style.textShadow="0 0 12px #0f0";
+    setTimeout(()=>location.reload(),2000);
+    }else{
+    typeText(resultDiv,data.message,"#f00");
+    resultDiv.style.textShadow="0 0 12px #f00";
+    }
+    });
+    }
+</script>
+
 <style>
+    .border-red-container {
+        position: relative;
+        display: inline-block;
+        border: 4px solid #1a1a1a;
+        background: #000;
+        line-height: 0;
+    }
+
+    #layoutImage {
+        max-width: 600px;
+        height: auto;
+        display: block;
+    }
+
+    #buttonOverlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+    }
+
+    /* CLICK ZONES */
+    .map-click-zone {
+        position: absolute;
+        cursor: pointer;
+        pointer-events: auto;
+        background: rgba(255,0,0,0);
+        border: 1px solid transparent;
+        transition: .2s;
+        z-index: 10;
+    }
+
+        .map-click-zone:hover {
+            background: rgba(255,0,0,.25);
+            border: 1px solid #f00;
+            box-shadow: 0 0 15px #f00 inset,0 0 10px #f00;
+            animation: pulse 1s infinite;
+        }
+    @@keyframes pulse {
+        0%
+
+    {
+        opacity: 1
+    }
+
+    50% {
+        opacity: .5
+    }
+
+    100% {
+        opacity: 1
+    }
+
+    }
+
+    /* CCTV FRAME */
     .cctv-frame {
         width: 100%;
         max-width: 700px;
@@ -101,61 +220,16 @@
         background: #050505;
         position: relative;
         overflow: hidden;
-        box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 100px rgba(0,0,0,1);
+        box-shadow: 0 0 50px rgba(0,0,0,.8), inset 0 0 100px #000;
+        animation: flicker 6s infinite;
     }
 
     .zoomed-map {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        filter: contrast(1.2) brightness(0.8) grayscale(0.6) sepia(0.1);
-        /* 2.5X ZOOM - Extremely tight zoom */
-        transform: scale(2.5);
-        transition: all 0.5s ease;
-    }
-
-    .cctv-frame::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        background: rgba(18, 16, 16, 0.1);
-        opacity: 0;
-        z-index: 2;
-        pointer-events: none;
-        animation: flicker 0.15s infinite;
-    }
-
-    .scanline {
-        width: 100%;
-        height: 100px;
-        background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(255,255,255,0.05) 50%, rgba(0,0,0,0) 100%);
-        position: absolute;
-        top: -100px;
-        z-index: 3;
-        animation: scan 4s linear infinite;
-    }
-
-    @@keyframes scan {
-        0% {
-            top: -100px;
-        }
-
-        100% {
-            top: 100%;
-        }
-    }
-
-    @@keyframes flicker {
-        0% {
-            opacity: 0.1;
-        }
-
-        100% {
-            opacity: 0.2;
-        }
+        transform: scale(2.8);
+        transition: .4s;
     }
 
     .cam-overlay {
@@ -163,44 +237,154 @@
         top: 15px;
         left: 20px;
         color: #0f0;
-        font-family: 'Courier New', monospace;
-        font-size: 1rem;
+        font-family: 'Courier New',monospace;
         text-shadow: 0 0 5px #0f0;
         z-index: 4;
     }
 
+    /* TERMINAL TEXT */
     .terminal-label {
-        color: #ff0000;
-        font-size: 0.85rem;
+        color: #f00;
         letter-spacing: 2px;
-        display: block;
-        margin-bottom: 12px;
         font-weight: bold;
+        text-shadow: 0 0 8px #f00;
     }
 
-    .terminal-input {
-        background: rgba(0, 0, 0, 0.7) !important;
-        border: 1px solid #333 !important;
-        border-bottom: 2px solid #ff0000 !important;
-        color: #fff !important;
+    /* TITLE GLITCH */
+    .game-title {
+        position: relative;
+        color: #fff;
+        animation: flicker 3s infinite;
+    }
+
+        .game-title::before,
+        .game-title::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .game-title::before {
+            animation: glitch1 2s infinite linear alternate-reverse;
+            color: #f00;
+        }
+
+        .game-title::after {
+            animation: glitch2 2s infinite linear alternate-reverse;
+            color: #0ff;
+        }
+    @@keyframes glitch1 {
+        0%
+
+    {
+        clip-path: inset(0 0 80% 0);
+        transform: translate(-2px,-2px)
+    }
+
+    50% {
+        clip-path: inset(40% 0 30% 0);
+        transform: translate(2px,2px)
+    }
+
+    100% {
+        clip-path: inset(10% 0 60% 0);
+        transform: translate(-1px,1px)
+    }
+
+    }
+    @@keyframes glitch2 {
+        0%
+
+    {
+        clip-path: inset(80% 0 0 0);
+        transform: translate(2px,0)
+    }
+
+    50% {
+        clip-path: inset(20% 0 50% 0);
+        transform: translate(-2px,0)
+    }
+
+    100% {
+        clip-path: inset(60% 0 10% 0);
+        transform: translate(1px,0)
+    }
+
+    }
+
+    /* BUTTON PRESS */
+    .auth-box {
+        transition: .15s;
+    }
+
+        .auth-box:active {
+            transform: scale(.92);
+            filter: brightness(1.5);
+        }
+
+    /* FLASH */
+    .switching {
+        animation: flash .3s;
+    }
+    @@keyframes flash {
+        0%
+
+    {
+        filter: brightness(3)
+    }
+
+    100% {
+        filter: brightness(1)
+    }
+
+    }
+
+    /* SCANLINE */
+    .scanline {
         width: 100%;
-        padding: 15px;
-        font-family: 'Courier New', monospace;
-        outline: none;
-        appearance: none;
-        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='red'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-        background-repeat: no-repeat;
-        background-position: right 15px center;
-        background-size: 20px;
+        height: 100px;
+        background: linear-gradient(0deg,transparent,rgba(255,255,255,.05),transparent);
+        position: absolute;
+        top: -100px;
+        z-index: 3;
+        animation: scan 4s linear infinite;
+    }
+    @@keyframes scan {
+        0%
+
+    {
+        top: -100px
     }
 
-        .terminal-input option {
-            background: #000;
-            color: #fff;
-        }
+    100% {
+        top: 100%
+    }
 
-        .terminal-input:focus {
-            border-color: #ff0000 !important;
-            box-shadow: 0 0 10px rgba(255,0,0,0.2);
-        }
+    }
+
+    /* STATIC */
+    .noise {
+        position: absolute;
+        inset: 0;
+        background: url("https://grainy-gradients.vercel.app/noise.svg");
+        opacity: .05;
+        mix-blend-mode: overlay;
+        pointer-events: none;
+    }
+
+    /* CRT FLICKER */
+    @@keyframes flicker {
+        0%,18%,22%,25%,53%,57%,100%
+
+    {
+        opacity: 1
+    }
+
+    20%, 24%, 55% {
+        opacity: .4
+    }
+
+    }
 </style>
