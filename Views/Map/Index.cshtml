@@ -13,9 +13,8 @@
 </div>
 
 <div class="homepage" style="padding-top: 40px;">
-    <div class="logo-container" style="margin-bottom: 20px;">
-        <h1 class="game-title" data-text="Signal Intercept">Signal Intercept</h1>
-    </div>
+
+    @* Title section removed as requested *@
 
     <div class="d-flex justify-content-center gap-3 mb-4 flex-wrap">
         @if (ViewBag.AllGames != null)
@@ -193,21 +192,19 @@
             box-shadow: 0 0 15px #f00 inset,0 0 10px #f00;
             animation: pulse 1s infinite;
         }
+
     @@keyframes pulse {
-        0%
+        0% {
+            opacity: 1
+        }
 
-    {
-        opacity: 1
-    }
+        50% {
+            opacity: .5
+        }
 
-    50% {
-        opacity: .5
-    }
-
-    100% {
-        opacity: 1
-    }
-
+        100% {
+            opacity: 1
+        }
     }
 
     /* CCTV FRAME */
@@ -250,97 +247,6 @@
         text-shadow: 0 0 8px #f00;
     }
 
-    /* TITLE GLITCH */
-    .game-title {
-        position: relative;
-        color: #fff;
-        animation: flicker 3s infinite;
-    }
-
-        .game-title::before,
-        .game-title::after {
-            content: attr(data-text);
-            position: absolute;
-            left: 0;
-            width: 100%;
-            overflow: hidden;
-        }
-
-        .game-title::before {
-            animation: glitch1 2s infinite linear alternate-reverse;
-            color: #f00;
-        }
-
-        .game-title::after {
-            animation: glitch2 2s infinite linear alternate-reverse;
-            color: #0ff;
-        }
-    @@keyframes glitch1 {
-        0%
-
-    {
-        clip-path: inset(0 0 80% 0);
-        transform: translate(-2px,-2px)
-    }
-
-    50% {
-        clip-path: inset(40% 0 30% 0);
-        transform: translate(2px,2px)
-    }
-
-    100% {
-        clip-path: inset(10% 0 60% 0);
-        transform: translate(-1px,1px)
-    }
-
-    }
-    @@keyframes glitch2 {
-        0%
-
-    {
-        clip-path: inset(80% 0 0 0);
-        transform: translate(2px,0)
-    }
-
-    50% {
-        clip-path: inset(20% 0 50% 0);
-        transform: translate(-2px,0)
-    }
-
-    100% {
-        clip-path: inset(60% 0 10% 0);
-        transform: translate(1px,0)
-    }
-
-    }
-
-    /* BUTTON PRESS */
-    .auth-box {
-        transition: .15s;
-    }
-
-        .auth-box:active {
-            transform: scale(.92);
-            filter: brightness(1.5);
-        }
-
-    /* FLASH */
-    .switching {
-        animation: flash .3s;
-    }
-    @@keyframes flash {
-        0%
-
-    {
-        filter: brightness(3)
-    }
-
-    100% {
-        filter: brightness(1)
-    }
-
-    }
-
     /* SCANLINE */
     .scanline {
         width: 100%;
@@ -351,17 +257,15 @@
         z-index: 3;
         animation: scan 4s linear infinite;
     }
+
     @@keyframes scan {
-        0%
+        0% {
+            top: -100px
+        }
 
-    {
-        top: -100px
-    }
-
-    100% {
-        top: 100%
-    }
-
+        100% {
+            top: 100%
+        }
     }
 
     /* STATIC */
@@ -376,15 +280,36 @@
 
     /* CRT FLICKER */
     @@keyframes flicker {
-        0%,18%,22%,25%,53%,57%,100%
+        0%, 18%, 22%, 25%, 53%, 57%, 100% {
+            opacity: 1
+        }
 
-    {
-        opacity: 1
+        20%, 24%, 55% {
+            opacity: .4
+        }
     }
 
-    20%, 24%, 55% {
-        opacity: .4
+    .auth-box {
+        transition: .15s;
+        cursor: pointer;
     }
 
+        .auth-box:active {
+            transform: scale(.92);
+            filter: brightness(1.5);
+        }
+
+    .switching {
+        animation: flash .3s;
+    }
+
+    @@keyframes flash {
+        0% {
+            filter: brightness(3)
+        }
+
+        100% {
+            filter: brightness(1)
+        }
     }
 </style>
