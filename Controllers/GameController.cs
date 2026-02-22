@@ -3,6 +3,7 @@ using FNaFle.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace FNaFle.Controllers
 {
@@ -29,7 +30,7 @@ namespace FNaFle.Controllers
             {
                 var randomCharacter = _context.Characters.OrderBy(x => Guid.NewGuid()).FirstOrDefault();
 
-                if (randomCharacter == null) return null; // Handle empty database
+                if (randomCharacter == null) return null;
 
                 dailyEntry = new DailyGame
                 {
@@ -55,13 +56,12 @@ namespace FNaFle.Controllers
             {
                 progress = await _context.UserProgress.FirstOrDefaultAsync(x => x.UserId == user.Id);
 
-                // 1. If progress doesn't exist, create it properly
                 if (progress == null)
                 {
                     progress = new UserProgress
                     {
                         UserId = user.Id,
-                        LastGuessDate = DateTime.UtcNow.Date.AddDays(-1), // Set to yesterday so they can play today
+                        LastGuessDate = DateTime.UtcNow.Date.AddDays(-1),
                         Streak = 0,
                         HasGuessedCorrectlyToday = false
                     };
@@ -69,10 +69,8 @@ namespace FNaFle.Controllers
                     await _context.SaveChangesAsync();
                 }
 
-                // 2. CHECK: If it's a new day, unlock the ability to guess
                 if (progress.LastGuessDate < DateTime.UtcNow.Date)
                 {
-                    // If they missed more than 1 day, reset the streak
                     if (progress.LastGuessDate < DateTime.UtcNow.Date.AddDays(-1))
                     {
                         progress.Streak = 0;
@@ -82,6 +80,13 @@ namespace FNaFle.Controllers
                     _context.Update(progress);
                     await _context.SaveChangesAsync();
                 }
+            }
+
+            // Load existing history from session if it exists
+            var sessionData = HttpContext.Session.GetString("GuessHistory");
+            if (!string.IsNullOrEmpty(sessionData))
+            {
+                ViewBag.History = JsonSerializer.Deserialize<List<Character>>(sessionData);
             }
 
             ViewBag.Character = character;
@@ -94,10 +99,6 @@ namespace FNaFle.Controllers
         [HttpPost]
         public async Task<IActionResult> Play(string guess)
         {
-            // Reset stored guesses after 08:00
-            if (DateTime.Now.TimeOfDay >= resetTime)
-                HttpContext.Session.Remove("PreviousGuesses");
-
             var character = GetTodayCharacter();
             var user = await _userManager.GetUserAsync(User);
 
@@ -110,7 +111,6 @@ namespace FNaFle.Controllers
 
             var progress = await _context.UserProgress.FirstAsync(x => x.UserId == user.Id);
 
-            // 3. FIX: Stop the streak from going up if they've already won today
             if (progress.HasGuessedCorrectlyToday)
             {
                 ViewBag.Message = "Tonight's challenge is already complete! Come back tomorrow.";
@@ -120,7 +120,6 @@ namespace FNaFle.Controllers
                 return View();
             }
 
-            // FIND THE GUESSED CHARACTER
             var guessedCharacter = _context.Characters
                 .FirstOrDefault(x => x.Name.ToLower() == (guess ?? "").ToLower());
 
@@ -132,40 +131,38 @@ namespace FNaFle.Controllers
                 return View();
             }
 
-            // BUILD RESULT BOXES
-            var results = new Dictionary<string, string>
+            // --- HISTORY LOGIC ---
+            var sessionKey = "GuessHistory";
+            var sessionData = HttpContext.Session.GetString(sessionKey);
+            List<Character> history = string.IsNullOrEmpty(sessionData)
+                ? new List<Character>()
+                : JsonSerializer.Deserialize<List<Character>>(sessionData);
+
+            if (!history.Any(c => c.Id == guessedCharacter.Id))
             {
-                { "Gender", guessedCharacter.Gender },
-                { "Generation", guessedCharacter.Generation },
-                { "Species", guessedCharacter.Species },
-                { "Location", guessedCharacter.Location },
-                { "Status", guessedCharacter.Status }
-            };
+                history.Insert(0, guessedCharacter);
+                HttpContext.Session.SetString(sessionKey, JsonSerializer.Serialize(history));
+            }
 
-            ViewBag.Results = results;
-            ViewBag.GuessName = guessedCharacter.Name;
-
-            // 4. CHECK WIN CONDITION
             if (string.Equals(guess, character.Name, StringComparison.OrdinalIgnoreCase))
             {
                 progress.HasGuessedCorrectlyToday = true;
-                progress.Streak++; // Increment ONLY on the first win of the day
-                progress.LastGuessDate = DateTime.UtcNow.Date; // Record the win date
-
-                ViewBag.Message = "🎉 Correct! Come back tomorrow after 08:00. :D";
+                progress.Streak++;
+                progress.LastGuessDate = DateTime.UtcNow.Date;
+                ViewBag.Message = "🎉 Correct! Come back tomorrow! :D";
             }
             else
             {
                 ViewBag.Message = "Wrong, try again?";
             }
 
-            // Save the win and the date to the DB
             _context.Update(progress);
             await _context.SaveChangesAsync();
 
             ViewBag.Character = character;
             ViewBag.Progress = progress;
             ViewBag.GuessedCorrectlyToday = progress.HasGuessedCorrectlyToday;
+            ViewBag.History = history;
 
             return View();
         }

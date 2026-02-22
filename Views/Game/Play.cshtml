@@ -1,18 +1,18 @@
-﻿@{
+﻿@model FNaFle.Models.Character
+@{
     Layout = "_Layout";
     ViewData["Title"] = "Play FNaFle";
 
-    var results = ViewBag.Results as Dictionary<string, string>;
-    var character = ViewBag.Character;
+    var target = ViewBag.Character as FNaFle.Models.Character;
+    var history = ViewBag.History as List<FNaFle.Models.Character>;
     var guessedCorrectlyToday = ViewBag.GuessedCorrectlyToday as bool? ?? false;
 }
 
 <div class="background-blur"></div>
 
-<!-- ✅ TOP BAR WITH HOME BUTTON -->
 <div class="top-bar">
     <div class="left-buttons" style="display:flex; gap:12px; align-items:center;">
-        <a asp-controller="Home" asp-action="Index" class="auth-box">
+        <a asp-controller="Home" asp-action="Index" class="auth-box" style="text-decoration:none;">
             Home
         </a>
     </div>
@@ -40,7 +40,7 @@
     else
     {
         <p style="color:#00ff00; font-weight:bold; font-size:22px; text-shadow:0 0 10px #00ff00;">
-            🎉 You already guessed today's character — return tomorrow after 08:00!
+            🎉 You already guessed today's character — return tomorrow!
         </p>
     }
 
@@ -53,45 +53,112 @@
 
     @if (ViewBag.Message != null)
     {
-        <p style="
-            margin-top:15px;
-            font-size:20px;
-            font-weight:bold;
-            text-shadow:0 0 10px;
-            color:@(ViewBag.Message.ToString().Contains("Correct") ? "lightgreen" : "red");
-                ">
+        <p style="margin-top:15px; font-size:20px; font-weight:bold; text-shadow:0 0 10px; color:@(ViewBag.Message.ToString().Contains("Correct") ? "lightgreen" : "red");">
             @ViewBag.Message
         </p>
     }
 
-    @if (results != null)
-    {
-        <h2 style="margin-top:20px; text-shadow:0 0 10px #ff0000;">
-            Your Guess: <span style="color:#ff0000;">@ViewBag.GuessName</span>
-        </h2>
+    <div class="history-list" style="display:flex; flex-direction:column; align-items:center; gap:12px; margin-top:30px; width:100%;">
+        @if (history != null)
+        {
+            @foreach (var g in history)
+            {
+                <div class="guess-row" style="display:flex; gap:10px; justify-content:center; align-items:center; width:100%; max-width:900px;">
 
-        <div class="guess-row" style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap; margin-top:20px;">
-            @{
-                foreach (var kvp in results)
-                {
-                    var isCorrect = kvp.Value == (kvp.Key switch
-                    {
-                        "Gender" => character.Gender,
-                        "Generation" => character.Generation,
-                        "Species" => character.Species,
-                        "Location" => character.Location,
-                        "Status" => character.Status,
-                        _ => null
-                    });
-
-                    var boxClass = isCorrect ? "box-correct" : "box-wrong";
-
-                    <div class="reveal-box @boxClass">
-                        <div class="attr-key">@kvp.Key</div>
-                        <div class="attr-value">@kvp.Value</div>
+                    <div class="reveal-box" style="padding:0; overflow:hidden; border:2px solid #444;">
+                        <img src="@g.ImagePath" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='/images/placeholder.png'" />
                     </div>
-                }
+
+                    <div class="reveal-box @(g.Name == target.Name ? "box-correct" : "box-wrong")">
+                        <div class="attr-key">Name</div>
+                        <div class="attr-value">@g.Name</div>
+                    </div>
+
+                    <div class="reveal-box @(g.Gender == target.Gender ? "box-correct" : "box-wrong")">
+                        <div class="attr-key">Gender</div>
+                        <div class="attr-value">@g.Gender</div>
+                    </div>
+
+                    <div class="reveal-box @(g.Generation == target.Generation ? "box-correct" : "box-wrong")">
+                        <div class="attr-key">Gen</div>
+                        <div class="attr-value">@g.Generation</div>
+                    </div>
+
+                    <div class="reveal-box @(g.Species == target.Species ? "box-correct" : "box-wrong")">
+                        <div class="attr-key">Species</div>
+                        <div class="attr-value">@g.Species</div>
+                    </div>
+
+                    <div class="reveal-box @(g.Location == target.Location ? "box-correct" : "box-wrong")">
+                        <div class="attr-key">Location</div>
+                        <div class="attr-value" style="font-size:11px;">@g.Location</div>
+                    </div>
+                </div>
             }
-        </div>
-    }
+        }
+    </div>
 </div>
+
+<style>
+    .history-list {
+        padding-bottom: 50px;
+    }
+
+    .reveal-box {
+        width: 100px;
+        height: 100px;
+        background: rgba(0,0,0,0.6);
+        border: 2px solid #333;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        border-radius: 8px;
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .box-correct {
+        background-color: #198754 !important;
+        border-color: #2fb370 !important;
+        box-shadow: 0 0 10px rgba(25, 135, 84, 0.4);
+    }
+
+    .box-wrong {
+        background-color: #bb2d3b !important;
+        border-color: #dc3545 !important;
+    }
+
+    .attr-key {
+        font-size: 10px;
+        text-transform: uppercase;
+        opacity: 0.6;
+        margin-bottom: 4px;
+        font-family: monospace;
+    }
+
+    .attr-value {
+        font-weight: bold;
+        font-size: 13px;
+        word-wrap: break-word;
+        max-width: 90%;
+    }
+
+    /* Animation for new guesses */
+    .guess-row {
+        animation: slideIn 0.5s ease-out;
+    }
+
+    @@keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
