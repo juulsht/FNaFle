@@ -16,5 +16,7 @@ namespace FNaFle.Data
         public DbSet<UserProgress> UserProgress { get; set; }
         public DbSet<MapLocation> MapLocations { get; set; }
 
+        public DbSet<RankedScore> RankedScores { get; set; }
+
     }
 }
