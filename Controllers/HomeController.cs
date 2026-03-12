@@ -43,16 +43,16 @@ namespace FNaFle.Controllers
             return View();
         }
 
-        // --- LEADERBOARD: JOINS PROGRESS WITH USERS TO GET USERNAME ---
+        // --- UPDATED LEADERBOARD: HANDLES BOTH MODES ---
         public async Task<IActionResult> Leaderboard()
         {
-            var leaderboardData = await _context.UserProgress
+            // 1. Fetch Classic Streak Data
+            var streakLeaders = await _context.UserProgress
                 .Join(_context.Users,
                     progress => progress.UserId,
                     user => user.Id,
                     (progress, user) => new LeaderboardUserViewModel
                     {
-                        // Pulls the Username column from the database
                         Username = user.UserName ?? "Unknown Player",
                         Streak = progress.Streak
                     })
@@ -60,10 +60,28 @@ namespace FNaFle.Controllers
                 .Take(100)
                 .ToListAsync();
 
-            return View(leaderboardData);
+            // 2. Fetch Ranked Points Data
+            // Note: We join with Users table to get the actual display name (UserName) 
+            // instead of just the Id stored in RankedScores.Username
+            var rankedLeaders = await _context.RankedScores
+                .Join(_context.Users,
+                    ranked => ranked.Username, // This holds the User.Id
+                    user => user.Id,
+                    (ranked, user) => new
+                    {
+                        Username = user.UserName ?? "Unknown Player",
+                        Points = ranked.TotalPoints
+                    })
+                .OrderByDescending(u => u.Points)
+                .Take(100)
+                .ToListAsync();
+
+            ViewBag.StreakLeaders = streakLeaders;
+            ViewBag.RankedLeaders = rankedLeaders;
+
+            return View();
         }
 
-        // --- PROFILE: GET PAGE ---
         [HttpGet]
         public async Task<IActionResult> Profile()
         {
@@ -77,14 +95,12 @@ namespace FNaFle.Controllers
             return View(model);
         }
 
-        // --- PROFILE: POST CHANGES ---
         [HttpPost]
         public async Task<IActionResult> Profile(EditProfileViewModel model)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return RedirectToAction("Index");
 
-            // Check if new username is already taken by someone else
             var existingUser = await _userManager.FindByNameAsync(model.NewUsername);
             if (existingUser != null && existingUser.Id != user.Id)
             {
@@ -93,15 +109,11 @@ namespace FNaFle.Controllers
                 return View(model);
             }
 
-            // Update the IdentityUser UserName
             user.UserName = model.NewUsername;
-
-            // Note: In some Identity setups, changing UserName also changes NormalizedUserName
             var result = await _userManager.UpdateAsync(user);
 
             if (result.Succeeded)
             {
-                // This refreshes the user's cookies so the navbar shows the new name immediately
                 await _signInManager.RefreshSignInAsync(user);
                 return RedirectToAction("Leaderboard");
             }

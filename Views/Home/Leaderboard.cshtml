@@ -1,7 +1,9 @@
 ﻿@model IEnumerable<FNaFle.Models.LeaderboardUserViewModel>
 @{
     ViewData["Title"] = "Security Rankings";
-    int rank = 1;
+    var streakLeaders = ViewBag.StreakLeaders as List<FNaFle.Models.LeaderboardUserViewModel>;
+    // Since RankedLeaders in Controller was an anonymous type, we cast to dynamic or a compatible list
+    var rankedLeaders = ViewBag.RankedLeaders as IEnumerable<dynamic>;
 }
 
 <div class="background-blur"></div>
@@ -20,34 +22,73 @@
     <div class="logo-container">
         <h1 class="game-title">Leaderboard</h1>
         <p class="subtitle">Authorized Personnel Only</p>
+
+        <div class="tab-system" style="margin-top: 30px; display: flex; gap: 10px; justify-content: center;">
+            <button id="btn-streak" class="mode-button classic active-tab" onclick="switchTab('streak')">
+                <span>Classic Streaks</span>
+            </button>
+            <button id="btn-ranked" class="mode-button ranked" onclick="switchTab('ranked')">
+                <span>Ranked Points</span>
+            </button>
+        </div>
     </div>
 
     <div class="leaderboard-wrapper">
-        <div class="leaderboard-grid">
-            @foreach (var user in Model)
+        <div id="section-streak" class="leaderboard-grid">
+            @{
+                int sRank = 1;
+            }
+            @foreach (var user in streakLeaders ?? new List<FNaFle.Models.LeaderboardUserViewModel>())
             {
-                <div class="leaderboard-card @(rank <= 3 ? "top-rank" : "")">
-                    <div class="rank-num">#@rank</div>
+                <div class="leaderboard-card @(sRank <= 3 ? "top-rank" : "")">
+                    <div class="rank-num">#@sRank</div>
                     <div class="user-details">
                         <span class="username-text">@user.Username</span>
-                        <span class="status-text">ENCRYPTED DATA</span>
+                        <span class="status-text">STREAK DATA VERIFIED</span>
                     </div>
                     <div class="streak-data">
                         <span class="streak-count">@user.Streak</span>
                         <span class="streak-label">NIGHTS</span>
                     </div>
                 </div>
-                rank++;
+                sRank++;
+            }
+        </div>
+
+        <div id="section-ranked" class="leaderboard-grid" style="display:none;">
+            @{
+                int rRank = 1;
+            }
+            @foreach (var user in rankedLeaders ?? Enumerable.Empty<dynamic>())
+            {
+                <div class="leaderboard-card @(rRank <= 3 ? "top-rank-gold" : "")">
+                    <div class="rank-num">#@rRank</div>
+                    <div class="user-details">
+                        <span class="username-text">@user.Username</span>
+                        <span class="status-text">RANKED ANALYSIS POINTS</span>
+                    </div>
+                    <div class="streak-data">
+                        <span class="streak-count" style="color: #ffaa00;">@user.Points</span>
+                        <span class="streak-label">POINTS</span>
+                    </div>
+                </div>
+                rRank++;
             }
         </div>
     </div>
 </div>
 
 <style>
-    /* The Magic Centering Logic */
+    /* Tab Styling */
+    .active-tab {
+        border-color: #ff0000 !important;
+        box-shadow: 0 0 15px rgba(255, 0, 0, 0.6) !important;
+        background: rgba(255, 0, 0, 0.1) !important;
+    }
+
     .leaderboard-wrapper {
         display: flex;
-        justify-content: center; /* Horizontally centers the grid */
+        justify-content: center;
         width: 100%;
         padding: 20px 0 100px 0;
     }
@@ -57,11 +98,11 @@
         flex-direction: column;
         gap: 12px;
         width: 100%;
-        max-width: 650px; /* Keeps the cards from getting too wide */
+        max-width: 650px;
     }
 
     .leaderboard-card {
-        background: rgba(0, 0, 0, 0.85); /* Slightly darker for better readability */
+        background: rgba(0, 0, 0, 0.85);
         border: 2px solid rgba(255, 0, 0, 0.25);
         display: flex;
         align-items: center;
@@ -74,13 +115,17 @@
         .leaderboard-card:hover {
             border-color: #ff0000;
             box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
-            transform: scale(1.03);
+            transform: scale(1.02);
         }
 
-    /* Special Glow for Top 3 */
     .top-rank {
         border-color: rgba(255, 0, 0, 0.8);
-        background: rgba(30, 0, 0, 0.7);
+        background: rgba(40, 0, 0, 0.4);
+    }
+
+    .top-rank-gold {
+        border-color: #ffaa00;
+        background: rgba(50, 40, 0, 0.3);
     }
 
     .rank-num {
@@ -120,7 +165,6 @@
         color: #fff;
         font-weight: bold;
         line-height: 1;
-        text-shadow: 0 0 5px rgba(255,255,255,0.2);
     }
 
     .streak-label {
@@ -129,3 +173,24 @@
         letter-spacing: 2px;
     }
 </style>
+
+<script>
+    function switchTab(mode) {
+        const streakSec = document.getElementById('section-streak');
+        const rankedSec = document.getElementById('section-ranked');
+        const btnStreak = document.getElementById('btn-streak');
+        const btnRanked = document.getElementById('btn-ranked');
+
+        if (mode === 'streak') {
+            streakSec.style.display = 'flex';
+            rankedSec.style.display = 'none';
+            btnStreak.classList.add('active-tab');
+            btnRanked.classList.remove('active-tab');
+        } else {
+            streakSec.style.display = 'none';
+            rankedSec.style.display = 'flex';
+            btnRanked.classList.add('active-tab');
+            btnStreak.classList.remove('active-tab');
+        }
+    }
+</script>
