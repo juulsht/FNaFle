@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace FNaFle.Models
 {
@@ -17,5 +18,8 @@ namespace FNaFle.Models
 
         [MaxLength(300)]
         public string? ImagePath { get; set; }   // e.g. "/images/characters/freddy.jpg"
+
+        [JsonIgnore]
+        public ICollection<VoiceLine> VoiceLines { get; set; } = new List<VoiceLine>();
     }
 }

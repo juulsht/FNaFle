@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewData["Title"] = "FNaFle";
     int streak = ViewBag.Streak ?? 0;
 }
@@ -42,7 +42,7 @@
 
         <a asp-controller="Map" asp-action="Index" class="mode-button camera"><span>Camera</span></a>
 
-        <a href="#" class="mode-button lore"><span>Lore</span></a>
+        <a asp-controller="Game" asp-action="PlayVoiceLines" class="mode-button lore"><span>Voice Lines</span></a>
         <a href="#" class="mode-button infinite"><span>Infinite</span></a>
         <a href="Ranked" class="mode-button ranked"><span>Ranked</span></a>
     </div>

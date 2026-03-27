@@ -1,4 +1,4 @@
-﻿using FNaFle.Data;
+using FNaFle.Data;
 using FNaFle.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,9 +26,37 @@ namespace FNaFle.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Details(int id)
         {
-            var c = await _db.Characters.FindAsync(id);
+            var c = await _db.Characters.Include(x => x.VoiceLines).FirstOrDefaultAsync(x => x.Id == id);
             if (c == null) return NotFound();
             return View(c);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddVoiceLine(int characterId, string text)
+        {
+            if (string.IsNullOrWhiteSpace(text)) return RedirectToAction(nameof(Details), new { id = characterId });
+            var vl = new VoiceLine { CharacterId = characterId, Text = text };
+            _db.VoiceLines.Add(vl);
+            await _db.SaveChangesAsync();
+            return RedirectToAction(nameof(Details), new { id = characterId });
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteVoiceLine(int id)
+        {
+            var vl = await _db.VoiceLines.FindAsync(id);
+            if (vl != null)
+            {
+                var charId = vl.CharacterId;
+                _db.VoiceLines.Remove(vl);
+                await _db.SaveChangesAsync();
+                return RedirectToAction(nameof(Details), new { id = charId });
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         // Only Admin can create

@@ -1,4 +1,4 @@
-﻿@model FNaFle.Models.Character
+@model FNaFle.Models.Character
 @{
     ViewData["Title"] = Model.Name;
 }
@@ -61,6 +61,38 @@
             <div class="details-actions">
                 <a asp-action="Edit" asp-route-id="@Model.Id" class="auth-box">Edit</a>
                 <a asp-action="Delete" asp-route-id="@Model.Id" class="auth-box delete-admin">Delete</a>
+            </div>
+
+            <!-- Voice Lines Panel -->
+            <div style="margin-top: 30px; text-align: left; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px; border: 1px solid #ff000040;">
+                <h3 style="color: #ff7a7a; margin-bottom: 10px;">Voice Lines</h3>
+                
+                @if (Model.VoiceLines != null && Model.VoiceLines.Any())
+                {
+                    <ul style="list-style: none; padding: 0;">
+                        @foreach (var vl in Model.VoiceLines)
+                        {
+                            <li style="margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 5px;">
+                                <span>"@vl.Text"</span>
+                                <form asp-action="DeleteVoiceLine" method="post" style="display:inline;">
+                                    <input type="hidden" name="id" value="@vl.Id" />
+                                    <button type="submit" class="auth-box delete-admin" style="padding: 4px 8px; font-size: 12px; margin-left: 10px;">Delete</button>
+                                </form>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p style="color: #888; font-size: 14px;">No voice lines added yet.</p>
+                }
+
+                <form asp-action="AddVoiceLine" method="post" style="margin-top: 15px; display: flex; gap: 10px;">
+                    <input type="hidden" name="characterId" value="@Model.Id" />
+                    <input type="text" name="text" placeholder="Enter new voice line..." required
+                           style="flex-grow: 1; padding: 8px; border-radius: 6px; border: 1px solid #444; background: #111; color: white;" />
+                    <button type="submit" class="auth-box" style="padding: 8px 15px;">Add</button>
+                </form>
             </div>
         }
 

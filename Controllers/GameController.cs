@@ -1,4 +1,4 @@
-﻿using FNaFle.Data;
+using FNaFle.Data;
 using FNaFle.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -163,6 +163,122 @@ namespace FNaFle.Controllers
             ViewBag.Progress = progress;
             ViewBag.GuessedCorrectlyToday = progress.HasGuessedCorrectlyToday;
             ViewBag.History = history;
+
+            return View();
+        }
+
+        private VoiceLine GetTodayVoiceLine()
+        {
+            var today = DateTime.UtcNow.Date;
+            var dailyEntry = _context.DailyVoiceLineGames.FirstOrDefault(x => x.Date == today);
+
+            if (dailyEntry == null)
+            {
+                var randomVL = _context.VoiceLines.Include(v => v.Character).OrderBy(x => Guid.NewGuid()).FirstOrDefault();
+
+                if (randomVL == null) return null;
+
+                dailyEntry = new DailyVoiceLineGame
+                {
+                    VoiceLineId = randomVL.Id,
+                    Date = today
+                };
+
+                _context.DailyVoiceLineGames.Add(dailyEntry);
+                _context.SaveChanges();
+            }
+
+            return _context.VoiceLines.Include(v => v.Character).First(x => x.Id == dailyEntry.VoiceLineId);
+        }
+
+        [HttpGet]
+        public IActionResult PlayVoiceLines()
+        {
+            var voiceLine = GetTodayVoiceLine();
+            
+            var sessionData = HttpContext.Session.GetString("VoiceLineGuessHistory");
+            List<Character> history = string.IsNullOrEmpty(sessionData)
+                ? new List<Character>()
+                : JsonSerializer.Deserialize<List<Character>>(sessionData);
+
+            ViewBag.History = history;
+            ViewBag.VoiceLine = voiceLine;
+            
+            bool guessedCorrectlyToday = false;
+            var sessionWon = HttpContext.Session.GetString("VoiceLineWonToday_" + DateTime.UtcNow.Date.ToString("yyyyMMdd"));
+            if (!string.IsNullOrEmpty(sessionWon) && sessionWon == "true")
+            {
+                guessedCorrectlyToday = true;
+            }
+
+            ViewBag.GuessedCorrectlyToday = guessedCorrectlyToday;
+            ViewBag.AllCharacters = _context.Characters.OrderBy(c => c.Name).ToList();
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult PlayVoiceLines(string guess)
+        {
+            var voiceLine = GetTodayVoiceLine();
+            if (voiceLine == null)
+            {
+                ViewBag.Error = "No voice lines available in the database.";
+                ViewBag.AllCharacters = _context.Characters.OrderBy(c => c.Name).ToList();
+                return View();
+            }
+
+            bool guessedCorrectlyToday = false;
+            var sessionWonKey = "VoiceLineWonToday_" + DateTime.UtcNow.Date.ToString("yyyyMMdd");
+            var sessionWon = HttpContext.Session.GetString(sessionWonKey);
+            if (!string.IsNullOrEmpty(sessionWon) && sessionWon == "true")
+            {
+                guessedCorrectlyToday = true;
+                ViewBag.Message = "You already guessed correctly today!";
+                ViewBag.VoiceLine = voiceLine;
+                ViewBag.GuessedCorrectlyToday = guessedCorrectlyToday;
+                var histDataStr = HttpContext.Session.GetString("VoiceLineGuessHistory");
+                ViewBag.History = string.IsNullOrEmpty(histDataStr) ? new List<Character>() : JsonSerializer.Deserialize<List<Character>>(histDataStr);
+                ViewBag.AllCharacters = _context.Characters.OrderBy(c => c.Name).ToList();
+                return View();
+            }
+
+            var guessedCharacter = _context.Characters.FirstOrDefault(x => x.Name.ToLower() == (guess ?? "").ToLower());
+
+            var sessionKey = "VoiceLineGuessHistory";
+            var sessionData = HttpContext.Session.GetString(sessionKey);
+            List<Character> history = string.IsNullOrEmpty(sessionData)
+                ? new List<Character>()
+                : JsonSerializer.Deserialize<List<Character>>(sessionData);
+
+            if (guessedCharacter == null)
+            {
+                ViewBag.Error = "Character not found!";
+            }
+            else
+            {
+                if (!history.Any(c => c.Id == guessedCharacter.Id))
+                {
+                    history.Insert(0, guessedCharacter);
+                    HttpContext.Session.SetString(sessionKey, JsonSerializer.Serialize(history));
+                }
+
+                if (string.Equals(guess, voiceLine.Character.Name, StringComparison.OrdinalIgnoreCase))
+                {
+                    guessedCorrectlyToday = true;
+                    HttpContext.Session.SetString(sessionWonKey, "true");
+                    ViewBag.Message = "🎉 Correct! Come back tomorrow! :D";
+                }
+                else
+                {
+                    ViewBag.Message = "Wrong, try again?";
+                }
+            }
+
+            ViewBag.VoiceLine = voiceLine;
+            ViewBag.GuessedCorrectlyToday = guessedCorrectlyToday;
+            ViewBag.History = history;
+            ViewBag.AllCharacters = _context.Characters.OrderBy(c => c.Name).ToList();
 
             return View();
         }

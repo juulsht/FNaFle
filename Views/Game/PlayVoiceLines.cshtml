@@ -1,0 +1,195 @@
+@model FNaFle.Models.Character
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Play Voice Lines";
+
+    var vl = ViewBag.VoiceLine as FNaFle.Models.VoiceLine;
+    var target = vl?.Character;
+    var history = ViewBag.History as List<FNaFle.Models.Character>;
+    var guessedCorrectlyToday = ViewBag.GuessedCorrectlyToday as bool? ?? false;
+    var charactersList = ViewBag.AllCharacters as List<FNaFle.Models.Character> ?? new List<FNaFle.Models.Character>();
+}
+
+<div class="background-blur"></div>
+
+<div class="top-bar">
+    <div class="left-buttons" style="display:flex; gap:12px; align-items:center;">
+        <a asp-controller="Home" asp-action="Index" class="auth-box" style="text-decoration:none;">
+            Home
+        </a>
+    </div>
+</div>
+
+<div class="homepage">
+
+    <div class="logo-container">
+        <h1 class="game-title">Voice Lines</h1>
+        <p class="subtitle">Who said this?</p>
+    </div>
+
+    @if (vl != null)
+    {
+        <div style="background: rgba(0,0,0,0.6); padding: 25px; border-radius: 12px; border: 2px solid rgba(255,0,0,0.4); margin-bottom: 30px; max-width: 600px; text-align: center;">
+            <p style="font-size: 24px; font-weight: bold; color: white; font-style: italic; text-shadow: 0 0 10px rgba(255,0,0,0.8);">"@vl.Text"</p>
+        </div>
+    }
+    else
+    {
+        <div style="color:#ff0000; font-weight:bold; font-size:22px;">No voice line available for today.</div>
+    }
+
+    @if (vl != null)
+    {
+        @if (!guessedCorrectlyToday)
+        {
+            <form asp-action="PlayVoiceLines" method="post" style="margin-bottom: 30px; position: relative;">
+                <input type="text" name="guess" list="charactersList" placeholder="Type a character..." autocomplete="off"
+                       class="mode-input"
+                       style="padding: 12px 15px; width: 260px; border-radius: 10px; border: 2px solid #ff000080; background-color: #111; color: white; text-align: center; font-size: 16px;" required />
+
+                <datalist id="charactersList">
+                    @foreach (var c in charactersList)
+                    {
+                        <option value="@c.Name" />
+                    }
+                </datalist>
+
+                <button type="submit" class="mode-button classic" style="margin-left:10px;">
+                    <span>Guess</span>
+                </button>
+            </form>
+        }
+        else
+        {
+            <p style="color:#00ff00; font-weight:bold; font-size:22px; text-shadow:0 0 10px #00ff00;">
+                🎉 You already guessed today's voice line — return tomorrow!
+            </p>
+        }
+    }
+
+    @if (ViewBag.Error != null)
+    {
+        <p style="color:#ff0000; font-weight:bold; text-shadow:0 0 10px #ff0000;">
+            @ViewBag.Error
+        </p>
+    }
+
+    @if (ViewBag.Message != null)
+    {
+        <p style="margin-top:15px; font-size:20px; font-weight:bold; text-shadow:0 0 10px; color:@(ViewBag.Message.ToString().Contains("Correct") ? "lightgreen" : "red");">
+            @ViewBag.Message
+        </p>
+    }
+
+    <div class="history-list" style="display:flex; flex-direction:column; align-items:center; gap:12px; margin-top:30px; width:100%;">
+        @if (history != null && target != null)
+        {
+            @foreach (var g in history)
+            {
+                <div class="guess-row" style="display:flex; gap:10px; justify-content:center; align-items:center; width:100%; max-width:900px;">
+
+                    <div class="reveal-box" style="padding:0; overflow:hidden; border:2px solid #444;">
+                        <img src="@g.ImagePath" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='/images/placeholder.png'" />
+                    </div>
+
+                    <div class="reveal-box @(g.Name == target.Name ? "box-correct" : "box-wrong")">
+                        <div class="attr-key">Name</div>
+                        <div class="attr-value">@g.Name</div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<style>
+    .history-list {
+        padding-bottom: 50px;
+    }
+
+    .reveal-box {
+        width: 100px;
+        height: 100px;
+        background: rgba(30,30,30,0.85);
+        border: 2px solid #444;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        border-radius: 8px;
+        color: white;
+        flex-shrink: 0;
+        backdrop-filter: blur(5px);
+        
+        opacity: 0;
+        transform: perspective(600px) rotateY(90deg);
+        animation: flipReveal 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+    }
+
+    .guess-row .reveal-box:nth-child(1) { animation-delay: 0.1s; }
+    .guess-row .reveal-box:nth-child(2) { animation-delay: 0.25s; }
+    .guess-row .reveal-box:nth-child(3) { animation-delay: 0.4s; }
+    .guess-row .reveal-box:nth-child(4) { animation-delay: 0.55s; }
+    .guess-row .reveal-box:nth-child(5) { animation-delay: 0.7s; }
+    .guess-row .reveal-box:nth-child(6) { animation-delay: 0.85s; }
+
+    @@keyframes flipReveal {
+        0% {
+            opacity: 0;
+            transform: perspective(600px) rotateY(90deg) scale(0.95);
+        }
+        50% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 1;
+            transform: perspective(600px) rotateY(0deg) scale(1);
+        }
+    }
+
+    .box-correct {
+        background: linear-gradient(135deg, #198754 0%, #0d4a2e 100%) !important;
+        border-color: #2fb370 !important;
+        box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.6), 0 0 10px rgba(25, 135, 84, 0.5) !important;
+    }
+
+    .box-wrong {
+        background: linear-gradient(135deg, #bb2d3b 0%, #5a141b 100%) !important;
+        border-color: #ff4d4d !important;
+        box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.6), 0 0 10px rgba(187, 45, 59, 0.5) !important;
+    }
+
+    .attr-key {
+        font-size: 10px;
+        text-transform: uppercase;
+        opacity: 0.7;
+        margin-bottom: 4px;
+        font-family: 'Segoe UI', monospace;
+        letter-spacing: 0.5px;
+    }
+
+    .attr-value {
+        font-weight: bold;
+        font-size: 13px;
+        word-wrap: break-word;
+        max-width: 90%;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+    }
+
+    .guess-row {
+        animation: slideIn 0.5s ease-out;
+    }
+
+    @@keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-15px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
