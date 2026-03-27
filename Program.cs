@@ -1,4 +1,4 @@
-﻿using FNaFle.Data;
+using FNaFle.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +10,7 @@ namespace FNaFle
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Test change to check Visual Studio sync
             // DB
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
                 ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");

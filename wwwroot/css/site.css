@@ -71,8 +71,9 @@ body {
 /* Individual Auth Box */
 .auth-box {
     display: inline-block;
-    background: linear-gradient(135deg, #111, #1a1a1a);
-    border: 2px solid #ff000050;
+    background: rgba(20, 20, 20, 0.65); /* Glassmorphism */
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 0, 0, 0.3);
     padding: 12px 25px;
     border-radius: 12px;
     color: white;
@@ -80,7 +81,7 @@ body {
     text-decoration: none;
     text-transform: uppercase;
     font-size: 16px;
-    box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+    box-shadow: inset 0 0 10px rgba(102, 0, 0, 0.4), 0 0 10px rgba(0, 0, 0, 0.8);
     transition: all 0.3s ease-in-out;
     position: relative;
     overflow: hidden;
@@ -105,9 +106,10 @@ body {
 
     .auth-box:hover {
         color: #fff;
-        border-color: #ff0000;
-        background-color: #1a0000;
-        box-shadow: 0 0 20px #ff0000;
+        border-color: rgba(255, 0, 0, 0.8);
+        background-color: rgba(40, 10, 10, 0.8);
+        box-shadow: inset 0 0 15px rgba(204, 0, 0, 0.6), 0 0 20px rgba(255, 0, 0, 0.5);
+        transform: translateY(-2px);
     }
 
 /* Homepage Center */
@@ -155,20 +157,22 @@ body {
 .mode-button {
     position: relative;
     display: inline-block;
-    background-color: rgba(0, 0, 0, 0.4); /* Initial transparent black */
+    background-color: rgba(20, 20, 20, 0.65); /* Glassmorphism */
+    backdrop-filter: blur(8px);
     color: white;
     text-decoration: none;
     padding: 18px 40px;
     font-size: 22px;
     border-radius: 12px;
+    border: 1px solid rgba(255, 0, 0, 0.2);
     text-align: center;
-    box-shadow: inset 0 0 8px rgba(102, 0, 0, 0.7), 0 0 10px rgba(153, 0, 0, 0.7);
+    box-shadow: inset 0 0 12px rgba(102, 0, 0, 0.5), 0 0 15px rgba(0, 0, 0, 0.8);
     width: 270px;
     font-family: 'Segoe UI Black', 'Arial Black', sans-serif;
     letter-spacing: 1.2px;
     overflow: hidden;
     z-index: 0;
-    transition: background-color 0.7s ease, box-shadow 0.7s ease;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
     .mode-button::before {
@@ -179,20 +183,22 @@ body {
         right: 0;
         bottom: 0;
         background: url('/images/asfalt-dark.png') repeat;
-        opacity: 0.4; /* Initial texture opacity */
+        opacity: 0.2; /* Initial texture opacity */
         pointer-events: none;
         border-radius: 12px;
         z-index: 1;
-        transition: opacity 0.7s ease;
+        transition: opacity 0.4s ease;
     }
 
     .mode-button:hover::before {
-        opacity: 0.1; /* Lower = more transparent = background image shows */
+        opacity: 0.05; /* Lower = more transparent = background image shows */
     }
 
     .mode-button:hover {
-        background-color: rgba(0, 0, 0, 0.2); /* More transparent black */
-        box-shadow: inset 0 0 15px #cc0000, 0 0 20px #ff0000, 0 0 30px #ff0000;
+        background-color: rgba(40, 10, 10, 0.85); /* Darker reddish black */
+        border-color: rgba(255, 0, 0, 0.8);
+        box-shadow: inset 0 0 20px rgba(204, 0, 0, 0.6), 0 0 30px rgba(255, 0, 0, 0.5);
+        transform: scale(1.05);
         cursor: pointer;
     }
 
@@ -201,12 +207,14 @@ body {
 .rules-box {
     margin-top: 30px;
     width: 270px;
-    background: linear-gradient(135deg, rgba(26, 26, 26, 0.2) 0%, rgba(46, 46, 46, 0.2) 100%);
+    background: rgba(20, 20, 20, 0.65);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 0, 0, 0.2);
     border-radius: 12px;
     padding: 20px 25px;
     color: white;
     font-size: 16px;
-    box-shadow: inset 0 0 8px rgba(102, 0, 0, 0.2), 0 0 10px rgba(153, 0, 0, 0.2);
+    box-shadow: inset 0 0 12px rgba(102, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.8);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     text-align: center;
     line-height: 1.4;
@@ -268,62 +276,8 @@ body {
 }
 
 /* =========================
-   FNaFle Guess Reveal Boxes
+   FNaFle Core Structural Layout 
    ========================= */
-
-.reveal-box {
-    opacity: 0;
-    transform: scale(0.8);
-    border-radius: 10px;
-    padding: 15px;
-    min-width: 120px;
-    text-align: center;
-    font-weight: bold;
-    font-size: 16px;
-    animation: revealBox 0.5s ease-out forwards;
-}
-
-.box-correct {
-    background-color: #2e8b57;
-    color: white;
-    box-shadow: 0 0 15px #00ff00;
-}
-
-.box-wrong {
-    background-color: #8b0000;
-    color: white;
-    box-shadow: 0 0 15px #ff0000;
-}
-
-.attr-key {
-    font-size: 13px;
-    color: #ccc;
-}
-
-.attr-value {
-    margin-top: 5px;
-}
-
-/* Animation for suspenseful reveal */
-@keyframes revealBox {
-    0% {
-        opacity: 0;
-        transform: scale(0.8) rotateX(90deg);
-        filter: brightness(0.3);
-    }
-
-    60% {
-        opacity: 1;
-        transform: scale(1.05) rotateX(10deg);
-        filter: brightness(1.3);
-    }
-
-    100% {
-        opacity: 1;
-        transform: scale(1) rotateX(0deg);
-        filter: brightness(1);
-    }
-}
 /* Center card, reuse your background-blur/top-bar look */
 .auth-wrapper {
     min-height: calc(100vh - 60px);
@@ -396,4 +350,26 @@ body {
 /* Validation */
 .text-danger {
     color: #ff6b6b;
+}
+
+/* Loldle Style Search Input */
+.mode-input {
+    width: 100%;
+    margin: 8px 0 12px;
+    padding: 15px 20px !important;
+    border-radius: 12px !important;
+    border: 1px solid rgba(255, 0, 0, 0.5) !important;
+    background: rgba(20, 20, 20, 0.65) !important;
+    backdrop-filter: blur(8px);
+    color: #fff !important;
+    outline: none;
+    font-size: 18px !important;
+    text-align: center;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8), 0 0 15px rgba(255, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.mode-input:focus {
+    border-color: rgba(255, 0, 0, 1) !important;
+    box-shadow: inset 0 0 15px rgba(100, 0, 0, 0.8), 0 0 20px rgba(255, 0, 0, 0.5);
 }
