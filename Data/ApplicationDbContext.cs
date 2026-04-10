@@ -19,6 +19,7 @@ namespace FNaFle.Data
         public DbSet<RankedScore> RankedScores { get; set; }
         public DbSet<VoiceLine> VoiceLines { get; set; }
         public DbSet<DailyVoiceLineGame> DailyVoiceLineGames { get; set; }
+        public DbSet<UserProfile> UserProfiles { get; set; }
 
     }
 }

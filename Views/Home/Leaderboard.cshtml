@@ -1,4 +1,4 @@
-﻿@model IEnumerable<FNaFle.Models.LeaderboardUserViewModel>
+@model IEnumerable<FNaFle.Models.LeaderboardUserViewModel>
 @{
     ViewData["Title"] = "Security Rankings";
     var streakLeaders = ViewBag.StreakLeaders as List<FNaFle.Models.LeaderboardUserViewModel>;
@@ -40,17 +40,22 @@
             }
             @foreach (var user in streakLeaders ?? new List<FNaFle.Models.LeaderboardUserViewModel>())
             {
-                <div class="leaderboard-card @(sRank <= 3 ? "top-rank" : "")">
-                    <div class="rank-num">#@sRank</div>
-                    <div class="user-details">
-                        <span class="username-text">@user.Username</span>
-                        <span class="status-text">STREAK DATA VERIFIED</span>
+                <a href="/Home/PublicProfile?username=@user.Username" style="text-decoration: none; color: inherit;">
+                    <div class="leaderboard-card glass-panel @(sRank <= 3 ? "top-rank" : "")">
+                        <div class="rank-num">#@sRank</div>
+                        <div class="lb-pic">
+                            <img src="@(string.IsNullOrEmpty(user.ProfilePicturePath) ? "/images/default-profile.png" : user.ProfilePicturePath)" alt="Pic" onerror="this.src='/images/default-profile.png'" />
+                        </div>
+                        <div class="user-details">
+                            <span class="username-text">@user.Username</span>
+                            <span class="status-text">STREAK DATA VERIFIED</span>
+                        </div>
+                        <div class="streak-data">
+                            <span class="streak-count">@user.Streak</span>
+                            <span class="streak-label">NIGHTS</span>
+                        </div>
                     </div>
-                    <div class="streak-data">
-                        <span class="streak-count">@user.Streak</span>
-                        <span class="streak-label">NIGHTS</span>
-                    </div>
-                </div>
+                </a>
                 sRank++;
             }
         </div>
@@ -61,17 +66,22 @@
             }
             @foreach (var user in rankedLeaders ?? Enumerable.Empty<dynamic>())
             {
-                <div class="leaderboard-card @(rRank <= 3 ? "top-rank-gold" : "")">
-                    <div class="rank-num">#@rRank</div>
-                    <div class="user-details">
-                        <span class="username-text">@user.Username</span>
-                        <span class="status-text">RANKED ANALYSIS POINTS</span>
+                <a href="/Home/PublicProfile?username=@user.Username" style="text-decoration: none; color: inherit;">
+                    <div class="leaderboard-card glass-panel @(rRank <= 3 ? "top-rank-gold" : "")">
+                        <div class="rank-num">#@rRank</div>
+                        <div class="lb-pic">
+                            <img src="@(string.IsNullOrEmpty(user.ProfilePicturePath) ? "/images/default-profile.png" : user.ProfilePicturePath)" alt="Pic" onerror="this.src='/images/default-profile.png'" />
+                        </div>
+                        <div class="user-details">
+                            <span class="username-text">@user.Username</span>
+                            <span class="status-text">RANKED ANALYSIS POINTS</span>
+                        </div>
+                        <div class="streak-data">
+                            <span class="streak-count" style="color: #ffaa00;">@user.Points</span>
+                            <span class="streak-label">POINTS</span>
+                        </div>
                     </div>
-                    <div class="streak-data">
-                        <span class="streak-count" style="color: #ffaa00;">@user.Points</span>
-                        <span class="streak-label">POINTS</span>
-                    </div>
-                </div>
+                </a>
                 rRank++;
             }
         </div>
@@ -102,30 +112,30 @@
     }
 
     .leaderboard-card {
-        background: rgba(0, 0, 0, 0.85);
-        border: 2px solid rgba(255, 0, 0, 0.25);
         display: flex;
         align-items: center;
-        padding: 15px 25px;
-        border-radius: 8px;
+        padding: 15px 25px !important;
+        border-radius: 12px !important;
         transition: 0.3s ease-in-out;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
     }
 
         .leaderboard-card:hover {
             border-color: #ff0000;
             box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
-            transform: scale(1.02);
+            -webkit-transform: scale(1.02) translateZ(0);
+            transform: scale(1.02) translateZ(0);
         }
 
     .top-rank {
-        border-color: rgba(255, 0, 0, 0.8);
-        background: rgba(40, 0, 0, 0.4);
+        border-color: rgba(255, 0, 0, 0.8) !important;
+        background: rgba(40, 0, 0, 0.6) !important;
     }
 
     .top-rank-gold {
-        border-color: #ffaa00;
-        background: rgba(50, 40, 0, 0.3);
+        border-color: #ffaa00 !important;
+        background: rgba(50, 40, 0, 0.5) !important;
     }
 
     .rank-num {
@@ -134,6 +144,21 @@
         color: #ff0000;
         width: 70px;
         text-shadow: 0 0 8px #ff0000;
+    }
+
+    .lb-pic {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 2px solid #555;
+        margin-right: 15px;
+    }
+
+    .lb-pic img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
 
     .user-details {

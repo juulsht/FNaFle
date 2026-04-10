@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace FNaFle.Models
 {
@@ -9,5 +9,6 @@ namespace FNaFle.Models
         public DateTime LastGuessDate { get; set; }
         public bool HasGuessedCorrectlyToday { get; set; }
         public int Streak { get; set; }
+        public int HighestStreak { get; set; }
     }
 }
