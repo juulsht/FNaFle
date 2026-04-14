@@ -20,6 +20,7 @@ namespace FNaFle.Data
         public DbSet<VoiceLine> VoiceLines { get; set; }
         public DbSet<DailyVoiceLineGame> DailyVoiceLineGames { get; set; }
         public DbSet<UserProfile> UserProfiles { get; set; }
+        public DbSet<DailyMapGame> DailyMapGames { get; set; }
 
     }
 }

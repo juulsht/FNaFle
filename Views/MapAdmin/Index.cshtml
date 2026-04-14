@@ -1,0 +1,47 @@
+@model IEnumerable<FNaFle.Models.MapLocation>
+@{
+    ViewData["Title"] = "Map Locations Admin";
+}
+
+<div class="background-blur"></div>
+
+<div class="homepage" style="padding-top: 40px; color: white;">
+    <div class="container custom-box pb-4" style="border-radius:15px; padding-top:20px;">
+        <h2>Map Locations Management</h2>
+        <hr style="border-color: #333;" />
+        <a asp-action="Create" class="auth-box mb-3 d-inline-block" style="text-decoration:none;">+ Add New Camera Image</a>
+
+        <div class="table-responsive">
+            <table class="table table-dark table-striped mt-3">
+                <thead>
+                    <tr>
+                        <th>Game</th>
+                        <th>Camera</th>
+                        <th>Image Target</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var item in Model) {
+                    <tr>
+                        <td>@item.GameName</td>
+                        <td>@item.CameraName</td>
+                        <td>
+                            @if(!string.IsNullOrEmpty(item.ImageUrl)) {
+                                <img src="@item.ImageUrl" style="max-height:50px; border-radius:5px;" alt="Map Loc"/>
+                            } else {
+                                <span class="text-muted">None</span>
+                            }
+                        </td>
+                        <td>
+                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this map image location?');">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

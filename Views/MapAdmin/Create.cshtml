@@ -1,0 +1,71 @@
+@model FNaFle.Models.MapLocation
+@{
+    ViewData["Title"] = "Add Map Location";
+}
+
+<div class="background-blur"></div>
+
+<div class="homepage" style="padding-top: 40px; color: white;">
+    <div class="container custom-box pb-4" style="border-radius:15px; padding:30px; max-width:600px;">
+        <h2>Add New Camera Target Location</h2>
+        <hr style="border-color: #333;" />
+        <form asp-action="Create" method="post">
+            <div class="mb-3">
+                <label>Game (Map)</label>
+                <select id="gameSelect" asp-for="GameName" class="form-control bg-dark text-white border-secondary" required onchange="updateCameras()">
+                    <option value="">-- Select Map --</option>
+                    <option value="FNaF 1">FNaF 1</option>
+                    <option value="FNaF 2">FNaF 2</option>
+                    <option value="FNaF 3">FNaF 3</option>
+                    <option value="FFPS">FFPS</option>
+                    <option value="FNaF SL">FNaF SL</option>
+                </select>
+                <span asp-validation-for="GameName" class="text-danger"></span>
+            </div>
+
+            <div class="mb-4">
+                <label>Camera Selection</label>
+                <select id="camSelect" asp-for="CameraName" class="form-control bg-dark text-white border-secondary" required>
+                    <option value="">-- Select Camera --</option>
+                </select>
+                <span asp-validation-for="CameraName" class="text-danger"></span>
+            </div>
+
+            <div class="mb-4">
+                <label>Target Image URL (Camera Feed)</label>
+                <input asp-for="ImageUrl" class="form-control bg-dark text-white border-secondary" placeholder="e.g. /images/maps/cam1.png" required />
+                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="auth-box" style="border:none;">Add Target Location</button>
+                <a asp-action="Index" class="auth-box" style="text-decoration:none; text-align:center; display:inline-block; line-height:1.5;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const mapData = {
+        "FNaF 1": ["CAM 1A", "CAM 1B", "CAM 1C", "CAM 5", "CAM 3", "CAM 7", "CAM 6", "CAM 2A", "CAM 2B", "CAM 4A", "CAM 4B"],
+        "FNaF 2": ["CAM 08", "CAM 07", "CAM 09", "CAM 03", "CAM 04", "CAM 11", "CAM 01", "CAM 02", "CAM 10", "CAM 05", "CAM 06", "CAM 12"],
+        "FNaF 3": ["CAM 07", "CAM 08", "CAM 09", "CAM 10", "CAM 06", "CAM 05", "CAM 04", "CAM 03", "CAM 02", "CAM 01"],
+        "FFPS": ["Room 1", "Room 2", "Room 3", "Room 4", "Room 5", "Room 6", "Room 7", "Room 8"],
+        "FNaF SL": ["Elevator", "Control Module", "Circus Control", "Circus Gallery", "Ballora Gallery", "Funtime Auditorium", "Breaker Room", "Parts & Service"]
+    };
+
+    function updateCameras() {
+        const game = document.getElementById("gameSelect").value;
+        const camSelect = document.getElementById("camSelect");
+        camSelect.innerHTML = '<option value="">-- Select Camera --</option>';
+
+        if (game && mapData[game]) {
+            mapData[game].forEach(cam => {
+                const opt = document.createElement("option");
+                opt.value = cam;
+                opt.innerText = cam;
+                camSelect.appendChild(opt);
+            });
+        }
+    }
+</script>

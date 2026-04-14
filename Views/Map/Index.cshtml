@@ -1,4 +1,4 @@
-﻿@model FNaFle.Models.MapLocation
+@model FNaFle.Models.MapLocation
 
 @{
     ViewData["Title"] = "Signal Intercept";
@@ -9,6 +9,10 @@
 <div class="top-bar">
     <div class="left-buttons">
         <a asp-controller="Home" asp-action="Index" class="auth-box" style="text-decoration:none;">← EXIT SYSTEM</a>
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-controller="MapAdmin" asp-action="Index" class="auth-box" style="display:inline-block; margin-left:15px; text-decoration:none; background: rgba(0,255,0,0.1); border-color:#0f0; color:#0f0; box-shadow:0 0 8px #0f0;">+ MAP ADMIN</a>
+        }
     </div>
 </div>
 
@@ -16,15 +20,24 @@
 
     @* Title section removed as requested *@
 
-    <div class="d-flex justify-content-center gap-3 mb-4 flex-wrap">
-        @if (ViewBag.AllGames != null)
-        {
-            foreach (var game in (List<string>)ViewBag.AllGames)
+    @if (ViewBag.GuessedCorrectlyToday != null && (bool)ViewBag.GuessedCorrectlyToday)
+    {
+        <div class="text-center mb-4">
+            <h2 style="color: #0f0; text-shadow: 0 0 12px #0f0; font-family: 'Courier New', monospace;">SIGNAL INTERCEPTED! COME BACK TOMORROW.</h2>
+        </div>
+    }
+    else
+    {
+        <div class="d-flex justify-content-center gap-3 mb-4 flex-wrap">
+            @if (ViewBag.AllGames != null)
             {
-                <button class="auth-box" onclick="loadMap('@game')">@game</button>
+                foreach (var game in (List<string>)ViewBag.AllGames)
+                {
+                    <button class="auth-box" onclick="loadMap('@game')">@game</button>
+                }
             }
-        }
-    </div>
+        </div>
+    }
 
     <div class="container d-flex flex-column align-items-center">
 
@@ -62,23 +75,81 @@
 </div>
 
 <script>
-    const mapData={
-    "FNaF 1":{
-    image:"/images/maps/fnaf1.png",
-    buttons:[
-    {name:"CAM 1A",top:"2.5%",left:"32.2%",w:"12.5%",h:"11%"},
-    {name:"CAM 1B",top:"19.5%",left:"28.5%",w:"12.5%",h:"11%"},
-    {name:"CAM 1C",top:"41.5%",left:"20.5%",w:"12.5%",h:"11%"},
-    {name:"CAM 5",top:"27.2%",left:"1.5%",w:"12.5%",h:"11%"},
-    {name:"CAM 3",top:"69.5%",left:"13.5%",w:"12.5%",h:"11%"},
-    {name:"CAM 7",top:"27.2%",left:"80.5%",w:"12.5%",h:"11%"},
-    {name:"CAM 6",top:"64.2%",left:"80.5%",w:"12.5%",h:"11%"},
-    {name:"CAM 2A",top:"74.5%",left:"32.2%",w:"12.5%",h:"11%"},
-    {name:"CAM 2B",top:"84.5%",left:"32.2%",w:"12.5%",h:"11%"},
-    {name:"CAM 4A",top:"74.5%",left:"57.5%",w:"12.5%",h:"11%"},
-    {name:"CAM 4B",top:"85.8%",left:"57.5%",w:"12.5%",h:"11%"}
-    ]
-    }
+    const mapData = {
+        "FNaF 1": {
+            image: "/images/maps/fnaf1.png",
+            buttons: [
+                { name: "CAM 1A", top: "2.5%", left: "32.2%", w: "12.5%", h: "11%" },
+                { name: "CAM 1B", top: "19.5%", left: "28.5%", w: "12.5%", h: "11%" },
+                { name: "CAM 1C", top: "41.5%", left: "20.5%", w: "12.5%", h: "11%" },
+                { name: "CAM 5", top: "27.2%", left: "1.5%", w: "12.5%", h: "11%" },
+                { name: "CAM 3", top: "69.5%", left: "13.5%", w: "12.5%", h: "11%" },
+                { name: "CAM 7", top: "27.2%", left: "80.5%", w: "12.5%", h: "11%" },
+                { name: "CAM 6", top: "64.2%", left: "80.5%", w: "12.5%", h: "11%" },
+                { name: "CAM 2A", top: "74.5%", left: "32.2%", w: "12.5%", h: "11%" },
+                { name: "CAM 2B", top: "84.5%", left: "32.2%", w: "12.5%", h: "11%" },
+                { name: "CAM 4A", top: "74.5%", left: "57.5%", w: "12.5%", h: "11%" },
+                { name: "CAM 4B", top: "85.8%", left: "57.5%", w: "12.5%", h: "11%" }
+            ]
+        },
+        "FNaF 2": {
+            image: "/images/maps/fnaf2.png",
+            buttons: [
+                { name: "CAM 08", top: "17%", left: "6.5%", w: "12%", h: "11%" },
+                { name: "CAM 07", top: "21%", left: "43%", w: "12%", h: "11%" },
+                { name: "CAM 09", top: "8%", left: "79%", w: "12%", h: "11%" },
+                { name: "CAM 03", top: "41%", left: "6.5%", w: "12%", h: "11%" },
+                { name: "CAM 04", top: "41%", left: "38%", w: "12%", h: "11%" },
+                { name: "CAM 11", top: "32%", left: "87%", w: "12%", h: "11%" },
+                { name: "CAM 01", top: "62%", left: "6.5%", w: "12%", h: "11%" },
+                { name: "CAM 02", top: "62%", left: "38%", w: "12%", h: "11%" },
+                { name: "CAM 10", top: "46%", left: "63%", w: "12%", h: "11%" },
+                { name: "CAM 05", top: "89%", left: "8%", w: "12%", h: "11%" },
+                { name: "CAM 06", top: "89%", left: "35%", w: "12%", h: "11%" },
+                { name: "CAM 12", top: "62%", left: "83%", w: "12%", h: "11%" }
+            ]
+        },
+        "FNaF 3": {
+            image: "/images/maps/fnaf3.png",
+            buttons: [
+                { name: "CAM 07", top: "23%", left: "15%", w: "12%", h: "11%" },
+                { name: "CAM 08", top: "17%", left: "36%", w: "12%", h: "11%" },
+                { name: "CAM 09", top: "5%", left: "49%", w: "12%", h: "11%" },
+                { name: "CAM 10", top: "15%", left: "70%", w: "12%", h: "11%" },
+                { name: "CAM 06", top: "43%", left: "15%", w: "12%", h: "11%" },
+                { name: "CAM 05", top: "43%", left: "42%", w: "12%", h: "11%" },
+                { name: "CAM 04", top: "38%", left: "74%", w: "12%", h: "11%" },
+                { name: "CAM 03", top: "58%", left: "71%", w: "12%", h: "11%" },
+                { name: "CAM 02", top: "72%", left: "58%", w: "12%", h: "11%" },
+                { name: "CAM 01", top: "82%", left: "16%", w: "12%", h: "11%" }
+            ]
+        },
+        "FFPS": {
+            image: "/images/maps/fnaf6.png",
+            buttons: [
+                { name: "Room 1", top: "23%", left: "25%", w: "8%", h: "8%" },
+                { name: "Room 2", top: "23%", left: "40%", w: "8%", h: "8%" },
+                { name: "Room 3", top: "45%", left: "25%", w: "8%", h: "8%" },
+                { name: "Room 4", top: "45%", left: "40%", w: "8%", h: "8%" },
+                { name: "Room 5", top: "23%", left: "60%", w: "8%", h: "8%" },
+                { name: "Room 6", top: "23%", left: "75%", w: "8%", h: "8%" },
+                { name: "Room 7", top: "45%", left: "60%", w: "8%", h: "8%" },
+                { name: "Room 8", top: "45%", left: "75%", w: "8%", h: "8%" }
+            ]
+        },
+        "FNaF SL": {
+            image: "/images/maps/fnafsl.png",
+            buttons: [
+                { name: "Elevator", top: "82%", left: "45%", w: "10%", h: "13%" },
+                { name: "Control Module", top: "48%", left: "43%", w: "14%", h: "20%" },
+                { name: "Circus Control", top: "24%", left: "44.5%", w: "11%", h: "12%" },
+                { name: "Circus Gallery", top: "7%", left: "38%", w: "24%", h: "16%" },
+                { name: "Ballora Gallery", top: "48%", left: "19%", w: "23%", h: "23%" },
+                { name: "Funtime Auditorium", top: "48%", left: "56%", w: "23%", h: "23%" },
+                { name: "Breaker Room", top: "52%", left: "6%", w: "11%", h: "15%" },
+                { name: "Parts & Service", top: "52%", left: "81%", w: "11%", h: "15%" }
+            ]
+        }
     };
 
     function loadMap(game){

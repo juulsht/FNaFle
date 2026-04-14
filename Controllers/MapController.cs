@@ -1,4 +1,4 @@
-﻿using FNaFle.Data;
+using FNaFle.Data;
 using FNaFle.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,19 +14,45 @@ namespace FNaFle.Controllers
             _context = context;
         }
 
+        private async Task<MapLocation> GetTodayMapLocation()
+        {
+            var today = DateTime.UtcNow.Date;
+            var dailyEntry = await _context.DailyMapGames.FirstOrDefaultAsync(x => x.Date == today);
+
+            if (dailyEntry == null)
+            {
+                var randomMap = await _context.MapLocations.OrderBy(x => Guid.NewGuid()).FirstOrDefaultAsync();
+
+                if (randomMap == null) return null;
+
+                dailyEntry = new DailyMapGame
+                {
+                    MapLocationId = randomMap.Id,
+                    Date = today
+                };
+
+                _context.DailyMapGames.Add(dailyEntry);
+                await _context.SaveChangesAsync();
+            }
+
+            return await _context.MapLocations.FirstOrDefaultAsync(x => x.Id == dailyEntry.MapLocationId);
+        }
+
         public async Task<IActionResult> Index()
         {
-            var location = await _context.MapLocations
-                .OrderBy(x => Guid.NewGuid())
-                .FirstOrDefaultAsync();
+            var location = await GetTodayMapLocation();
 
-            if (location == null) return View(null);
+            // Hardcode the games list to ensure it's always populated regardless of existing map records
+            ViewBag.AllGames = new List<string> { "FNaF 1", "FNaF 2", "FNaF 3", "FFPS", "FNaF SL" };
 
-            // Get unique games for the top navigation buttons
-            ViewBag.AllGames = await _context.MapLocations
-                .Select(m => m.GameName)
-                .Distinct()
-                .ToListAsync();
+            // Check if the user already won today's challenge in their session
+            bool guessedCorrectlyToday = false;
+            var sessionWon = HttpContext.Session.GetString("MapWonToday_" + DateTime.UtcNow.Date.ToString("yyyyMMdd"));
+            if (!string.IsNullOrEmpty(sessionWon) && sessionWon == "true")
+            {
+                guessedCorrectlyToday = true;
+            }
+            ViewBag.GuessedCorrectlyToday = guessedCorrectlyToday;
 
             return View(location);
         }
@@ -34,6 +60,13 @@ namespace FNaFle.Controllers
         [HttpPost]
         public async Task<IActionResult> CheckVisualGuess(int id, string gameName, string cameraName)
         {
+            var sessionWonKey = "MapWonToday_" + DateTime.UtcNow.Date.ToString("yyyyMMdd");
+            var sessionWon = HttpContext.Session.GetString(sessionWonKey);
+            if (!string.IsNullOrEmpty(sessionWon) && sessionWon == "true")
+            {
+                return Json(new { success = false, message = "You already guessed correctly today!" });
+            }
+
             var actual = await _context.MapLocations.FindAsync(id);
             if (actual == null) return Json(new { success = false, message = "Error: Signal Lost" });
 
@@ -42,7 +75,8 @@ namespace FNaFle.Controllers
 
             if (gameCorrect && cameraCorrect)
             {
-                return Json(new { success = true, message = "great" });
+                HttpContext.Session.SetString(sessionWonKey, "true");
+                return Json(new { success = true, message = "Correct! Come back tomorrow!" });
             }
 
             return Json(new { success = false, message = "wrong try again :(" });
