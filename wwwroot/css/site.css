@@ -70,48 +70,51 @@ body {
 
 /* Individual Auth Box */
 .auth-box {
+    position: relative;
     display: inline-block;
-    background: rgba(20, 20, 20, 0.65); /* Glassmorphism */
+    background-color: rgba(20, 20, 20, 0.65); /* Glassmorphism */
     backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 0, 0, 0.3);
+    color: white;
+    text-decoration: none;
     padding: 12px 25px;
     border-radius: 12px;
-    color: white;
+    border: 1px solid rgba(255, 0, 0, 0.2);
+    text-align: center;
+    box-shadow: inset 0 0 12px rgba(102, 0, 0, 0.5), 0 0 15px rgba(0, 0, 0, 0.8);
     font-weight: bold;
-    text-decoration: none;
     text-transform: uppercase;
     font-size: 16px;
-    box-shadow: inset 0 0 10px rgba(102, 0, 0, 0.4), 0 0 10px rgba(0, 0, 0, 0.8);
-    transition: all 0.3s ease-in-out;
-    position: relative;
     overflow: hidden;
+    z-index: 0;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-    .auth-box::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255,0,0,0.3) 0%, transparent 70%);
-        transform: rotate(45deg);
-        transition: opacity 0.3s ease;
-        opacity: 0;
-    }
+.auth-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('/images/asfalt-dark.png') repeat;
+    opacity: 0.2; /* Initial texture opacity */
+    pointer-events: none;
+    border-radius: 12px;
+    z-index: 1;
+    transition: opacity 0.4s ease;
+}
 
-    .auth-box:hover::before {
-        opacity: 1;
-    }
+.auth-box:hover::before {
+    opacity: 0.05; /* Lower = more transparent = background image shows */
+}
 
-    .auth-box:hover {
-        color: #fff;
-        border-color: rgba(255, 0, 0, 0.8);
-        background-color: rgba(40, 10, 10, 0.8);
-        box-shadow: inset 0 0 15px rgba(204, 0, 0, 0.6), 0 0 20px rgba(255, 0, 0, 0.5);
-        transform: translateY(-2px);
-    }
-
+.auth-box:hover {
+    background-color: rgba(40, 10, 10, 0.85); /* Darker reddish black */
+    border-color: rgba(255, 0, 0, 0.8);
+    box-shadow: inset 0 0 20px rgba(204, 0, 0, 0.6), 0 0 30px rgba(255, 0, 0, 0.5);
+    transform: scale(1.05); /* match home buttons */
+    color: white;
+}
 /* Homepage Center */
 .homepage {
     display: flex;
@@ -445,3 +448,57 @@ body {
     box-shadow: 0 0 25px rgba(255,0,0,0.7);
     color: white;
 }
+
+/* Mode Tooltips */
+.mode-wrapper {
+    position: relative;
+    width: fit-content;
+}
+
+.mode-tooltip {
+    position: absolute;
+    left: calc(100% + 15px);
+    top: 50%;
+    transform: translateY(-50%) translateX(-10px);
+    background: rgba(15, 5, 5, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 0, 0, 0.4);
+    color: #fff;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 15px;
+    line-height: 1.4;
+    width: max-content;
+    max-width: 250px;
+    text-align: left;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.8), inset 0 0 10px rgba(255, 0, 0, 0.1);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none;
+    z-index: 10;
+}
+
+.mode-tooltip::before {
+    content: '';
+    position: absolute;
+    left: -7px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-right: 7px solid rgba(255, 0, 0, 0.4);
+}
+
+.mode-wrapper:hover .mode-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(-50%) translateX(0);
+}
+
+@media (max-width: 900px) {
+    .mode-tooltip {
+        display: none !important;
+    }
+}
+

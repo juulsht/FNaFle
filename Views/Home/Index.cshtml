@@ -38,19 +38,28 @@
     </div>
 
     <div class="modes-vertical" style="gap: 25px;">
-        <a asp-controller="Game" asp-action="Play" class="mode-button classic"><span>Classic</span></a>
+        <div class="mode-wrapper">
+            <a asp-controller="Game" asp-action="Play" class="mode-button classic"><span>Classic</span></a>
+            <div class="mode-tooltip">Guess the daily FNaF character from their attributes!</div>
+        </div>
 
-        <a asp-controller="Map" asp-action="Index" class="mode-button camera"><span>Camera</span></a>
+        <div class="mode-wrapper">
+            <a asp-controller="Map" asp-action="Index" class="mode-button camera"><span>Camera</span></a>
+            <div class="mode-tooltip">Identify the correct room from the camera map!</div>
+        </div>
 
-        <a asp-controller="Game" asp-action="PlayVoiceLines" class="mode-button lore"><span>Voice Lines</span></a>
-        <a href="Ranked" class="mode-button ranked"><span>Ranked</span></a>
+        <div class="mode-wrapper">
+            <a asp-controller="Game" asp-action="PlayVoiceLines" class="mode-button lore"><span>Voice Lines</span></a>
+            <div class="mode-tooltip">Read some quotes and guess who said them!</div>
+        </div>
+
+        <div class="mode-wrapper">
+            <a href="Ranked" class="mode-button ranked"><span>Ranked</span></a>
+            <div class="mode-tooltip">Compete for high scores in competitive mode!</div>
+        </div>
     </div>
 
-    <div class="rules-box glass-panel" style="margin-top: 80px; padding: 25px;">
-        <strong>Game Rules:</strong><br />
-        Survive each night by managing your resources and avoiding animatronics.<br />
-        Use cameras wisely and keep track of your power to last until 6 AM.
-    </div>
+
 
     <footer class="footer">
         <p>Not affiliated with Scott Cawthon or FNaF. Made for fun.</p>

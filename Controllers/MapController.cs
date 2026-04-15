@@ -47,7 +47,9 @@ namespace FNaFle.Controllers
 
             // Check if the user already won today's challenge in their session
             bool guessedCorrectlyToday = false;
-            var sessionWon = HttpContext.Session.GetString("MapWonToday_" + DateTime.UtcNow.Date.ToString("yyyyMMdd"));
+            var userName = User.Identity != null && User.Identity.IsAuthenticated ? User.Identity.Name : "Guest";
+            var sessionWonKey = $"MapWonToday_{DateTime.UtcNow.Date:yyyyMMdd}_{userName}";
+            var sessionWon = HttpContext.Session.GetString(sessionWonKey);
             if (!string.IsNullOrEmpty(sessionWon) && sessionWon == "true")
             {
                 guessedCorrectlyToday = true;
@@ -60,7 +62,8 @@ namespace FNaFle.Controllers
         [HttpPost]
         public async Task<IActionResult> CheckVisualGuess(int id, string gameName, string cameraName)
         {
-            var sessionWonKey = "MapWonToday_" + DateTime.UtcNow.Date.ToString("yyyyMMdd");
+            var userName = User.Identity != null && User.Identity.IsAuthenticated ? User.Identity.Name : "Guest";
+            var sessionWonKey = $"MapWonToday_{DateTime.UtcNow.Date:yyyyMMdd}_{userName}";
             var sessionWon = HttpContext.Session.GetString(sessionWonKey);
             if (!string.IsNullOrEmpty(sessionWon) && sessionWon == "true")
             {

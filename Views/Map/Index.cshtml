@@ -16,14 +16,14 @@
     </div>
 </div>
 
-<div class="homepage" style="padding-top: 40px;">
+<div class="homepage" style="padding-top: 130px;">
 
     @* Title section removed as requested *@
 
     @if (ViewBag.GuessedCorrectlyToday != null && (bool)ViewBag.GuessedCorrectlyToday)
     {
         <div class="text-center mb-4">
-            <h2 style="color: #0f0; text-shadow: 0 0 12px #0f0; font-family: 'Courier New', monospace;">SIGNAL INTERCEPTED! COME BACK TOMORROW.</h2>
+            <h2 style="color: #0f0; text-shadow: 0 0 12px #0f0; font-family: 'Courier New', monospace;">You guessed it! Come back tomorrow.</h2>
         </div>
     }
     else
@@ -56,19 +56,18 @@
                 </div>
             }
 
-            <div class="cam-overlay">HINT FEED - ID: @(Model?.Id ?? 0)</div>
+            
         </div>
 
         <div id="mapWrapper" style="display:none;text-align:center;">
             <h3 class="terminal-label mb-3" id="selectedGameTitle" style="font-size:1.5rem;"></h3>
+            <div id="wrongGuessPopup" style="display:none; color: #ff3b3b; font-weight: bold; margin-bottom: 15px; text-shadow: 0 0 10px red;">(Wrong, try again?)</div>
 
             <div class="border-red-container">
                 <img id="layoutImage" src="" alt="Map Layout">
                 <div id="buttonOverlay"></div>
             </div>
 
-            <div id="resultMessage" class="mt-4 text-center"
-                 style="font-family:monospace;font-size:1.2rem;min-height:1.5em;letter-spacing:2px;font-weight:bold;"></div>
         </div>
 
     </div>
@@ -197,8 +196,6 @@
     }
 
     function submitGuess(game,cam){
-    const resultDiv=document.getElementById('resultMessage');
-
     fetch('/Map/CheckVisualGuess',{
     method:'POST',
     headers:{'Content-Type':'application/x-www-form-urlencoded'},
@@ -211,12 +208,19 @@
     .then(res=>res.json())
     .then(data=>{
     if(data.success){
-    typeText(resultDiv,data.message,"#0f0");
-    resultDiv.style.textShadow="0 0 12px #0f0";
-    setTimeout(()=>location.reload(),2000);
-    }else{
-    typeText(resultDiv,data.message,"#f00");
-    resultDiv.style.textShadow="0 0 12px #f00";
+        const popup = document.getElementById('wrongGuessPopup');
+        if (popup) {
+            popup.innerText = '🎉 Correct! Come back tomorrow! :D';
+            popup.style.color = '#4cff9a';
+            popup.style.display = 'block';
+        }
+        document.querySelectorAll('.map-click-zone').forEach(btn => btn.style.pointerEvents = 'none');
+    } else {
+        const popup = document.getElementById('wrongGuessPopup');
+        if (popup) {
+            popup.style.display = 'block';
+            setTimeout(() => popup.style.display = 'none', 3000);
+        }
     }
     });
     }
@@ -384,3 +388,4 @@
         }
     }
 </style>
+

@@ -149,7 +149,7 @@ namespace FNaFle.Controllers
                 progress.HasGuessedCorrectlyToday = true;
                 progress.Streak++;
                 progress.LastGuessDate = DateTime.UtcNow.Date;
-                ViewBag.Message = "🎉 Correct! Come back tomorrow! :D";
+                ViewBag.Message = "🎉 Correct! Come back tomorrow! :D";               ViewBag.JustWon = true;
             }
             else
             {
@@ -267,7 +267,7 @@ namespace FNaFle.Controllers
                 {
                     guessedCorrectlyToday = true;
                     HttpContext.Session.SetString(sessionWonKey, "true");
-                    ViewBag.Message = "🎉 Correct! Come back tomorrow! :D";
+                    ViewBag.Message = "🎉 Correct! Come back tomorrow! :D";               ViewBag.JustWon = true;
                 }
                 else
                 {
