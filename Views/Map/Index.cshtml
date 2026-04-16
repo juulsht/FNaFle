@@ -8,7 +8,7 @@
 
 <div class="top-bar">
     <div class="left-buttons">
-        <a asp-controller="Home" asp-action="Index" class="auth-box" style="text-decoration:none;">← EXIT SYSTEM</a>
+        <a asp-controller="Home" asp-action="Index" class="auth-box" style="text-decoration:none;">← Home</a>
         @if (User.IsInRole("Admin"))
         {
             <a asp-controller="MapAdmin" asp-action="Index" class="auth-box" style="display:inline-block; margin-left:15px; text-decoration:none; background: rgba(0,255,0,0.1); border-color:#0f0; color:#0f0; box-shadow:0 0 8px #0f0;">+ MAP ADMIN</a>
@@ -19,8 +19,8 @@
 <div class="game-container" style="padding-top: 100px;">
 
     <div class="logo-container" style="margin-bottom: 20px;">
-        <h1 class="game-title">Map Exploration</h1>
-        <p class="subtitle">Select a layout and uncover the camera feed</p>
+        <h1 class="game-title">Camera Mode</h1>
+        <p class="subtitle">Guess which camera you are on!</p>
     </div>
 
     @if (ViewBag.GuessedCorrectlyToday != null && (bool)ViewBag.GuessedCorrectlyToday)

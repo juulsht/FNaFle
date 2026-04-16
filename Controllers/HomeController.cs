@@ -101,6 +101,7 @@ namespace FNaFle.Controllers
                 .FirstOrDefaultAsync(up => up.UserId == user.Id);
 
             var progress = await _context.UserProgress.FirstOrDefaultAsync(p => p.UserId == user.Id);
+            var rankedScore = await _context.RankedScores.FirstOrDefaultAsync(r => r.Username == user.Id);
 
             if (progress != null && progress.Streak > progress.HighestStreak)
             {
@@ -111,7 +112,7 @@ namespace FNaFle.Controllers
 
             ViewBag.Username = user.UserName;
             ViewBag.ProfilePicturePath = profile?.ProfilePicturePath;
-            ViewBag.CurrentStreak = progress?.Streak ?? 0;
+            ViewBag.RankedPoints = rankedScore?.TotalPoints ?? 0;
             ViewBag.HighestStreak = progress?.HighestStreak ?? 0;
             
             var favCharacters = new List<Character>();
