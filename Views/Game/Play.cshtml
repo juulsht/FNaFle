@@ -34,21 +34,25 @@
     }
     else if (ViewBag.JustWon != true)
     {
-        <p class="success-msg">
-            🎉 You already guessed today's character — come back tomorrow!
-        </p>
+        <div class="text-center mb-4">
+            <p class="success-msg">
+                You already guessed today's character — come back tomorrow!
+            </p>
+        </div>
     }
 
     @if (ViewBag.Error != null)
     {
-        <p class="error-msg">@ViewBag.Error</p>
+        <div class="text-center mb-4"><p class="error-msg">@ViewBag.Error</p></div>
     }
 
     @if (ViewBag.Message != null)
     {
-        <p class="result-msg @(ViewBag.Message.ToString().Contains("Correct") ? "correct" : "wrong")">
-            @ViewBag.Message
-        </p>
+        <div class="text-center mb-4">
+            <p class="@(ViewBag.Message.ToString().Contains("Correct") ? "success-msg" : "error-msg")">
+                @ViewBag.Message
+            </p>
+        </div>
     }
 
     <div class="history-list">
@@ -111,35 +115,7 @@
         margin-top: 20px;
     }
 
-    /* MESSAGES */
-    .success-msg {
-        color: #4cff9a;
-        font-weight: bold;
-        font-size: 20px;
-        text-shadow: 0 0 12px rgba(0,255,150,0.6);
-    }
 
-    .error-msg {
-        color: #ff4d4d;
-        font-weight: bold;
-        text-shadow: 0 0 12px rgba(255,0,0,0.6);
-    }
-
-    .result-msg {
-        margin-top: 15px;
-        font-size: 20px;
-        font-weight: bold;
-    }
-
-        .result-msg.correct {
-            color: #4cff9a;
-            text-shadow: 0 0 12px rgba(0,255,150,0.6);
-        }
-
-        .result-msg.wrong {
-            color: #ff4d4d;
-            text-shadow: 0 0 12px rgba(255,0,0,0.6);
-        }
 
     /* HISTORY */
     .history-list {

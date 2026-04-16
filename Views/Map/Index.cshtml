@@ -29,7 +29,7 @@
         {
             <div class="text-center mb-4">
                 <p class="success-msg">
-                    🎉 You already guessed today's map — come back tomorrow!
+                    You already guessed today's map — come back tomorrow!
                 </p>
             </div>
         }
@@ -71,8 +71,8 @@
         <div id="mapWrapper" style="display:none; text-align:center;">
             <h3 class="terminal-label mb-3 mt-3" id="selectedGameTitle"></h3>
             
-            <div id="wrongGuessPopup" class="wrong-popup-msg" style="display:none;">(Wrong location, try again?)</div>
-            <div id="correctGuessPopup" class="correct-popup-msg" style="display:none;">🎉 Correct! Come back tomorrow! :D</div>
+            <div id="wrongGuessPopup" class="error-msg" style="display:none; margin-bottom: 15px; animation: fadeIn 0.3s ease;">(Wrong location, try again?)</div>
+            <div id="correctGuessPopup" class="success-msg" style="display:none; margin-bottom: 15px; animation: fadeIn 0.3s ease;">Correct! Come back tomorrow! :D</div>
 
             <div class="border-red-container fade-in-effect">
                 <img id="layoutImage" src="" alt="Map Layout">
@@ -219,7 +219,14 @@
             } else {
                 const wrongPopup = document.getElementById('wrongGuessPopup');
                 wrongPopup.style.display = 'block';
-                setTimeout(() => wrongPopup.style.display = 'none', 3000);
+                wrongPopup.style.animation = 'fadeIn 0.3s ease';
+                setTimeout(() => {
+                    wrongPopup.style.animation = 'fadeOut 0.3s ease forwards';
+                    setTimeout(() => {
+                        wrongPopup.style.display = 'none';
+                        wrongPopup.style.animation = ''; // reset
+                    }, 280);
+                }, 3000);
             }
         });
     }
@@ -254,35 +261,7 @@
         letter-spacing: 1px;
     }
 
-    .success-msg {
-        color: #4cff9a;
-        font-weight: bold;
-        font-size: 20px;
-        text-shadow: 0 0 12px rgba(0,255,150,0.6);
-        background: rgba(0, 255, 150, 0.1);
-        padding: 15px 30px;
-        border-radius: 8px;
-        border: 1px solid rgba(0, 255, 150, 0.3);
-        display: inline-block;
-    }
 
-    .wrong-popup-msg {
-        color: #ff3b3b;
-        font-weight: bold;
-        font-size: 18px;
-        margin-bottom: 15px;
-        text-shadow: 0 0 10px red;
-        animation: fadeIn 0.3s ease;
-    }
-
-    .correct-popup-msg {
-        color: #4cff9a;
-        font-weight: bold;
-        font-size: 18px;
-        margin-bottom: 15px;
-        text-shadow: 0 0 10px #4cff9a;
-        animation: fadeIn 0.3s ease;
-    }
 
     /* ALIGNMENT OF CCTV AND MAPS */
     .cctv-and-map-wrapper {
@@ -415,6 +394,11 @@
     @@keyframes fadeIn {
         from { opacity: 0; transform: translateY(15px); }
         to { opacity: 1; transform: translateY(0); }
+    }
+
+    @@keyframes fadeOut {
+        from { opacity: 1; transform: translateY(0); }
+        to { opacity: 0; transform: translateY(15px); }
     }
 
     @@keyframes zoomIn {

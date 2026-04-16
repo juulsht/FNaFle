@@ -159,7 +159,7 @@ namespace FNaFle.Controllers
             }
             else
             {
-                ViewBag.Message = "Wrong, try again?";
+                // ViewBag.Message removed per user request
             }
 
             _context.Update(progress);
@@ -277,7 +277,7 @@ namespace FNaFle.Controllers
                 }
                 else
                 {
-                    ViewBag.Message = "Wrong, try again?";
+                    // ViewBag.Message removed per user request
                 }
             }
 

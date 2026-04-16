@@ -502,3 +502,30 @@ body {
     }
 }
 
+/* Global Success Box (Come back tomorrow) */
+.success-msg {
+    color: #f00;
+    font-weight: bold;
+    font-size: 20px;
+    text-shadow: 0 0 12px rgba(255, 0, 0, 0.8);
+    background: rgba(255, 0, 0, 0.1);
+    padding: 15px 30px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 0, 0, 0.3);
+    display: inline-block;
+    text-align: center;
+}
+
+/* Global Error Box (Wrong guess / No tries left) */
+.error-msg {
+    color: #f00;
+    font-weight: bold;
+    font-size: 20px;
+    text-shadow: 0 0 12px rgba(255, 0, 0, 0.8);
+    background: rgba(255, 0, 0, 0.1);
+    padding: 15px 30px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 0, 0, 0.3);
+    display: inline-block;
+    text-align: center;
+}

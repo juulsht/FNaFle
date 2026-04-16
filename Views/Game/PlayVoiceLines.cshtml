@@ -61,24 +61,28 @@
         }
         else if (ViewBag.JustWon != true)
         {
-            <p class="success-msg">
-                🎉 You already guessed today's voice line — come back tomorrow!
-            </p>
+            <div class="text-center mb-4">
+                <p class="success-msg">
+                    You already guessed today's voice line — come back tomorrow!
+                </p>
+            </div>
         }
     }
 
     @if (ViewBag.Error != null)
     {
-        <p style="color:#ff0000; font-weight:bold; text-shadow:0 0 10px #ff0000;">
-            @ViewBag.Error
-        </p>
+        <div class="text-center mb-4">
+            <p class="error-msg">@ViewBag.Error</p>
+        </div>
     }
 
     @if (ViewBag.Message != null)
     {
-        <p style="margin-top:15px; font-size:20px; font-weight:bold; text-shadow:0 0 10px; color:@(ViewBag.Message.ToString().Contains("Correct") ? "lightgreen" : "red");">
-            @ViewBag.Message
-        </p>
+        <div class="text-center mb-4">
+            <p class="@(ViewBag.Message.ToString().Contains("Correct") ? "success-msg" : "error-msg")">
+                @ViewBag.Message
+            </p>
+        </div>
     }
 
     <div class="history-list" style="display:flex; flex-direction:column; align-items:center; gap:12px; margin-top:30px; width:100%;">
@@ -107,13 +111,6 @@
         padding-bottom: 50px;
     }
 
-    .success-msg {
-        color: #4cff9a;
-        font-weight: bold;
-        font-size: 20px;
-        text-shadow: 0 0 12px rgba(0,255,150,0.6);
-        text-align: center;
-    }
 
     .reveal-box {
         width: 100px;
