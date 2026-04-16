@@ -1,8 +1,8 @@
-@model IEnumerable<FNaFle.Models.LeaderboardUserViewModel>
+﻿@model IEnumerable<FNaFle.Models.LeaderboardUserViewModel>
 @{
     ViewData["Title"] = "Security Rankings";
     var streakLeaders = ViewBag.StreakLeaders as List<FNaFle.Models.LeaderboardUserViewModel>;
-    // Since RankedLeaders in Controller was an anonymous type, we cast to dynamic or a compatible list
+    
     var rankedLeaders = ViewBag.RankedLeaders as IEnumerable<dynamic>;
 }
 
@@ -89,7 +89,7 @@
 </div>
 
 <style>
-    /* Tab Styling */
+    
     .active-tab {
         border-color: #ff0000 !important;
         box-shadow: 0 0 15px rgba(255, 0, 0, 0.6) !important;

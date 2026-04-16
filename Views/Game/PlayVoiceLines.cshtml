@@ -43,16 +43,12 @@
         @if (!guessedCorrectlyToday)
         {
             <form asp-action="PlayVoiceLines" method="post" style="margin-bottom: 30px; position: relative;">
-                <input type="text" name="guess" list="charactersList" placeholder="Type a character..." autocomplete="off"
-                       class="mode-input"
-                       style="padding: 12px 15px; width: 260px; border-radius: 10px; border: 2px solid #ff000080; background-color: #111; color: white; text-align: center; font-size: 16px;" required />
-
-                <datalist id="charactersList">
-                    @foreach (var c in charactersList)
-                    {
-                        <option value="@c.Name" />
-                    }
-                </datalist>
+                <div class="autocomplete-container">
+                    <input type="text" id="character-guess" name="guess" placeholder="Type a character..." autocomplete="off"
+                           class="mode-input"
+                           style="padding: 12px 15px; width: 260px; border-radius: 10px; border: 2px solid #ff000080; background-color: #111; color: white; text-align: center; font-size: 16px;" required />
+                    <ul id="autocomplete-list" class="autocomplete-items"></ul>
+                </div>
 
                 <button type="submit" class="mode-button classic" style="margin-left:10px;">
                     <span>Guess</span>
@@ -197,3 +193,39 @@
     }
 </style>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const allCharacters = @Html.Raw(Json.Serialize((ViewBag.AllCharacters as IEnumerable<FNaFle.Models.Character>)?.Select(c => new { name = c.Name, image = c.ImagePath }) ?? new[] { new { name = "", image = "" } }.Take(0)));
+        const input = document.getElementById("character-guess");
+        const list = document.getElementById("autocomplete-list");
+
+        if (input && list) {
+            input.addEventListener("input", function() {
+                const val = this.value;
+                list.innerHTML = '';
+                if (!val) return false;
+
+                for (let i = 0; i < allCharacters.length; i++) {
+                    const char = allCharacters[i];
+                    if (char.name.toLowerCase().startsWith(val.toLowerCase())) {
+                        const li = document.createElement("li");
+                        li.innerHTML = '<img src="' + (char.image || '/images/placeholder.png') + '" onerror="this.src=\'/images/placeholder.png\'" />';
+                        li.innerHTML += '<span><strong>' + char.name.substr(0, val.length) + '</strong>' + char.name.substr(val.length) + '</span>';
+                        
+                        li.addEventListener("click", function() {
+                            input.value = char.name;
+                            list.innerHTML = '';
+                        });
+                        list.appendChild(li);
+                    }
+                }
+            });
+
+            document.addEventListener("click", function (e) {
+                if (e.target !== input) {
+                    list.innerHTML = '';
+                }
+            });
+        }
+    });
+</script>

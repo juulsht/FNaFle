@@ -36,12 +36,12 @@ namespace FNaFle.Controllers
 
             if (user != null)
             {
-                // Check the database to see if a record exists for today
+                
                 hasPlayedToday = await _context.RankedScores
                     .AnyAsync(x => x.Username == user.Id && x.LastPlayedDate >= DateTime.Today);
             }
 
-            // Load session history for display
+            
             var sessionData = HttpContext.Session.GetString("RankedHistory");
             var history = string.IsNullOrEmpty(sessionData)
                 ? new List<Character>()
@@ -50,8 +50,13 @@ namespace FNaFle.Controllers
             ViewBag.Character = character;
             ViewBag.History = history;
 
-            // If the DB says they played, they are locked out even if session is empty
+            
             ViewBag.GuessedCorrectlyToday = hasPlayedToday;
+            if (hasPlayedToday && history.Count > 0 && history[0].Id != character.Id)
+            {
+                ViewBag.Failed = true;
+            }
+            ViewBag.AllCharacters = await _context.Characters.OrderBy(c => c.Name).ToListAsync();
 
             return View();
         }
@@ -64,26 +69,35 @@ namespace FNaFle.Controllers
 
             if (user == null) return RedirectToPage("/Account/Login", new { area = "Identity" });
 
-            // 1. HARD LOCK: Check DB before allowing a guess
+            
             var existingScore = await _context.RankedScores
                 .FirstOrDefaultAsync(x => x.Username == user.Id);
 
             if (existingScore != null && existingScore.LastPlayedDate >= DateTime.Today)
             {
-                ViewBag.Message = "You already guessed the character. Come back tomorrow :)";
+                ViewBag.Message = "You played Ranked already today. Come back tomorrow :)";
                 ViewBag.GuessedCorrectlyToday = true;
                 ViewBag.Character = character;
+                
+                var sKey = "RankedHistory";
+                var sData = HttpContext.Session.GetString(sKey);
+                var hist = string.IsNullOrEmpty(sData) ? new List<Character>() : JsonSerializer.Deserialize<List<Character>>(sData);
+                if (hist.Count > 0 && hist[0].Id != character.Id)
+                {
+                    ViewBag.Failed = true;
+                }
+                
                 return View("Index");
             }
 
-            // 2. Get History from Session
+            
             var sessionKey = "RankedHistory";
             var sessionData = HttpContext.Session.GetString(sessionKey);
             List<Character> history = string.IsNullOrEmpty(sessionData)
                 ? new List<Character>()
                 : JsonSerializer.Deserialize<List<Character>>(sessionData);
 
-            // 3. Validate Guess
+            
             var guessedCharacter = _context.Characters
                 .FirstOrDefault(x => x.Name.ToLower() == (guess ?? "").ToLower());
 
@@ -91,31 +105,33 @@ namespace FNaFle.Controllers
             {
                 ViewBag.Error = "Character not found!";
             }
-            else if (history.Count < 3)
+            else if (history.Count < 5)
             {
                 history.Insert(0, guessedCharacter);
                 HttpContext.Session.SetString(sessionKey, JsonSerializer.Serialize(history));
 
                 if (string.Equals(guess, character.Name, StringComparison.OrdinalIgnoreCase))
                 {
-                    int pointsEarned = 4 - history.Count;
+                    int pointsEarned = 6 - history.Count;
                     await SaveRankedPoints(user.Id, pointsEarned);
 
                     ViewBag.GuessedCorrectlyToday = true;
                     ViewBag.Message = $"🎉 Correct! You earned {pointsEarned} points!";
                 }
-                else if (history.Count >= 3)
+                else if (history.Count >= 5)
                 {
-                    // If they fail all 3 tries, we still mark them as "played" in the DB 
-                    // so they can't restart the app to try again.
+                    
+                    
                     await SaveRankedPoints(user.Id, 0);
                     ViewBag.Message = "❌ Out of tries! Come back tomorrow.";
-                    ViewBag.GuessedCorrectlyToday = true; // Lock the UI
+                    ViewBag.GuessedCorrectlyToday = true; 
+                    ViewBag.Failed = true;
                 }
             }
 
             ViewBag.Character = character;
             ViewBag.History = history;
+            ViewBag.AllCharacters = await _context.Characters.OrderBy(c => c.Name).ToListAsync();
             return View("Index");
         }
 

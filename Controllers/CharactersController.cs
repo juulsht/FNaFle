@@ -1,4 +1,4 @@
-using FNaFle.Data;
+﻿using FNaFle.Data;
 using FNaFle.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +14,7 @@ namespace FNaFle.Controllers
             _db = db;
         }
 
-        // Everyone can view the list
+        
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
@@ -22,7 +22,7 @@ namespace FNaFle.Controllers
             return View(list);
         }
 
-        // Everyone can view details
+        
         [AllowAnonymous]
         public async Task<IActionResult> Details(int id)
         {
@@ -59,7 +59,7 @@ namespace FNaFle.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // Only Admin can create
+        
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
@@ -79,7 +79,7 @@ namespace FNaFle.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // Only Admin can edit
+        
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id)
         {
@@ -101,7 +101,7 @@ namespace FNaFle.Controllers
             return RedirectToAction(nameof(Details), new { id = model.Id });
         }
 
-        // Only Admin can delete
+        
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {

@@ -1,16 +1,16 @@
-@model FNaFle.Models.Character
+﻿@model FNaFle.Models.Character
 @{
     ViewData["Title"] = Model.Name;
 }
 
 <div class="details-page">
 
-    <!-- Back Button -->
+    
     <a asp-action="Index" class="auth-box details-back">← Back</a>
 
     <div class="details-card">
 
-        <!-- IMAGE -->
+        
         <div class="details-image-box">
             @if (!string.IsNullOrWhiteSpace(Model.ImagePath))
             {
@@ -22,10 +22,10 @@
             }
         </div>
 
-        <!-- NAME -->
+        
         <h1 class="details-title">@Model.Name</h1>
 
-        <!-- STATS PANEL -->
+        
         <div class="details-stats">
 
             <div class="details-row">
@@ -55,7 +55,7 @@
 
         </div>
 
-        <!-- Admin Buttons -->
+        
         @if (User.IsInRole("Admin"))
         {
             <div class="details-actions">
@@ -63,7 +63,7 @@
                 <a asp-action="Delete" asp-route-id="@Model.Id" class="auth-box delete-admin">Delete</a>
             </div>
 
-            <!-- Voice Lines Panel -->
+            
             <div style="margin-top: 30px; text-align: left; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px; border: 1px solid #ff000040;">
                 <h3 style="color: #ff7a7a; margin-bottom: 10px;">Voice Lines</h3>
                 
@@ -102,7 +102,7 @@
 
 <style>
 
-    /* PAGE WRAPPER */
+    
     .details-page {
         padding-top: 140px;
         display: flex;
@@ -111,12 +111,12 @@
         padding-bottom: 80px;
     }
 
-    /* BACK BUTTON */
+    
     .details-back {
         margin-bottom: 25px;
     }
 
-    /* MAIN DETAILS CARD */
+    
     .details-card {
         width: min(750px, 92vw);
         background: rgba(0,0,0,0.65);
@@ -128,7 +128,7 @@
         box-shadow: 0 0 22px rgba(255,0,0,0.3);
     }
 
-    /* IMAGE */
+    
     .details-image-box {
         width: fit-content;
         max-width: 100%;
@@ -159,7 +159,7 @@
             color: #888;
         }
 
-    /* NAME */
+    
     .details-title {
         font-size: 40px;
         color: #ff0000;
@@ -168,13 +168,13 @@
         letter-spacing: 1px;
     }
 
-    /* STAT PANEL */
+    
     .details-stats {
         margin-top: 10px;
         margin-bottom: 35px;
     }
 
-    /* Each row */
+    
     .details-row {
         display: flex;
         justify-content: space-between;
@@ -186,27 +186,27 @@
         box-shadow: inset 0 0 8px rgba(255, 0, 0, 0.15);
     }
 
-    /* Label = left side text */
+    
     .details-label {
         font-weight: bold;
         color: #ff7a7a;
     }
 
-    /* Value = right side */
+    
     .details-value {
         font-weight: bold;
         color: white;
         opacity: 0.9;
     }
 
-    /* ADMIN BUTTONS */
+    
     .details-actions {
         display: flex;
         justify-content: center;
         gap: 20px;
     }
 
-    /* Special delete styling */
+    
     .delete-admin {
         background: rgba(80, 0, 0, 0.8);
         border-color: rgba(255,0,0,0.7) !important;

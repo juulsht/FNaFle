@@ -21,7 +21,7 @@
 
             <div class="settings-body">
 
-                <!-- AVATAR -->
+                
                 <div class="avatar-section">
                     <div class="avatar-wrapper">
                         @if (!string.IsNullOrEmpty(Model.CurrentProfilePicturePath))
@@ -39,10 +39,9 @@
                     </label>
 
                     <input asp-for="ProfilePicture" type="file" id="ProfilePicture"
-                           accept="image/*" hidden onchange="previewImage(event)" />
+                           accept="image/*" onchange="previewImage(event)" style="display:none;" />
                 </div>
 
-                <!-- FORM -->
                 <div class="form-section">
 
                     <div class="form-group">
@@ -51,72 +50,57 @@
                     </div>
 
                     <div class="form-group">
-                        <label>New Username</label>
-                        <input asp-for="NewUsername" class="glass-input" placeholder="Enter new username..." />
+                        <label asp-for="NewUsername">New Username</label>
+                        <input asp-for="NewUsername" class="auth-input" placeholder="Leave blank to keep current" />
+                        <span asp-validation-for="NewUsername" class="text-danger" style="font-size:11px;"></span>
                     </div>
 
                     <div class="form-group">
-                        <label>Favorite Characters</label>
-
-                        <select asp-for="FavChar1Id" class="glass-input">
-                            <option value="">-- Slot 1 --</option>
-                            @foreach (var ch in Model.AvailableCharacters)
-                            {
-                                <option value="@ch.Id">@ch.Name</option>
-                            }
+                        <label asp-for="FavChar1Id">Favorite Character #1</label>
+                        <select asp-for="FavChar1Id" class="auth-input" asp-items="@(new SelectList(Model.AvailableCharacters, "Id", "Name"))">
+                            <option value="">-- Select Character --</option>
                         </select>
+                    </div>
 
-                        <select asp-for="FavChar2Id" class="glass-input">
-                            <option value="">-- Slot 2 --</option>
-                            @foreach (var ch in Model.AvailableCharacters)
-                            {
-                                <option value="@ch.Id">@ch.Name</option>
-                            }
+                    <div class="form-group">
+                        <label asp-for="FavChar2Id">Favorite Character #2</label>
+                        <select asp-for="FavChar2Id" class="auth-input" asp-items="@(new SelectList(Model.AvailableCharacters, "Id", "Name"))">
+                            <option value="">-- Select Character --</option>
                         </select>
+                    </div>
 
-                        <select asp-for="FavChar3Id" class="glass-input">
-                            <option value="">-- Slot 3 --</option>
-                            @foreach (var ch in Model.AvailableCharacters)
-                            {
-                                <option value="@ch.Id">@ch.Name</option>
-                            }
+                    <div class="form-group">
+                        <label asp-for="FavChar3Id">Favorite Character #3</label>
+                        <select asp-for="FavChar3Id" class="auth-input" asp-items="@(new SelectList(Model.AvailableCharacters, "Id", "Name"))">
+                            <option value="">-- Select Character --</option>
                         </select>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-glass-primary">Save Changes</button>
                     </div>
 
                 </div>
-            </div>
 
-            <div class="form-actions">
-                @if (!ViewData.ModelState.IsValid)
-                {
-                    <div class="text-danger mb-3">
-                        <div asp-validation-summary="All"></div>
-                    </div>
-                }
-
-                <button type="submit" class="btn-glass-primary">Save Changes</button>
             </div>
 
         </form>
+
     </div>
 </div>
 
 <style>
-
-    /* LAYOUT */
     .page-container {
         padding-top: 120px;
         display: flex;
         justify-content: center;
     }
 
-    /* CARD */
     .settings-card {
-        width: 900px;
+        width: 1000px;
         max-width: 95%;
     }
 
-    /* HEADER */
     .settings-header {
         margin-bottom: 25px;
     }
@@ -131,14 +115,12 @@
         font-size: 14px;
     }
 
-    /* BODY */
     .settings-body {
         display: flex;
         gap: 40px;
         align-items: flex-start;
     }
 
-    /* AVATAR */
     .avatar-section {
         display: flex;
         flex-direction: column;
@@ -154,13 +136,10 @@
         border: 2px solid rgba(255,0,0,0.3);
         box-shadow: 0 0 20px rgba(255,0,0,0.3), inset 0 0 10px rgba(0,0,0,0.7);
         transition: all 0.3s;
-        -webkit-transform: translateZ(0);
-        transform: translateZ(0);
     }
 
         .avatar-wrapper:hover {
-            -webkit-transform: scale(1.05) translateZ(0);
-            transform: scale(1.05) translateZ(0);
+            transform: scale(1.05);
             box-shadow: 0 0 30px rgba(255,0,0,0.6), inset 0 0 15px rgba(0,0,0,0.9);
         }
 
@@ -170,7 +149,6 @@
             object-fit: cover;
         }
 
-    /* FORM */
     .form-section {
         flex: 1;
     }
@@ -186,17 +164,18 @@
         font-size: 12px;
         text-transform: uppercase;
         color: #888;
+        letter-spacing: 1px;
     }
 
-    /* STATIC */
     .form-static {
         background: rgba(0,0,0,0.6);
         padding: 12px;
         border-radius: 8px;
         border: 1px solid rgba(255,255,255,0.1);
+        color: #fff;
+        font-weight: bold;
     }
 
-    /* ACTIONS */
     .form-actions {
         margin-top: 25px;
         display: flex;

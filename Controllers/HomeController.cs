@@ -1,4 +1,4 @@
-using FNaFle.Data;
+﻿using FNaFle.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -47,10 +47,10 @@ namespace FNaFle.Controllers
             return View();
         }
 
-        // --- UPDATED LEADERBOARD: HANDLES BOTH MODES ---
+        
         public async Task<IActionResult> Leaderboard()
         {
-            // 1. Fetch Classic Streak Data
+            
             var streakLeaders = await (from progress in _context.UserProgress
                                        join user in _context.Users on progress.UserId equals user.Id
                                        join up in _context.UserProfiles on user.Id equals up.UserId into upJoin
@@ -65,7 +65,7 @@ namespace FNaFle.Controllers
                                        .Take(100)
                                        .ToListAsync();
 
-            // 2. Fetch Ranked Points Data
+            
             var rankedLeaders = await (from ranked in _context.RankedScores
                                        join user in _context.Users on ranked.Username equals user.Id
                                        join up in _context.UserProfiles on user.Id equals up.UserId into upJoin
@@ -181,7 +181,7 @@ namespace FNaFle.Controllers
                 return View(model);
             }
 
-            // Handle Profile updates
+            
             var userProfile = await _context.UserProfiles.FirstOrDefaultAsync(u => u.UserId == user.Id);
             if (userProfile == null)
             {
@@ -193,7 +193,7 @@ namespace FNaFle.Controllers
             userProfile.FavChar2Id = model.FavChar2Id;
             userProfile.FavChar3Id = model.FavChar3Id;
 
-            // Handle profile picture upload
+            
             if (model.ProfilePicture != null && model.ProfilePicture.Length > 0)
             {
                 string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images", "profiles");

@@ -1,4 +1,4 @@
-using FNaFle.Data;
+﻿using FNaFle.Data;
 using FNaFle.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +12,7 @@ namespace FNaFle.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
 
-        // Reset time for session/guesses if needed
+        
         private readonly TimeSpan resetTime = new TimeSpan(8, 0, 0);
 
         public GameController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
@@ -82,7 +82,7 @@ namespace FNaFle.Controllers
                 }
             }
 
-            // Load existing history from session if it exists
+            
             var sessionData = HttpContext.Session.GetString("GuessHistory");
             if (!string.IsNullOrEmpty(sessionData))
             {
@@ -92,6 +92,7 @@ namespace FNaFle.Controllers
             ViewBag.Character = character;
             ViewBag.Progress = progress;
             ViewBag.GuessedCorrectlyToday = progress?.HasGuessedCorrectlyToday ?? false;
+            ViewBag.AllCharacters = await _context.Characters.OrderBy(c => c.Name).ToListAsync();
 
             return View();
         }
@@ -131,7 +132,7 @@ namespace FNaFle.Controllers
                 return View();
             }
 
-            // --- HISTORY LOGIC ---
+            
             var sessionKey = "GuessHistory";
             var sessionData = HttpContext.Session.GetString(sessionKey);
             List<Character> history = string.IsNullOrEmpty(sessionData)
@@ -159,7 +160,7 @@ namespace FNaFle.Controllers
             }
             else
             {
-                // ViewBag.Message removed per user request
+                
             }
 
             _context.Update(progress);
@@ -169,6 +170,7 @@ namespace FNaFle.Controllers
             ViewBag.Progress = progress;
             ViewBag.GuessedCorrectlyToday = progress.HasGuessedCorrectlyToday;
             ViewBag.History = history;
+            ViewBag.AllCharacters = await _context.Characters.OrderBy(c => c.Name).ToListAsync();
 
             return View();
         }
@@ -277,7 +279,7 @@ namespace FNaFle.Controllers
                 }
                 else
                 {
-                    // ViewBag.Message removed per user request
+                    
                 }
             }
 

@@ -1,4 +1,4 @@
-using FNaFle.Models;
+﻿using FNaFle.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 using System.IO;
@@ -34,7 +34,7 @@ namespace FNaFle.Data
             string charFile = "CharactersSeed.json";
             string mapFile = "MapLocationsSeed.json";
 
-            // ------------- CHARACTERS -------------
+            
             var existingDbChars = context.Characters.Include(x => x.VoiceLines).ToList();
             var jsonChars = new List<CharacterSeedDto>();
             
@@ -66,7 +66,7 @@ namespace FNaFle.Data
                 }
                 else
                 {
-                    // Update any missing pictures or empty fields from the JSON
+                    
                     if (string.IsNullOrEmpty(existingChar.ImagePath) && !string.IsNullOrEmpty(jChar.ImagePath))
                     {
                         existingChar.ImagePath = jChar.ImagePath;
@@ -85,7 +85,7 @@ namespace FNaFle.Data
                 context.SaveChanges();
                 existingDbChars = context.Characters.Include(x => x.VoiceLines).ToList();
             }
-            // Fallback for very first run ever if deleted JSON
+            
             else if (existingDbChars.Count == 0)
             {
                 var characters = new Character[]
@@ -117,7 +117,6 @@ namespace FNaFle.Data
             }
 
 
-            // ------------- MAP LOCATIONS -------------
             var existingMaps = context.MapLocations.ToList();
             var jsonMaps = new List<MapLocationSeedDto>();
 

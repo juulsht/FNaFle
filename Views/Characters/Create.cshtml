@@ -11,36 +11,36 @@
 
         <form method="post" class="create-form">
 
-            <!-- NAME -->
+            
             <label class="create-label">Name</label>
             <input asp-for="Name" class="auth-input" />
             <span asp-validation-for="Name" class="text-danger"></span>
 
-            <!-- GENDER -->
+            
             <label class="create-label">Gender</label>
             <input asp-for="Gender" class="auth-input" />
 
-            <!-- GENERATION -->
+            
             <label class="create-label">Generation</label>
             <input asp-for="Generation" class="auth-input" />
 
-            <!-- SPECIES -->
+            
             <label class="create-label">Species</label>
             <input asp-for="Species" class="auth-input" />
 
-            <!-- LOCATION -->
+            
             <label class="create-label">Location</label>
             <input asp-for="Location" class="auth-input" />
 
-            <!-- STATUS -->
+            
             <label class="create-label">Status</label>
             <input asp-for="Status" class="auth-input" />
 
-            <!-- IMAGE PATH -->
+            
             <label class="create-label">Image Path</label>
             <input asp-for="ImagePath" class="auth-input" placeholder="/images/characters/freddy.jpg" />
 
-            <!-- ACTION BUTTONS -->
+            
             <div class="create-actions">
                 <button type="submit" class="auth-box">Save</button>
                 <a asp-action="Index" class="auth-box">Cancel</a>
@@ -58,7 +58,7 @@
 
 <style>
 
-    /* Page container */
+    
     .create-page {
         padding-top: 140px;
         display: flex;
@@ -66,7 +66,7 @@
         padding-bottom: 60px;
     }
 
-    /* Card wrapper */
+    
     .create-card {
         width: min(520px, 92vw);
         background: rgba(0,0,0,0.65);
@@ -77,7 +77,7 @@
         color: white;
     }
 
-    /* Title */
+    
     .create-title {
         text-align: center;
         font-size: 36px;
@@ -86,7 +86,7 @@
         text-shadow: 0 0 14px #ff0000, 0 0 26px #ff0000;
     }
 
-    /* Form labels */
+    
     .create-label {
         margin-top: 12px;
         margin-bottom: 4px;
@@ -96,7 +96,7 @@
         text-shadow: 0 0 6px rgba(255, 0, 0, 0.4);
     }
 
-    /* Action buttons */
+    
     .create-actions {
         display: flex;
         gap: 15px;

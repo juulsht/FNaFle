@@ -1,4 +1,4 @@
-@model FNaFle.Models.MapLocation
+﻿@model FNaFle.Models.MapLocation
 
 @{
     ViewData["Title"] = "Signal Intercept";
@@ -212,9 +212,8 @@
                 const correctPopup = document.getElementById('correctGuessPopup');
                 correctPopup.style.display = 'block';
                 document.querySelectorAll('.map-click-zone').forEach(btn => btn.style.pointerEvents = 'none');
-                
-                // Keep the text green immediately and permanently
-                // Also scroll view to the map slightly
+
+
                 setTimeout(() => window.scrollBy({ top: -100, behavior: 'smooth' }), 100);
             } else {
                 const wrongPopup = document.getElementById('wrongGuessPopup');
@@ -224,7 +223,7 @@
                     wrongPopup.style.animation = 'fadeOut 0.3s ease forwards';
                     setTimeout(() => {
                         wrongPopup.style.display = 'none';
-                        wrongPopup.style.animation = ''; // reset
+                        wrongPopup.style.animation = ''; 
                     }, 280);
                 }, 3000);
             }
@@ -233,7 +232,7 @@
 </script>
 
 <style>
-    /* MAIN CONTAINER CHANGES */
+    
     .game-container {
         display: flex;
         flex-direction: column;
@@ -262,8 +261,6 @@
     }
 
 
-
-    /* ALIGNMENT OF CCTV AND MAPS */
     .cctv-and-map-wrapper {
         display: flex;
         flex-direction: column;
@@ -323,7 +320,7 @@
         50%, 100% { opacity: 0; }
     }
 
-    /* RED BORDER CONTAINER REWORK */
+    
     .border-red-container {
         position: relative;
         display: inline-block;
@@ -357,7 +354,7 @@
         pointer-events: none;
     }
 
-    /* CLICK ZONES */
+    
     .map-click-zone {
         position: absolute;
         cursor: pointer;
@@ -382,7 +379,7 @@
         100% { opacity: 1; }
     }
 
-    /* FAST EFFECTS */
+    
     .fade-in-effect {
         animation: fadeIn 0.4s ease-out;
     }
@@ -406,7 +403,7 @@
         to { opacity: 1; transform: scale(1); }
     }
 
-    /* TERMINAL TEXT */
+    
     .terminal-label {
         color: #f00;
         letter-spacing: 2px;
@@ -416,7 +413,7 @@
         font-size: 1.8rem;
     }
 
-    /* SCANLINE */
+    
     .scanline {
         width: 100%;
         height: 100%;
@@ -433,7 +430,7 @@
         100% { top: 100%; }
     }
 
-    /* STATIC */
+    
     .noise {
         position: absolute;
         inset: 0;
@@ -444,13 +441,13 @@
         z-index: 2;
     }
 
-    /* CRT FLICKER */
+    
     @@keyframes flicker {
         0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; }
         20%, 24%, 55% { opacity: .7; }
     }
 
-    /* BUTTONS */
+    
     .auth-box {
         transition: .15s;
         cursor: pointer;

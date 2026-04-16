@@ -1,4 +1,4 @@
-@model FNaFle.Models.Character
+﻿@model FNaFle.Models.Character
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Ranked Mode";
@@ -7,7 +7,7 @@
     var history = ViewBag.History as List<FNaFle.Models.Character> ?? new List<FNaFle.Models.Character>();
     var guessedCorrectlyToday = ViewBag.GuessedCorrectlyToday as bool? ?? false;
 
-    int maxTries = 3;
+    int maxTries = 5;
     int historyCount = history.Count;
     int livesLeft = maxTries - historyCount;
 }
@@ -28,8 +28,10 @@
     @if (!guessedCorrectlyToday && livesLeft > 0)
     {
         <form asp-controller="Ranked" asp-action="Play" method="post" class="guess-form">
-            <input type="text" name="guess" placeholder="Enter character..."
-                   class="mode-input" required />
+            <div class="autocomplete-container">
+                <input type="text" id="character-guess" name="guess" placeholder="Enter character..." class="mode-input" autocomplete="off" required />
+                <ul id="autocomplete-list" class="autocomplete-items"></ul>
+            </div>
 
             <button type="submit" class="mode-button classic">
                 <span>Guess</span>
@@ -67,55 +69,70 @@
         </div>
     }
 
-    <div class="history-list">
-        @for (int i = 0; i < historyCount; i++)
-        {
-            var g = history[i];
-            int guessAttemptNumber = historyCount - i;
-
-            bool hideLocation = (guessAttemptNumber == 1);
-            bool hideSpecies = (guessAttemptNumber == 2);
-            bool hideGen = (guessAttemptNumber == 3);
-
-            <div class="guess-row">
-
-                <div class="reveal-box image-box">
-                    <img src="@g.ImagePath" onerror="this.src='/images/placeholder.png'" />
+    @if (ViewBag.Failed == true && target != null)
+    {
+        <div class="history-list" style="justify-content: center; align-items: center;">
+            <div class="text-center" style="animation: slideIn 0.8s ease-out;">
+                <p style="color: #ff4d4d; text-transform: uppercase; font-size: 16px; letter-spacing: 2px; margin-bottom: 12px; font-weight: bold;">The correct character was:</p>
+                <div class="reveal-box image-box" style="width: 160px; height: 160px; margin: 0 auto; border: 3px solid #ff4d4d; box-shadow: 0 0 25px rgba(255,0,0,0.4); opacity: 1; transform: scale(1); animation: none;">
+                    <img src="@target.ImagePath" onerror="this.src='/images/placeholder.png'" />
                 </div>
-
-                <div class="reveal-box @(g.Name == target.Name ? "box-correct" : "box-wrong")">
-                    <div class="attr-key">Name</div>
-                    <div class="attr-value">@g.Name</div>
-                </div>
-
-                <div class="reveal-box @(g.Gender == target.Gender ? "box-correct" : "box-wrong")">
-                    <div class="attr-key">Gender</div>
-                    <div class="attr-value">@g.Gender</div>
-                </div>
-
-                <div class="reveal-box @(hideGen ? "box-hidden" : (g.Generation == target.Generation ? "box-correct" : "box-wrong"))">
-                    <div class="attr-key">Gen</div>
-                    <div class="attr-value">@(hideGen ? "???" : g.Generation)</div>
-                </div>
-
-                <div class="reveal-box @(hideSpecies ? "box-hidden" : (g.Species == target.Species ? "box-correct" : "box-wrong"))">
-                    <div class="attr-key">Species</div>
-                    <div class="attr-value">@(hideSpecies ? "???" : g.Species)</div>
-                </div>
-
-                <div class="reveal-box @(hideLocation ? "box-hidden" : (g.Location == target.Location ? "box-correct" : "box-wrong"))">
-                    <div class="attr-key">Location</div>
-                    <div class="attr-value small">@(hideLocation ? "???" : g.Location)</div>
-                </div>
-
+                <h2 style="color: white; margin: 20px 0 0 0; text-align: center; width: 100%; font-size: 30px; font-weight: bold; text-shadow: 0 0 15px rgba(255,0,0,0.8);">@target.Name</h2>
             </div>
-        }
-    </div>
+        </div>
+    }
+    else
+    {
+        <div class="history-list">
+            @for (int i = 0; i < historyCount; i++)
+            {
+                var g = history[i];
+                int guessAttemptNumber = historyCount - i;
+
+                bool hideLocation = (guessAttemptNumber == 1);
+                bool hideSpecies = (guessAttemptNumber == 2);
+                bool hideGen = (guessAttemptNumber == 3);
+
+                <div class="guess-row">
+
+                    <div class="reveal-box image-box">
+                        <img src="@g.ImagePath" onerror="this.src='/images/placeholder.png'" />
+                    </div>
+
+                    <div class="reveal-box @(g.Name == target.Name ? "box-correct" : "box-wrong")">
+                        <div class="attr-key">Name</div>
+                        <div class="attr-value">@g.Name</div>
+                    </div>
+
+                    <div class="reveal-box @(g.Gender == target.Gender ? "box-correct" : "box-wrong")">
+                        <div class="attr-key">Gender</div>
+                        <div class="attr-value">@g.Gender</div>
+                    </div>
+
+                    <div class="reveal-box @(hideGen ? "box-hidden" : (g.Generation == target.Generation ? "box-correct" : "box-wrong"))">
+                        <div class="attr-key">Gen</div>
+                        <div class="attr-value">@(hideGen ? "???" : g.Generation)</div>
+                    </div>
+
+                    <div class="reveal-box @(hideSpecies ? "box-hidden" : (g.Species == target.Species ? "box-correct" : "box-wrong"))">
+                        <div class="attr-key">Species</div>
+                        <div class="attr-value">@(hideSpecies ? "???" : g.Species)</div>
+                    </div>
+
+                    <div class="reveal-box @(hideLocation ? "box-hidden" : (g.Location == target.Location ? "box-correct" : "box-wrong"))">
+                        <div class="attr-key">Location</div>
+                        <div class="attr-value small">@(hideLocation ? "???" : g.Location)</div>
+                    </div>
+
+                </div>
+            }
+        </div>
+    }
 </div>
 
 <style>
 
-    /* SAME AS CLASSIC */
+    
     .game-container {
         display: flex;
         flex-direction: column;
@@ -125,7 +142,7 @@
         background-color: rgba(0, 0, 0, 0.6);
     }
 
-    /* FORM */
+    
     .guess-form {
         display: flex;
         gap: 12px;
@@ -133,8 +150,6 @@
     }
 
 
-
-    /* HISTORY */
     .history-list {
         margin-top: 30px;
         width: 100%;
@@ -144,7 +159,7 @@
         gap: 14px;
     }
 
-    /* ROW */
+    
     .guess-row {
         display: flex;
         gap: 10px;
@@ -152,7 +167,7 @@
         animation: slideIn 0.6s ease-out;
     }
 
-    /* BOXES (IDENTICAL TO CLASSIC) */
+    
     .reveal-box {
         width: 120px;
         height: 120px;
@@ -173,7 +188,7 @@
         transition: all 0.3s ease;
     }
 
-    /* IMAGE */
+    
     .image-box {
         padding: 0;
         overflow: hidden;
@@ -185,28 +200,28 @@
             object-fit: cover;
         }
 
-    /* CORRECT */
+    
     .box-correct {
         background: linear-gradient(135deg, #198754 0%, #0d4a2e 100%) !important;
         border-color: #2fb370 !important;
         box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.6), 0 0 10px rgba(25, 135, 84, 0.5) !important;
     }
 
-    /* WRONG */
+    
     .box-wrong {
         background: linear-gradient(135deg, #bb2d3b 0%, #5a141b 100%) !important;
         border-color: #ff4d4d !important;
         box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.6), 0 0 10px rgba(187, 45, 59, 0.5) !important;
     }
 
-    /* 🔥 HIDDEN (MATCHES STYLE, JUST DARKER) */
+    
     .box-hidden {
         background: rgba(5,5,5,0.9);
         border: 1px dashed rgba(255,255,255,0.2);
         color: #aaa;
     }
 
-    /* TEXT FIX */
+    
     .attr-key {
         font-size: 11px;
         opacity: 0.7;
@@ -233,7 +248,7 @@
             font-size: 11px;
         }
 
-    /* ANIMATIONS */
+    
     @@keyframes flipReveal {
         0%
 
@@ -253,7 +268,7 @@
 
     }
 
-    /* STAGGER */
+    
     .guess-row .reveal-box:nth-child(1) {
         animation-delay: 0.2s;
     }
@@ -278,7 +293,7 @@
         animation-delay: 1.2s;
     }
 
-    /* ROW ENTRY */
+    
     @@keyframes slideIn {
         from
 
@@ -294,3 +309,40 @@
 
     }
 </style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const allCharacters = @Html.Raw(Json.Serialize((ViewBag.AllCharacters as IEnumerable<FNaFle.Models.Character>)?.Select(c => new { name = c.Name, image = c.ImagePath }) ?? new[] { new { name = "", image = "" } }.Take(0)));
+        const input = document.getElementById("character-guess");
+        const list = document.getElementById("autocomplete-list");
+
+        if (input && list) {
+            input.addEventListener("input", function() {
+                const val = this.value;
+                list.innerHTML = '';
+                if (!val) return false;
+
+                for (let i = 0; i < allCharacters.length; i++) {
+                    const char = allCharacters[i];
+                    if (char.name.toLowerCase().startsWith(val.toLowerCase())) {
+                        const li = document.createElement("li");
+                        li.innerHTML = '<img src="' + (char.image || '/images/placeholder.png') + '" onerror="this.src=\'/images/placeholder.png\'" />';
+                        li.innerHTML += '<span><strong>' + char.name.substr(0, val.length) + '</strong>' + char.name.substr(val.length) + '</span>';
+                        
+                        li.addEventListener("click", function() {
+                            input.value = char.name;
+                            list.innerHTML = '';
+                        });
+                        list.appendChild(li);
+                    }
+                }
+            });
+
+            document.addEventListener("click", function (e) {
+                if (e.target !== input) {
+                    list.innerHTML = '';
+                }
+            });
+        }
+    });
+</script>

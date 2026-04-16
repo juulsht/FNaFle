@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace FNaFle.Models
@@ -10,14 +10,14 @@ namespace FNaFle.Models
         [Required]
         public string Name { get; set; }
 
-        public string Gender { get; set; }       // Male / Female / Unknown
-        public string Generation { get; set; }   // Classic / Toy / Glamrock / etc.
-        public string Species { get; set; }      // Bear / Rabbit / etc.
-        public string Location { get; set; }     // Pizza Place / Sister Location / etc.
-        public string Status { get; set; }       // Active / Phantom / Decommissioned
+        public string Gender { get; set; }       
+        public string Generation { get; set; }   
+        public string Species { get; set; }      
+        public string Location { get; set; }     
+        public string Status { get; set; }       
 
         [MaxLength(300)]
-        public string? ImagePath { get; set; }   // e.g. "/images/characters/freddy.jpg"
+        public string? ImagePath { get; set; }   
 
         [JsonIgnore]
         public ICollection<VoiceLine> VoiceLines { get; set; } = new List<VoiceLine>();

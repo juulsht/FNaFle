@@ -1,4 +1,4 @@
-using FNaFle.Data;
+﻿using FNaFle.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,15 +10,14 @@ namespace FNaFle
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Test change to check Visual Studio sync
-            // DB
+
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
                 ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            // Identity WITH ROLES + built-in UI (dev-friendly)
+            
             builder.Services
                 .AddIdentity<IdentityUser, IdentityRole>(options =>
                 {
@@ -32,7 +31,7 @@ namespace FNaFle
 
             builder.Services.AddControllersWithViews();
 
-            // Session
+            
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
             {
@@ -43,17 +42,17 @@ namespace FNaFle
 
             var app = builder.Build();
 
-            // SEEDING SECTION
+            
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
                 var context = services.GetRequiredService<ApplicationDbContext>();
 
-                // Seed existing characters
+                
                 SeedData.Initialize(context);
             }
 
-            // PIPELINE
+            
             if (app.Environment.IsDevelopment())
             {
                 app.UseMigrationsEndPoint();
@@ -77,7 +76,7 @@ namespace FNaFle
                 pattern: "{controller=Home}/{action=Index}/{id?}");
             app.MapRazorPages();
 
-            // Seed roles + admin
+            
             await IdentitySeeder.SeedAsync(app.Services);
 
             await app.RunAsync();

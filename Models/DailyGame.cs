@@ -6,7 +6,7 @@ namespace FNaFle.Models
     {
         public int Id { get; set; }
         public int CharacterId { get; set; }
-        public DateTime Date { get; set; } // stores the day this character belongs to
+        public DateTime Date { get; set; } 
     }
 }
 

@@ -1,4 +1,4 @@
-using FNaFle.Data;
+﻿using FNaFle.Data;
 using FNaFle.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -42,10 +42,10 @@ namespace FNaFle.Controllers
         {
             var location = await GetTodayMapLocation();
 
-            // Hardcode the games list to ensure it's always populated regardless of existing map records
+            
             ViewBag.AllGames = new List<string> { "FNaF 1", "FNaF 2", "FNaF 3", "FFPS", "FNaF SL" };
 
-            // Check if the user already won today's challenge in their session
+            
             bool guessedCorrectlyToday = false;
             var userName = User.Identity != null && User.Identity.IsAuthenticated ? User.Identity.Name : "Guest";
             var sessionWonKey = $"MapWonToday_{DateTime.UtcNow.Date:yyyyMMdd}_{userName}";
