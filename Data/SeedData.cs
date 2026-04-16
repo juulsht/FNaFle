@@ -44,10 +44,11 @@ namespace FNaFle.Data
                 jsonChars = JsonSerializer.Deserialize<List<CharacterSeedDto>>(json) ?? new List<CharacterSeedDto>();
             }
 
-            bool charsAdded = false;
+            bool charsUpdated = false;
             foreach (var jChar in jsonChars)
             {
-                if (!existingDbChars.Any(c => c.Name.Equals(jChar.Name, StringComparison.OrdinalIgnoreCase)))
+                var existingChar = existingDbChars.FirstOrDefault(c => c.Name.Equals(jChar.Name, StringComparison.OrdinalIgnoreCase));
+                if (existingChar == null)
                 {
                     var character = new Character
                     {
@@ -61,11 +62,25 @@ namespace FNaFle.Data
                         VoiceLines = jChar.VoiceLines?.Select(v => new VoiceLine { Text = v }).ToList() ?? new List<VoiceLine>()
                     };
                     context.Characters.Add(character);
-                    charsAdded = true;
+                    charsUpdated = true;
+                }
+                else
+                {
+                    // Update any missing pictures or empty fields from the JSON
+                    if (string.IsNullOrEmpty(existingChar.ImagePath) && !string.IsNullOrEmpty(jChar.ImagePath))
+                    {
+                        existingChar.ImagePath = jChar.ImagePath;
+                        charsUpdated = true;
+                    }
+                    if (string.IsNullOrEmpty(existingChar.Location) && !string.IsNullOrEmpty(jChar.Location))
+                    {
+                        existingChar.Location = jChar.Location;
+                        charsUpdated = true;
+                    }
                 }
             }
 
-            if (charsAdded)
+            if (charsUpdated)
             {
                 context.SaveChanges();
                 existingDbChars = context.Characters.Include(x => x.VoiceLines).ToList();
@@ -75,10 +90,10 @@ namespace FNaFle.Data
             {
                 var characters = new Character[]
                 {
-                    new Character { Name="Freddy", Gender="Male", Generation="Classic", Species="Bear", Location="Pizza Place", Status="Active" },
-                    new Character { Name="Bonnie", Gender="Male", Generation="Classic", Species="Rabbit", Location="Pizza Place", Status="Active" },
-                    new Character { Name="Chica", Gender="Female", Generation="Classic", Species="Chicken", Location="Pizza Place", Status="Active" },
-                    new Character { Name="Foxy", Gender="Male", Generation="Classic", Species="Fox", Location="Pirate Cove", Status="Active" },
+                    new Character { Name="Freddy", Gender="Male", Generation="Classic", Species="Bear", Location="Pizza Place", Status="Active", ImagePath="/images/profiles/Freddy.png" },
+                    new Character { Name="Bonnie", Gender="Male", Generation="Classic", Species="Rabbit", Location="Pizza Place", Status="Active", ImagePath="/images/profiles/Bonnie.png" },
+                    new Character { Name="Chica", Gender="Female", Generation="Classic", Species="Chicken", Location="Pizza Place", Status="Active", ImagePath="/images/profiles/Chica.png" },
+                    new Character { Name="Foxy", Gender="Male", Generation="Classic", Species="Fox", Location="Pirate Cove", Status="Active", ImagePath="/images/profiles/Foxy.png" },
                 };
                 context.Characters.AddRange(characters);
                 context.SaveChanges();
