@@ -148,6 +148,12 @@ namespace FNaFle.Controllers
             {
                 progress.HasGuessedCorrectlyToday = true;
                 progress.Streak++;
+                
+                if (progress.Streak > progress.HighestStreak)
+                {
+                    progress.HighestStreak = progress.Streak;
+                }
+                
                 progress.LastGuessDate = DateTime.UtcNow.Date;
                 ViewBag.Message = "🎉 Correct! Come back tomorrow! :D";               ViewBag.JustWon = true;
             }

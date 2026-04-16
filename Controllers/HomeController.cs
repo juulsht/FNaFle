@@ -55,11 +55,11 @@ namespace FNaFle.Controllers
                                        join user in _context.Users on progress.UserId equals user.Id
                                        join up in _context.UserProfiles on user.Id equals up.UserId into upJoin
                                        from up in upJoin.DefaultIfEmpty()
-                                       orderby progress.Streak descending
+                                       orderby progress.HighestStreak descending
                                        select new LeaderboardUserViewModel
                                        {
                                            Username = user.UserName ?? "Unknown Player",
-                                           Streak = progress.Streak,
+                                           Streak = progress.HighestStreak,
                                            ProfilePicturePath = up.ProfilePicturePath
                                        })
                                        .Take(100)
@@ -101,6 +101,13 @@ namespace FNaFle.Controllers
                 .FirstOrDefaultAsync(up => up.UserId == user.Id);
 
             var progress = await _context.UserProgress.FirstOrDefaultAsync(p => p.UserId == user.Id);
+
+            if (progress != null && progress.Streak > progress.HighestStreak)
+            {
+                progress.HighestStreak = progress.Streak;
+                _context.Update(progress);
+                await _context.SaveChangesAsync();
+            }
 
             ViewBag.Username = user.UserName;
             ViewBag.ProfilePicturePath = profile?.ProfilePicturePath;

@@ -59,10 +59,10 @@
                 </button>
             </form>
         }
-        else
+        else if (ViewBag.JustWon != true)
         {
-            <p style="color:#00ff00; font-weight:bold; font-size:22px; text-shadow:0 0 10px #00ff00;">
-                🎉 You already guessed today's voice line — return tomorrow!
+            <p class="success-msg">
+                🎉 You already guessed today's voice line — come back tomorrow!
             </p>
         }
     }
@@ -105,6 +105,14 @@
 <style>
     .history-list {
         padding-bottom: 50px;
+    }
+
+    .success-msg {
+        color: #4cff9a;
+        font-weight: bold;
+        font-size: 20px;
+        text-shadow: 0 0 12px rgba(0,255,150,0.6);
+        text-align: center;
     }
 
     .reveal-box {
