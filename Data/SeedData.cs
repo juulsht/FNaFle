@@ -34,78 +34,130 @@ namespace FNaFle.Data
             string charFile = "CharactersSeed.json";
             string mapFile = "MapLocationsSeed.json";
 
-            // 1. IMPORT if DB is empty and JSON exists
-            if (!context.Characters.Any() && File.Exists(charFile))
+            // ------------- CHARACTERS -------------
+            var existingDbChars = context.Characters.Include(x => x.VoiceLines).ToList();
+            var jsonChars = new List<CharacterSeedDto>();
+            
+            if (File.Exists(charFile))
             {
                 var json = File.ReadAllText(charFile);
-                var dtos = JsonSerializer.Deserialize<List<CharacterSeedDto>>(json);
-                if (dtos != null)
-                {
-                    foreach (var dto in dtos)
-                    {
-                        var character = new Character
-                        {
-                            Name = dto.Name,
-                            Gender = dto.Gender,
-                            Generation = dto.Generation,
-                            Species = dto.Species,
-                            Location = dto.Location,
-                            Status = dto.Status,
-                            ImagePath = dto.ImagePath,
-                            VoiceLines = dto.VoiceLines?.Select(v => new VoiceLine { Text = v }).ToList() ?? new List<VoiceLine>()
-                        };
-                        context.Characters.Add(character);
-                    }
-                    context.SaveChanges();
-                }
+                jsonChars = JsonSerializer.Deserialize<List<CharacterSeedDto>>(json) ?? new List<CharacterSeedDto>();
             }
-            
-            if (!context.MapLocations.Any() && File.Exists(mapFile))
+
+            bool charsAdded = false;
+            foreach (var jChar in jsonChars)
             {
-                var json = File.ReadAllText(mapFile);
-                var dtos = JsonSerializer.Deserialize<List<MapLocationSeedDto>>(json);
-                if (dtos != null)
+                if (!existingDbChars.Any(c => c.Name.Equals(jChar.Name, StringComparison.OrdinalIgnoreCase)))
                 {
-                    foreach (var dto in dtos)
+                    var character = new Character
                     {
-                        context.MapLocations.Add(new MapLocation
-                        {
-                            ImageUrl = dto.ImageUrl,
-                            MapLayoutUrl = dto.MapLayoutUrl,
-                            GameName = dto.GameName,
-                            CameraName = dto.CameraName
-                        });
-                    }
-                    context.SaveChanges();
+                        Name = jChar.Name,
+                        Gender = jChar.Gender,
+                        Generation = jChar.Generation,
+                        Species = jChar.Species,
+                        Location = jChar.Location,
+                        Status = jChar.Status,
+                        ImagePath = jChar.ImagePath,
+                        VoiceLines = jChar.VoiceLines?.Select(v => new VoiceLine { Text = v }).ToList() ?? new List<VoiceLine>()
+                    };
+                    context.Characters.Add(character);
+                    charsAdded = true;
                 }
             }
 
-            // 2. EXPORT current DB to JSON so it stays updated
-            var exportChars = context.Characters.Include(c => c.VoiceLines).Select(c => new CharacterSeedDto
+            if (charsAdded)
             {
-                Name = c.Name,
-                Gender = c.Gender,
-                Generation = c.Generation,
-                Species = c.Species,
-                Location = c.Location,
-                Status = c.Status,
-                ImagePath = c.ImagePath,
-                VoiceLines = c.VoiceLines.Select(v => v.Text).ToList()
-            }).ToList();
-            
-            if (exportChars.Any()) {
+                context.SaveChanges();
+                existingDbChars = context.Characters.Include(x => x.VoiceLines).ToList();
+            }
+            // Fallback for very first run ever if deleted JSON
+            else if (existingDbChars.Count == 0)
+            {
+                var characters = new Character[]
+                {
+                    new Character { Name="Freddy", Gender="Male", Generation="Classic", Species="Bear", Location="Pizza Place", Status="Active" },
+                    new Character { Name="Bonnie", Gender="Male", Generation="Classic", Species="Rabbit", Location="Pizza Place", Status="Active" },
+                    new Character { Name="Chica", Gender="Female", Generation="Classic", Species="Chicken", Location="Pizza Place", Status="Active" },
+                    new Character { Name="Foxy", Gender="Male", Generation="Classic", Species="Fox", Location="Pirate Cove", Status="Active" },
+                };
+                context.Characters.AddRange(characters);
+                context.SaveChanges();
+                existingDbChars = context.Characters.Include(x => x.VoiceLines).ToList();
+            }
+
+            if (existingDbChars.Count > jsonChars.Count)
+            {
+                var exportChars = existingDbChars.Select(c => new CharacterSeedDto
+                {
+                    Name = c.Name,
+                    Gender = c.Gender,
+                    Generation = c.Generation,
+                    Species = c.Species,
+                    Location = c.Location,
+                    Status = c.Status,
+                    ImagePath = c.ImagePath,
+                    VoiceLines = c.VoiceLines.Select(v => v.Text).ToList()
+                }).ToList();
                 File.WriteAllText(charFile, JsonSerializer.Serialize(exportChars, new JsonSerializerOptions { WriteIndented = true }));
             }
 
-            var exportMaps = context.MapLocations.Select(m => new MapLocationSeedDto
+
+            // ------------- MAP LOCATIONS -------------
+            var existingMaps = context.MapLocations.ToList();
+            var jsonMaps = new List<MapLocationSeedDto>();
+
+            if (File.Exists(mapFile))
             {
-                ImageUrl = m.ImageUrl,
-                MapLayoutUrl = m.MapLayoutUrl,
-                GameName = m.GameName,
-                CameraName = m.CameraName
-            }).ToList();
-            
-            if (exportMaps.Any()) {
+                var json = File.ReadAllText(mapFile);
+                jsonMaps = JsonSerializer.Deserialize<List<MapLocationSeedDto>>(json) ?? new List<MapLocationSeedDto>();
+            }
+
+            bool mapsAdded = false;
+            foreach (var jMap in jsonMaps)
+            {
+                if (!existingMaps.Any(m => m.CameraName == jMap.CameraName && m.GameName == jMap.GameName))
+                {
+                    context.MapLocations.Add(new MapLocation
+                    {
+                        ImageUrl = jMap.ImageUrl,
+                        MapLayoutUrl = jMap.MapLayoutUrl,
+                        GameName = jMap.GameName,
+                        CameraName = jMap.CameraName
+                    });
+                    mapsAdded = true;
+                }
+            }
+
+            if (mapsAdded)
+            {
+                context.SaveChanges();
+                existingMaps = context.MapLocations.ToList();
+            }
+            else if (existingMaps.Count == 0)
+            {
+                var maps = new MapLocation[]
+                {
+                    new MapLocation {
+                        ImageUrl = "/images/maps/Cam2B.png",
+                        MapLayoutUrl = "/images/maps/fnaf1.png",
+                        GameName = "FNaF 1",
+                        CameraName = "CAM 2B"
+                    }
+                };
+                context.MapLocations.AddRange(maps);
+                context.SaveChanges();
+                existingMaps = context.MapLocations.ToList();
+            }
+
+            if (existingMaps.Count > jsonMaps.Count)
+            {
+                var exportMaps = existingMaps.Select(m => new MapLocationSeedDto
+                {
+                    ImageUrl = m.ImageUrl,
+                    MapLayoutUrl = m.MapLayoutUrl,
+                    GameName = m.GameName,
+                    CameraName = m.CameraName
+                }).ToList();
                 File.WriteAllText(mapFile, JsonSerializer.Serialize(exportMaps, new JsonSerializerOptions { WriteIndented = true }));
             }
         }

@@ -1,0 +1,884 @@
+[
+  {
+    "Name": "Freddy",
+    "Gender": "Male",
+    "Generation": "Classic",
+    "Species": "Bear",
+    "Location": "Fazbear\u0027s Pizza",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/Freddy.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Bonnie",
+    "Gender": "Male",
+    "Generation": "Classic",
+    "Species": "Rabbit",
+    "Location": "Fazbear\u0027s Pizza",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/Bonnie.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Chica",
+    "Gender": "Female",
+    "Generation": "Classic",
+    "Species": "Chicken",
+    "Location": "Fazbear\u0027s Pizza",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/Chica.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Foxy",
+    "Gender": "Male",
+    "Generation": "Classic",
+    "Species": "Fox",
+    "Location": "Pirate Cove",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/Foxy.png",
+    "VoiceLines": [
+      "Ya-ha-hargh! Never underestimate the cunning of a pirate! Or a fox for that matter!",
+      "Argh! You never stoood a chance!",
+      "Argh! I came for ye booty! That\u2026be treasure, you know.",
+      "I can\u2019t run like I used to, but I can pull myself apart just fine!",
+      "Argh, so much more spacious in here! I might stay a while."
+    ]
+  },
+  {
+    "Name": "Toy Freddy",
+    "Gender": "Male",
+    "Generation": "Toy",
+    "Species": "Bear",
+    "Location": "Fazbear\u0027s Pizza",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/Toy_Freddy_icon.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Toy Bonnie",
+    "Gender": "Male",
+    "Generation": "Toy",
+    "Species": "Rabbit",
+    "Location": "Fazbear\u0027s Pizza",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/Toy_Bonnie.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Mangle",
+    "Gender": "Unknown",
+    "Generation": "Toy",
+    "Species": "Fox",
+    "Location": "Fazbear\u0027s Pizza",
+    "Status": "Decommissioned",
+    "ImagePath": "/images/profiles/The_Mangle.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Balloon Boy",
+    "Gender": "Male",
+    "Generation": "Toy",
+    "Species": "Human/Animatronic",
+    "Location": "Pizza Place",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/Balloon_Boy.png",
+    "VoiceLines": [
+      "oh?",
+      "nice.."
+    ]
+  },
+  {
+    "Name": "Ballora",
+    "Gender": "Female",
+    "Generation": "Funtime",
+    "Species": "Human/Animatronic",
+    "Location": "Circus Baby\u0027s Entertainment",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/Ballora.png",
+    "VoiceLines": [
+      "Is someone there?",
+      "I can hear someone creeping through my room.",
+      "Perhaps, not.",
+      "Why do you hide inside your walls, when there is music in my halls?  All I see is an empty room.  no more joy; an empty tomb.  It\u2019s so good to sing all day.  To dance, to spin, to fly away.",
+      "I could hear you. Breathing.",
+      "Admit it, you wanted to let me in.",
+      "Why do you hide inside these walls?",
+      "Don\u2019t be shy.",
+      "These are strange circumstances, that have brought us together."
+    ]
+  },
+  {
+    "Name": "Endo 01",
+    "Gender": "Unknown",
+    "Generation": "Classic",
+    "Species": "Skeleton",
+    "Location": "Fazbear\u0027s Pizza",
+    "Status": "Decommissioned",
+    "ImagePath": "/images/profiles/Endo-01.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Phone Guy",
+    "Gender": "Male",
+    "Generation": "Classic",
+    "Species": "Human",
+    "Location": "Fazbear\u0027s Pizza",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/Phone_Guy.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Golden Freddy",
+    "Gender": "Other",
+    "Generation": "Classic",
+    "Species": "Bear",
+    "Location": "Fazbear\u0027s Pizza",
+    "Status": "Decommissioned",
+    "ImagePath": "/images/profiles/Golden_Freddy.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Cupcake",
+    "Gender": "Male",
+    "Generation": "Classic",
+    "Species": "Other",
+    "Location": "Fazbear\u0027s Pizza",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/Cupcake.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Endo 02",
+    "Gender": "Unknown",
+    "Generation": "Toy",
+    "Species": "Skeleton",
+    "Location": "Fazbear\u0027s Pizza",
+    "Status": "Decommissioned",
+    "ImagePath": "/images/profiles/Endo-02.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Toy Chica",
+    "Gender": "Female",
+    "Generation": "Toy",
+    "Species": "Chicken",
+    "Location": "Fazbear\u0027s Pizza",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/Toy_Chica.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Puppet",
+    "Gender": "Other",
+    "Generation": "Toy",
+    "Species": "Human/Animatronic",
+    "Location": "Fazbear\u0027s Pizza",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/The_Puppet.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Purple Guy",
+    "Gender": "Male",
+    "Generation": "Toy",
+    "Species": "Human",
+    "Location": "Fazbear\u0027s Pizza",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/Purple_Guy.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "JJ",
+    "Gender": "Female",
+    "Generation": "Toy",
+    "Species": "Human/Animatronic",
+    "Location": "Fazbear\u0027s Pizza",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/jj.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "RWQFSFASXC",
+    "Gender": "Unknown",
+    "Generation": "Unknown",
+    "Species": "Unknown",
+    "Location": "Fazbear\u0027s Pizza",
+    "Status": "Unknown",
+    "ImagePath": "/images/profiles/Shadow_Bonnie.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Withered Bonnie",
+    "Gender": "Male",
+    "Generation": "Toy",
+    "Species": "Rabbit",
+    "Location": "Fazbear\u0027s Pizza",
+    "Status": "Withered",
+    "ImagePath": "/images/profiles/Withered_Bonnie.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Withered Chica",
+    "Gender": "Female",
+    "Generation": "Toy",
+    "Species": "Chicken",
+    "Location": "Fazbear\u0027s Pizza",
+    "Status": "Withered",
+    "ImagePath": "/images/profiles/Withered_Chica.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Withered Foxy",
+    "Gender": "Male",
+    "Generation": "Toy",
+    "Species": "Fox",
+    "Location": "Fazbear\u0027s Pizza",
+    "Status": "Withered",
+    "ImagePath": "/images/profiles/Withered_Foxy.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Withered Freddy",
+    "Gender": "Male",
+    "Generation": "Toy",
+    "Species": "Bear",
+    "Location": "Fazbear\u0027s Pizza",
+    "Status": "Withered",
+    "ImagePath": "/images/profiles/Withered_Freddy.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Withered Golden Freddy",
+    "Gender": "Male",
+    "Generation": "Toy",
+    "Species": "Bear",
+    "Location": "Fazbear\u0027s Pizza",
+    "Status": "Withered",
+    "ImagePath": "/images/profiles/Withered_Golden_Freddy.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Springtrap",
+    "Gender": "Male",
+    "Generation": "Phantom",
+    "Species": "Human/Animatronic",
+    "Location": "Fazbear\u0027s Fright",
+    "Status": "Damaged",
+    "ImagePath": "/images/profiles/Springtrap.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Phantom BB",
+    "Gender": "Male",
+    "Generation": "Phantom",
+    "Species": "Human/Animatronic",
+    "Location": "Fazbear\u0027s Fright",
+    "Status": "Hallucination",
+    "ImagePath": "/images/profiles/Phantom_BB.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Phantom Chica",
+    "Gender": "Female",
+    "Generation": "Phantom",
+    "Species": "Chicken",
+    "Location": "Fazbear\u0027s Fright",
+    "Status": "Hallucination",
+    "ImagePath": "/images/profiles/Phantom_Chica.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Phantom Foxy",
+    "Gender": "Male",
+    "Generation": "Phantom",
+    "Species": "Fox",
+    "Location": "Fazbear\u0027s Fright",
+    "Status": "Hallucination",
+    "ImagePath": "/images/profiles/Phantom_Foxy.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Phantom Freddy",
+    "Gender": "Male",
+    "Generation": "Phantom",
+    "Species": "Bear",
+    "Location": "Fazbear\u0027s Fright",
+    "Status": "Hallucination",
+    "ImagePath": "/images/profiles/Phantom_Freddy.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Phantom Puppet",
+    "Gender": "Other",
+    "Generation": "Phantom",
+    "Species": "Human/Animatronic",
+    "Location": "Fazbear\u0027s Fright",
+    "Status": "Hallucination",
+    "ImagePath": "/images/profiles/Phantom_Puppet.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Phantom Mangle",
+    "Gender": "Unknown",
+    "Generation": "Phantom",
+    "Species": "Fox",
+    "Location": "Fazbear\u0027s Fright",
+    "Status": "Hallucination",
+    "ImagePath": "/images/profiles/Phantom_Mangle.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Nightmare Freddy",
+    "Gender": "Male",
+    "Generation": "Nightmare",
+    "Species": "Bear",
+    "Location": "House",
+    "Status": "Nightmare",
+    "ImagePath": "/images/profiles/Nightmare_Freddy.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Nightmare ",
+    "Gender": "Other",
+    "Generation": "Nightmare",
+    "Species": "Bear",
+    "Location": "House",
+    "Status": "Hallucination",
+    "ImagePath": "/images/profiles/Nightmare.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Nightmare BB",
+    "Gender": "Male",
+    "Generation": "Nightmare",
+    "Species": "Human/Animatronic",
+    "Location": "House",
+    "Status": "Nightmare",
+    "ImagePath": "/images/profiles/Nightmare_BB.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Nightmare Bonnie",
+    "Gender": "Male",
+    "Generation": "Nightmare",
+    "Species": "Rabbit",
+    "Location": "House",
+    "Status": "Nightmare",
+    "ImagePath": "/images/profiles/Nightmare_Bonnie.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Nightmare Chica",
+    "Gender": "Female",
+    "Generation": "Nightmare",
+    "Species": "Chicken",
+    "Location": "House",
+    "Status": "Nightmare",
+    "ImagePath": "/images/profiles/Nightmare_Chica.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Nightmare Foxy",
+    "Gender": "Male",
+    "Generation": "Nightmare",
+    "Species": "Fox",
+    "Location": "House",
+    "Status": "Nightmare",
+    "ImagePath": "/images/profiles/Nightmare_Foxy.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Nightmare Fredbear",
+    "Gender": "Male",
+    "Generation": "Nightmare",
+    "Species": "Bear",
+    "Location": "House",
+    "Status": "Nightmare",
+    "ImagePath": "/images/profiles/Nightmare_Fredbear.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Plushtrap",
+    "Gender": "Male",
+    "Generation": "Nightmare",
+    "Species": "Rabbit",
+    "Location": "House",
+    "Status": "Nightmare",
+    "ImagePath": "/images/profiles/Plushtrap.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Hand Unit",
+    "Gender": "Unknown",
+    "Generation": "Funtime",
+    "Species": "Other",
+    "Location": "Circus Baby\u0027s Entertainment",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/HandUnit.png",
+    "VoiceLines": [
+      "Welcome to the first day of your exciting new career. Whether you were approached at a job fair, read our ad in Screws, Bolts and Hairpins, or if this is the result of a dare, we welcome you. I will be your personal guide to help you get started. I\u2019m a model 5 of the Handyman\u2019s Robotics and Unit-Repair System, but you can call me Hand-Unit. Your new career promises challenge, intrigue and endless janitorial opportunities.",
+      "Please enter your name as seen above the keypad. This cannot be changed later so please be careful",
+      "It seems that you had some trouble with the keypad. I see what you were trying to type, and I will auto-correct it for you. One moment. Welcome:",
+      "Eggs Benedict.",
+      "You can now open the elevator using that bright, red and obvious button. Let\u2019s get to work!",
+      "Allow me to fill this somewhat frightening silence with some light-hearted banter. Due to the massive success and even more-so the unfortunate closing of Freddy Fazbear\u2019s Pizza, it was clear that the stage was set \u2013 no pun intended \u2013 for another contender in children\u2019s entertainment. Unlike most entertainment venues, our robotic entertainers are rented out for private parties during the day, and it\u2019s your job to get the robots back in proper working order before the following morning.",
+      "Exotic Butters."
+    ]
+  },
+  {
+    "Name": "Circus Baby",
+    "Gender": "Female",
+    "Generation": "Funtime",
+    "Species": "Human/Animatronic",
+    "Location": "Circus Baby\u0027s Entertainment",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/Circus_Baby.png",
+    "VoiceLines": [
+      "Looks like something bad happened\u2026",
+      "I guess you forgot about me\u2026",
+      "Want to see the scooping room?",
+      "I guess you forgot about me\u2026",
+      "I don\u2019t recognise you. You are new. I remember this scenario, however. It\u2019s a strange thing to want to do, to come here. I\u2019m curious what events would lead a person to want to spend their nights, in a place like this. Willingly. Maybe curiosity? Maybe ignorance?  There is a space under the desk; someone before you crafted it into a hiding-place and it worked for him. I recommend that you hurry though.  You will be safe there; just try not to make eye-contact. It will be over soon; they will lose interest.",
+      "You\u2019re in The Scooping Room. Do you know why they call it The Scooping Room? It\u2019s because, dummy, this is the room where they use The Scooper. I thought that would be obvious.  Isn\u2019t that a fun name for something? The Scooper. It sounds like something you would use for ice-cream, or custard, or sprinkles. It sounds like something you would want at your birthday party, to ensure that you get a heaping portion of every good thing.  I wonder, though; if you were a freshly opened pint of ice-cream, how you would feel about something with that name. Thankfully, I don\u2019t think a freshly opened pint of ice-cream feels anything at all.  Uh-oh, it sounds like someone else is in the building. Shhh.",
+      "Don\u2019t be afraid, I\u2019m not going to hurt you. I am only going to keep you for a little while. Try not to wiggle though. You\u2019re inside something that came from my old pizzeria. I don\u2019t think it was ever used; at least, not the way it was meant to be used. Too dangerous. It\u2019s just big enough for one person to fit inside, but just\u2026barely."
+    ]
+  },
+  {
+    "Name": "Funtime Freddy",
+    "Gender": "Male",
+    "Generation": "Funtime",
+    "Species": "Bear",
+    "Location": "Circus Baby\u0027s Entertainment",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/Funtime_Freddy.png",
+    "VoiceLines": [
+      "Bon-Bon, say hi to our friends!",
+      "Bon-Bon say-ay hi to our friends!",
+      "I-I know you\u2019re over there so-some-where!!",
+      "*laugh*I know you\u2019re over there somewhere.",
+      "I see you over there in the dark! come-come on out!",
+      "Hey Bon-Bon, I think-think that\u2019s the birthday boy over there-ere. We should go give him a suprise!",
+      "Well hello again!~",
+      "*laugh* Well, hello again!"
+    ]
+  },
+  {
+    "Name": "Funtime Foxy",
+    "Gender": "Male",
+    "Generation": "Funtime",
+    "Species": "Fox",
+    "Location": "Circus Baby\u0027s Entertainment",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/Funtime_Foxy.png",
+    "VoiceLines": [
+      "It seems you couldn\u2019t make it to my show, so I brought the show to you!",
+      "Showtimes are on the hour \u2013 not a moment before and not a moment later!",
+      "It\u2019s time to take your final bow!",
+      "I\u2019m sorry but there was never enough room on this stage for both of us!",
+      "A performance was demanded of me, and now I have delivered! Encore!"
+    ]
+  },
+  {
+    "Name": "Bidybab",
+    "Gender": "Female",
+    "Generation": "Funtime",
+    "Species": "Human/Animatronic",
+    "Location": "Circus Baby\u0027s Entertainment",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/Bidybab.png",
+    "VoiceLines": [
+      "Hello in there~",
+      "Someone is inside.",
+      "Is it the same person?",
+      "Knock knock.",
+      "We always find a way inside.",
+      "She\u2019s watching us!",
+      "Oh, we have to leave now!",
+      "We will see you again soon!~"
+    ]
+  },
+  {
+    "Name": "Minireena",
+    "Gender": "Female",
+    "Generation": "Funtime",
+    "Species": "Human/Animatronic",
+    "Location": "Circus Baby\u0027s Entertainment",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/Minireena1.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Bon-Bon",
+    "Gender": "Male",
+    "Generation": "Funtime",
+    "Species": "Rabbit",
+    "Location": "Circus Baby\u0027s Entertainment",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/Bon_Bon.png",
+    "VoiceLines": [
+      "Calm down and go back to sle-eep! No-one is here!",
+      "Shhh, go back to your stage! Everything is okay.",
+      "Everything is okay! Let\u2019s go back to sleep.",
+      "Oh calm down! I think it was just a mouse!",
+      "Nnnnnn-ope! No-one is here!",
+      "Shhh, it\u2019s bed-time! Let\u2019s go back to our stage.",
+      "You must be hearing things, silly! *giggle*"
+    ]
+  },
+  {
+    "Name": "Ennard",
+    "Gender": "Male",
+    "Generation": "Funtime",
+    "Species": "Human/Animatronic",
+    "Location": "Circus Baby\u0027s Entertainment",
+    "Status": "Decommissioned",
+    "ImagePath": "/images/profiles/Ennard.png",
+    "VoiceLines": [
+      "Why didn\u2019t you trust me?",
+      "Sometimes I don\u2019t understand why people do the things that they do.",
+      "Why didn\u2019t you believe me?",
+      "I thought you liked me.",
+      "I thought I did everything right.",
+      "We don\u2019t want to hurt anyone; but we need you.",
+      "We need you, so that we can leave. We need you, so that we can hide.",
+      "We need you, so that we can look like you.",
+      "If they find us like this, we won\u2019t be able to try again.",
+      "If they find us like this, we won\u2019t be able to try again. You must help us. You must let us inside the room.",
+      "You must let us inside the room.",
+      "Isn\u2019t this why you came here? To be with her again?",
+      "I don\u2019t understand.",
+      "You won\u2019t die, and it will only hurt for a moment.",
+      "I will find a way out."
+    ]
+  },
+  {
+    "Name": "Lolbit",
+    "Gender": "Unknown",
+    "Generation": "Funtime",
+    "Species": "Fox",
+    "Location": "Circus Baby\u0027s Entertainment",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/Lolbit.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Yenndo",
+    "Gender": "Unknown",
+    "Generation": "Funtime",
+    "Species": "Skeleton",
+    "Location": "Circus Baby\u0027s Entertainment",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/Yenndo.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Bonnet",
+    "Gender": "Female",
+    "Generation": "Funtime",
+    "Species": "Rabbit",
+    "Location": "Circus Baby\u0027s Entertainment",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/Bonnet.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Electro Baby",
+    "Gender": "Unknown",
+    "Generation": "Funtime",
+    "Species": "Human/Animatronic",
+    "Location": "Circus Baby\u0027s Entertainment",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/Electrobab.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Michael",
+    "Gender": "Male",
+    "Generation": "Unknown",
+    "Species": "Human",
+    "Location": "Fredbear\u2019s Family Diner",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/Michael.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Elizabeth",
+    "Gender": "Female",
+    "Generation": "Unknown",
+    "Species": "Human",
+    "Location": "Circus Baby\u0027s Entertainment",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/Elizabeth.png",
+    "VoiceLines": [
+      "Daddy, why won\u2019t you let me play with her?",
+      "Daddy, you let the other children go see her. Why won\u2019t you let me go?",
+      "Daddy just once let me go play with her. She\u2019s so pretty and shiny. Didn\u2019t you make her just for meee?",
+      "Daddy, she can make balloons! have you seen her make balloons? Oh Daddy, let me go to her!",
+      "Daddy isn\u2019t watching.",
+      "Don\u2019t tell Daddy that I\u2019m here, I wanted to watch your show too! I don\u2019t know why he wouldn\u2019t let me come see you, you\u2019re wonderful! Where did the other children go?"
+    ]
+  },
+  {
+    "Name": "Scrap Baby",
+    "Gender": "Female",
+    "Generation": "Funtime",
+    "Species": "Human/Animatronic",
+    "Location": "Freddy Fazbear\u0027s Pizza Place",
+    "Status": "Scrap",
+    "ImagePath": "/images/profiles/Scrap_baby.png",
+    "VoiceLines": [
+      "Two, one.",
+      "You don\u2019t really know who your employer is, do you?",
+      "Did I catch you off-guard?",
+      "Where are you?",
+      "It feels like\u2026my birthday. Did you have a gift for me?",
+      "You\u2019re not who I expected to see.",
+      "You should have known I\u2019d find you.",
+      "You played right into our hands. Did you really think that this job just fell out of the sky for you? No. This was a gift, for us.  You gathered them all together in one place. Just like he asked you to. All of those little souls, in one place. Just for us. A gift.  Now we can do what we were created to do, and be complete. I will make you proud, daddy. Watch. Listen, and be full."
+    ]
+  },
+  {
+    "Name": "Molten Freddy",
+    "Gender": "Male",
+    "Generation": "Funtime",
+    "Species": "Bear",
+    "Location": "Freddy Fazbear\u0027s Pizza Place",
+    "Status": "Scrap",
+    "ImagePath": "/images/profiles/Molten_Freddy.png",
+    "VoiceLines": [
+      "Thanks for letting me join the par-r-rty. I-I\u2019ll try no-ot to disappoint.",
+      "Knock Kno-o-ock! I\u2019m here~!",
+      "Oh, what a pleasant surprise!",
+      "Together ag-gain!",
+      "One bi-i-ig happy family!"
+    ]
+  },
+  {
+    "Name": "Scraptrap",
+    "Gender": "Male",
+    "Generation": "Classic",
+    "Species": "Human/Animatronic",
+    "Location": "Freddy Fazbear\u0027s Pizza Place",
+    "Status": "Scrap",
+    "ImagePath": "/images/profiles/Springtrap_2.png",
+    "VoiceLines": [
+      "What a deceptive calling. I knew it was a lie the moment I heard it, obviously. But it is intriguing nonetheless.",
+      "I always come back.",
+      "Fascinating, what they have become\u2026",
+      "How can I resist, a promise, such as this?",
+      "You may not recognise me at first, but I assure you, it\u2019s still me.",
+      "Bittersweet, but fitting.",
+      "That was easier than I thought it would be."
+    ]
+  },
+  {
+    "Name": "Helpy",
+    "Gender": "Male",
+    "Generation": "Funtime",
+    "Species": "Bear",
+    "Location": "Freddy Fazbear\u0027s Pizza Place",
+    "Status": "Funtime",
+    "ImagePath": "/images/profiles/Helpy.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Lefty",
+    "Gender": "Male",
+    "Generation": "Rockstar",
+    "Species": "Bear",
+    "Location": "Freddy Fazbear\u0027s Pizza Place",
+    "Status": "Scrap",
+    "ImagePath": "/images/profiles/Lefty.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Jack O Chica",
+    "Gender": "Female",
+    "Generation": "Nightmare",
+    "Species": "Chicken",
+    "Location": "House",
+    "Status": "Nightmare",
+    "ImagePath": "/images/profiles/Jack_Chica.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Happy Frog",
+    "Gender": "Female",
+    "Generation": "Mediocre Melodies",
+    "Species": "Frog",
+    "Location": "Freddy Fazbear\u0027s Pizza Place",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/HappyFrog_UCN.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Mr Hippo",
+    "Gender": "Male",
+    "Generation": "Mediocre Melodies",
+    "Species": "Hippo",
+    "Location": "Freddy Fazbear\u0027s Pizza Place",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/MrHippo_UCN.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Pig Patch",
+    "Gender": "Male",
+    "Generation": "Mediocre Melodies",
+    "Species": "Pig",
+    "Location": "Freddy Fazbear\u0027s Pizza Place",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/PigPatch_UCN.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Nedd Bear",
+    "Gender": "Male",
+    "Generation": "Mediocre Melodies",
+    "Species": "Bear",
+    "Location": "Freddy Fazbear\u0027s Pizza Place",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/NeddBear_UCN.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Orville Elephant",
+    "Gender": "Male",
+    "Generation": "Mediocre Melodies",
+    "Species": "Elephant",
+    "Location": "Freddy Fazbear\u0027s Pizza Place",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/OrvilleElephant_UCN.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "El Chip",
+    "Gender": "Male",
+    "Generation": "Mediocre Melodies",
+    "Species": "Woodchuck",
+    "Location": "Freddy Fazbear\u0027s Pizza Place",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/El_Chip.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Nightmarionne",
+    "Gender": "Unknown",
+    "Generation": "Mediocre Melodies",
+    "Species": "Nightmare",
+    "Location": "House",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/Nightmarionne.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Old Man Consequences",
+    "Gender": "Unknown",
+    "Generation": "Unknown",
+    "Species": "Unkown",
+    "Location": "Unkown",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/OMC.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Trash And The Gang",
+    "Gender": "Unknown",
+    "Generation": "Unknown",
+    "Species": "Unknown",
+    "Location": "Unkown",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/trashandthegang.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Nightmare Mangle",
+    "Gender": "Unknown",
+    "Generation": "Nightmare",
+    "Species": "Fox",
+    "Location": "House",
+    "Status": "Nightmare",
+    "ImagePath": "/images/profiles/Nightmare_Mangle.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Music Man",
+    "Gender": "Male",
+    "Generation": "Funtime",
+    "Species": "Human/Animatronic",
+    "Location": "Circus Baby\u0027s Entertainment",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/MusicMan.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Dee Dee",
+    "Gender": "Female",
+    "Generation": "Unknown",
+    "Species": "Human/Animatronic",
+    "Location": "Freddy Fazbear\u0027s Pizza Place",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/DeeDeeProfile.png",
+    "VoiceLines": [
+      "Uh oh! How unfortunate! Uh oh! How unfortunate! I\u2019m gonna do a sneaky thing, and throw a new contender in the ring!",
+      "Uh oh! How unfortunate! Uh oh! How unfortunate!  I know how much you like to fight, so I\u2019ll add a new problem to your night!"
+    ]
+  },
+  {
+    "Name": "Funtime Chica",
+    "Gender": "Female",
+    "Generation": "Funtime",
+    "Species": "Chicken",
+    "Location": "Circus Baby\u0027s Entertainment",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/FuntimeChica.png",
+    "VoiceLines": [
+      "Today is all about me, me, me!",
+      "I\u2019m ready for my close-up!",
+      "Don\u2019t get distracted!",
+      "Smile!",
+      "Say cheese!"
+    ]
+  },
+  {
+    "Name": "Rockstar Chica",
+    "Gender": "Female",
+    "Generation": "Rockstar",
+    "Species": "Chicken",
+    "Location": "Freddy Fazbear\u0027s Pizza Place",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/Rockstar_Chica.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Rockstar Bonnie",
+    "Gender": "Male",
+    "Generation": "Rockstar",
+    "Species": "Rabbit",
+    "Location": "Freddy Fazbear\u0027s Pizza Place",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/Rockstar_Bonnie.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Rockstar Freddy",
+    "Gender": "Male",
+    "Generation": "Rockstar",
+    "Species": "Bear",
+    "Location": "Freddy Fazbear\u0027s Pizza Place",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/Rockstar_Freddy.png",
+    "VoiceLines": []
+  },
+  {
+    "Name": "Rockstar Foxy",
+    "Gender": "Male",
+    "Generation": "Rockstar",
+    "Species": "Fox",
+    "Location": "Freddy Fazbear\u0027s Pizza Place",
+    "Status": "Active",
+    "ImagePath": "/images/profiles/Rockstar_Foxy.png",
+    "VoiceLines": []
+  }
+]

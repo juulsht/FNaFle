@@ -1,0 +1,200 @@
+[
+  {
+    "ImageUrl": "/images/maps/Cam2B.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 1",
+    "CameraName": "CAM 2B"
+  },
+  {
+    "ImageUrl": "/images/Cameras/Cam1A.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 1",
+    "CameraName": "CAM 1A"
+  },
+  {
+    "ImageUrl": "/images/Cameras/Cam1B.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 1",
+    "CameraName": "CAM 1B"
+  },
+  {
+    "ImageUrl": "/images/Cameras/Cam1C.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 1",
+    "CameraName": "CAM 1C"
+  },
+  {
+    "ImageUrl": "/images/Cameras/Cam2A.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 1",
+    "CameraName": "CAM 2A"
+  },
+  {
+    "ImageUrl": "/images/Cameras/Cam3.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 1",
+    "CameraName": "CAM 3"
+  },
+  {
+    "ImageUrl": "/images/Cameras/PR1.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 2",
+    "CameraName": "CAM 01"
+  },
+  {
+    "ImageUrl": "/images/Cameras/PR2.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 2",
+    "CameraName": "CAM 02"
+  },
+  {
+    "ImageUrl": "/images/Cameras/PR3.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 2",
+    "CameraName": "CAM 03"
+  },
+  {
+    "ImageUrl": "/images/Cameras/fn3Cam1.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 3",
+    "CameraName": "CAM 01"
+  },
+  {
+    "ImageUrl": "/images/Cameras/fn3Cam2.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 3",
+    "CameraName": "CAM 02"
+  },
+  {
+    "ImageUrl": "/images/Cameras/Fn3Cam3.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 3",
+    "CameraName": "CAM 03"
+  },
+  {
+    "ImageUrl": "/images/Cameras/Cam4A.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 1",
+    "CameraName": "CAM 4A"
+  },
+  {
+    "ImageUrl": "/images/Cameras/Cam4B.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 1",
+    "CameraName": "CAM 4B"
+  },
+  {
+    "ImageUrl": "/images/Cameras/Cam5.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 1",
+    "CameraName": "CAM 5"
+  },
+  {
+    "ImageUrl": "/images/Cameras/Cam6.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 1",
+    "CameraName": "CAM 6"
+  },
+  {
+    "ImageUrl": "/images/Cameras/Cam7.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 1",
+    "CameraName": "CAM 7"
+  },
+  {
+    "ImageUrl": "/images/Cameras/PR4.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 2",
+    "CameraName": "CAM 04"
+  },
+  {
+    "ImageUrl": "/images/Cameras/Fn2Cam5.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 2",
+    "CameraName": "CAM 05"
+  },
+  {
+    "ImageUrl": "/images/Cameras/Fn2Cam6.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 2",
+    "CameraName": "CAM 06"
+  },
+  {
+    "ImageUrl": "/images/Cameras/Fn2Cam7.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 2",
+    "CameraName": "CAM 07"
+  },
+  {
+    "ImageUrl": "/images/Cameras/Fn2Cam8.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 2",
+    "CameraName": "CAM 08"
+  },
+  {
+    "ImageUrl": "/images/Cameras/Fn2Cam9.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 2",
+    "CameraName": "CAM 09"
+  },
+  {
+    "ImageUrl": "/images/Cameras/Fn2Cam10.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 2",
+    "CameraName": "CAM 10"
+  },
+  {
+    "ImageUrl": "/images/Cameras/Fn2Cam11.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 2",
+    "CameraName": "CAM 11"
+  },
+  {
+    "ImageUrl": "/images/Cameras/Fn2Cam12.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 2",
+    "CameraName": "CAM 12"
+  },
+  {
+    "ImageUrl": "/images/Cameras/Fn3Cam4.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 3",
+    "CameraName": "CAM 04"
+  },
+  {
+    "ImageUrl": "/images/Cameras/Fn3Cam5.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 3",
+    "CameraName": "CAM 05"
+  },
+  {
+    "ImageUrl": "/images/Cameras/Fn3Cam6.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 3",
+    "CameraName": "CAM 06"
+  },
+  {
+    "ImageUrl": "/images/Cameras/Fn3Cam7.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 3",
+    "CameraName": "CAM 07"
+  },
+  {
+    "ImageUrl": "/images/Cameras/Fn3Cam8.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 3",
+    "CameraName": "CAM 08"
+  },
+  {
+    "ImageUrl": "/images/Cameras/Fn3Cam9.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 3",
+    "CameraName": "CAM 09"
+  },
+  {
+    "ImageUrl": "/images/Cameras/Fn3Cam10.png",
+    "MapLayoutUrl": "",
+    "GameName": "FNaF 3",
+    "CameraName": "CAM 10"
+  }
+]
