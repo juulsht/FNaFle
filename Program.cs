@@ -51,9 +51,6 @@ namespace FNaFle
 
                 // Seed existing characters
                 SeedData.Initialize(context);
-
-                // ✅ NEW: Seed Map Locations for the Map Guess mode
-                DbInitializer.Initialize(context);
             }
 
             // PIPELINE
