@@ -5,7 +5,14 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-FNaFle-2822a286-1f51-41ca-8377-85a3ab6e1ac4</UserSecretsId>
+    <DefaultItemExcludes>$(DefaultItemExcludes);FNaFle.Tests/**</DefaultItemExcludes>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="FNaFle.Tests\**" />
+    <EmbeddedResource Remove="FNaFle.Tests\**" />
+    <None Remove="FNaFle.Tests\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.4" />
