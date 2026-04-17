@@ -1,10 +1,11 @@
-﻿using FNaFle.Data;
+using FNaFle.Data;
 using FNaFle.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace FNaFle.Controllers
 {
+    [Microsoft.AspNetCore.Authorization.Authorize]
     public class MapController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -47,7 +48,8 @@ namespace FNaFle.Controllers
 
             
             bool guessedCorrectlyToday = false;
-            var userName = User.Identity != null && User.Identity.IsAuthenticated ? User.Identity.Name : "Guest";
+            var userName = User.Identity.Name;
+
             var sessionWonKey = $"MapWonToday_{DateTime.UtcNow.Date:yyyyMMdd}_{userName}";
             var sessionWon = HttpContext.Session.GetString(sessionWonKey);
             if (!string.IsNullOrEmpty(sessionWon) && sessionWon == "true")
@@ -62,7 +64,8 @@ namespace FNaFle.Controllers
         [HttpPost]
         public async Task<IActionResult> CheckVisualGuess(int id, string gameName, string cameraName)
         {
-            var userName = User.Identity != null && User.Identity.IsAuthenticated ? User.Identity.Name : "Guest";
+            var userName = User.Identity.Name;
+
             var sessionWonKey = $"MapWonToday_{DateTime.UtcNow.Date:yyyyMMdd}_{userName}";
             var sessionWon = HttpContext.Session.GetString(sessionWonKey);
             if (!string.IsNullOrEmpty(sessionWon) && sessionWon == "true")

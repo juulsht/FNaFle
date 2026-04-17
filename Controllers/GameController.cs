@@ -1,4 +1,4 @@
-﻿using FNaFle.Data;
+using FNaFle.Data;
 using FNaFle.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +7,7 @@ using System.Text.Json;
 
 namespace FNaFle.Controllers
 {
+    [Microsoft.AspNetCore.Authorization.Authorize]
     public class GameController : Controller
     {
         private readonly ApplicationDbContext _context;

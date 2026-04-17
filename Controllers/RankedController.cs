@@ -1,4 +1,4 @@
-﻿using FNaFle.Data;
+using FNaFle.Data;
 using FNaFle.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +7,7 @@ using System.Text.Json;
 
 namespace FNaFle.Controllers
 {
+    [Microsoft.AspNetCore.Authorization.Authorize]
     public class RankedController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -67,7 +68,7 @@ namespace FNaFle.Controllers
             var character = GetDailyCharacter();
             var user = await _userManager.GetUserAsync(User);
 
-            if (user == null) return RedirectToPage("/Account/Login", new { area = "Identity" });
+
 
             
             var existingScore = await _context.RankedScores
