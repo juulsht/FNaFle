@@ -1,4 +1,4 @@
-﻿<div id="lore-chat-container" style="position:fixed; bottom:20px; right:20px; z-index:1000; font-family:'Courier New',monospace;">
+<div id="lore-chat-container" style="position:fixed; bottom:20px; right:20px; z-index:1000; font-family:'Courier New',monospace;">
 
     <button id="chat-toggle" class="auth-box" onclick="toggleChat()"
             style="width:60px;height:60px;border-radius:50%;padding:0;display:flex;justify-content:center;align-items:center;box-shadow:0 0 15px #f00;">
@@ -50,26 +50,7 @@
         margin-bottom: 10px;
     }
 
-    .glitch {
-        animation: glitch 0.2s infinite;
-    }
 
-    @@keyframes glitch {
-        0%
-
-    {
-        text-shadow: 2px 0 red;
-    }
-
-    50% {
-        text-shadow: -2px 0 blue;
-    }
-
-    100% {
-        text-shadow: 2px 0 red;
-    }
-
-    }
 </style>
 
 <script>
@@ -143,9 +124,7 @@
 
     typeText(textSpan,data.reply);
 
-    if(Math.random()<0.25){
-    replyBox.classList.add("glitch");
-    }
+
 
     scrollBottom();
 

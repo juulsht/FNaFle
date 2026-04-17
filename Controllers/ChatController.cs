@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using System.Text.Json;
 
@@ -23,11 +23,12 @@ namespace FNaFle.Controllers
             var payload = new
             {
                 model = "openai/gpt-3.5-turbo",
+                max_tokens = 500,
                 messages = new[]
                 {
                     new {
                         role = "system",
-                        content = "You are a corrupted Fazbear Entertainment archive computer. Respond like a glitchy system while answering FNaF lore questions."
+                        content = "You are a helpful Fazbear Entertainment AI assistant. Provide clear and concise answers to questions about FNaF lore."
                     },
                     new {
                         role = "user",
@@ -46,12 +47,24 @@ namespace FNaFle.Controllers
             var responseString = await response.Content.ReadAsStringAsync();
 
             if (!response.IsSuccessStatusCode)
-                return Json(new { reply = "SYSTEM ERROR: CONNECTION FAILURE." });
+            {
+                return Json(new { reply = "SYSTEM ERROR: The AI service is currently unavailable or the account limit has been reached." });
+            }
 
             using var doc = JsonDocument.Parse(responseString);
 
-            string aiReply = doc.RootElement
-                .GetProperty("choices")[0]
+            if (doc.RootElement.TryGetProperty("error", out var errorProp))
+            {
+                var errorMsg = errorProp.TryGetProperty("message", out var m) ? m.GetString() : "Unknown API Error";
+                return Json(new { reply = $"API ERROR: {errorMsg}" });
+            }
+
+            if (!doc.RootElement.TryGetProperty("choices", out var choices) || choices.GetArrayLength() == 0)
+            {
+                return Json(new { reply = "SYSTEM ERROR: NO_RESPONSE_FROM_AI." });
+            }
+
+            string aiReply = choices[0]
                 .GetProperty("message")
                 .GetProperty("content")
                 .GetString();
