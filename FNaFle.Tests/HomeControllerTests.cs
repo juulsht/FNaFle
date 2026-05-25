@@ -2,6 +2,7 @@ using FNaFle.Controllers;
 using FNaFle.Data;
 using FNaFle.Models;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -31,13 +32,35 @@ namespace FNaFle.Tests
         }
 
         [Fact]
-        public async Task Index_UserAuthenticated_ReturnsStreakInViewBag()
+        public async Task Index_UserNotAuthenticated_ReturnsZeroStreak()
         {
-            // Arrange
-            var context = GetDatabaseContext();
-            var user = new IdentityUser { Id = "user-1", UserName = "Freddy" };
-            var progress = new UserProgress { UserId = "user-1", Streak = 5 };
-            context.UserProgress.Add(progress);
+                        var context = GetDatabaseContext();
+            var loggerMock = new Mock<ILogger<HomeController>>();
+            var userManagerMock = GetMockUserManager();
+            var signInManagerMock = new Mock<SignInManager<IdentityUser>>(userManagerMock.Object, new Mock<Microsoft.AspNetCore.Http.IHttpContextAccessor>().Object, new Mock<IUserClaimsPrincipalFactory<IdentityUser>>().Object, null, null, null, null);
+            var webHostEnvironmentMock = new Mock<IWebHostEnvironment>();
+
+            var controller = new HomeController(loggerMock.Object, context, userManagerMock.Object, signInManagerMock.Object, webHostEnvironmentMock.Object);
+            
+            controller.ControllerContext = new ControllerContext()
+            {
+                HttpContext = new Microsoft.AspNetCore.Http.DefaultHttpContext()
+            };
+
+                        var result = await controller.Index();
+
+                        var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal(0, controller.ViewBag.Streak);
+        }
+
+        [Fact]
+        public async Task Leaderboard_ReturnsViewResult_WithStreakAndRankedLeaders()
+        {
+                        var context = GetDatabaseContext();
+            var user = new IdentityUser { Id = "u1", UserName = "P1" };
+            context.Users.Add(user);
+            context.UserProgress.Add(new UserProgress { UserId = "u1", HighestStreak = 10 });
+            context.RankedScores.Add(new RankedScore { Username = "u1", TotalPoints = 100, LastPlayedDate = System.DateTime.Today });
             context.SaveChanges();
 
             var loggerMock = new Mock<ILogger<HomeController>>();
@@ -45,23 +68,67 @@ namespace FNaFle.Tests
             var signInManagerMock = new Mock<SignInManager<IdentityUser>>(userManagerMock.Object, new Mock<Microsoft.AspNetCore.Http.IHttpContextAccessor>().Object, new Mock<IUserClaimsPrincipalFactory<IdentityUser>>().Object, null, null, null, null);
             var webHostEnvironmentMock = new Mock<IWebHostEnvironment>();
 
-            userManagerMock.Setup(u => u.GetUserAsync(It.IsAny<ClaimsPrincipal>())).ReturnsAsync(user);
+            var controller = new HomeController(loggerMock.Object, context, userManagerMock.Object, signInManagerMock.Object, webHostEnvironmentMock.Object);
+
+                        var result = await controller.Leaderboard();
+
+                        var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.NotNull(controller.ViewBag.StreakLeaders);
+            Assert.NotNull(controller.ViewBag.RankedLeaders);
+        }
+
+        [Fact]
+        public async Task PublicProfile_InvalidUsername_RedirectsToLeaderboard()
+        {
+                        var context = GetDatabaseContext();
+            var loggerMock = new Mock<ILogger<HomeController>>();
+            var userManagerMock = GetMockUserManager();
+            var signInManagerMock = new Mock<SignInManager<IdentityUser>>(userManagerMock.Object, new Mock<Microsoft.AspNetCore.Http.IHttpContextAccessor>().Object, new Mock<IUserClaimsPrincipalFactory<IdentityUser>>().Object, null, null, null, null);
+            var webHostEnvironmentMock = new Mock<IWebHostEnvironment>();
+
+            userManagerMock.Setup(u => u.FindByNameAsync(It.IsAny<string>())).ReturnsAsync((IdentityUser)null);
 
             var controller = new HomeController(loggerMock.Object, context, userManagerMock.Object, signInManagerMock.Object, webHostEnvironmentMock.Object);
-            
-            // Mock authentication
-            var userPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Name, "Freddy") }, "mock"));
-            controller.ControllerContext = new ControllerContext()
-            {
-                HttpContext = new Microsoft.AspNetCore.Http.DefaultHttpContext() { User = userPrincipal }
-            };
 
-            // Act
-            var result = await controller.Index();
+                        var result = await controller.PublicProfile("nonexistent");
 
-            // Assert
-            var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal(5, controller.ViewBag.Streak);
+                        var redirectResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("Leaderboard", redirectResult.ActionName);
+        }
+
+        [Fact]
+        public void Privacy_ReturnsViewResult()
+        {
+                        var context = GetDatabaseContext();
+            var loggerMock = new Mock<ILogger<HomeController>>();
+            var userManagerMock = GetMockUserManager();
+            var signInManagerMock = new Mock<SignInManager<IdentityUser>>(userManagerMock.Object, new Mock<Microsoft.AspNetCore.Http.IHttpContextAccessor>().Object, new Mock<IUserClaimsPrincipalFactory<IdentityUser>>().Object, null, null, null, null);
+            var webHostEnvironmentMock = new Mock<IWebHostEnvironment>();
+
+            var controller = new HomeController(loggerMock.Object, context, userManagerMock.Object, signInManagerMock.Object, webHostEnvironmentMock.Object);
+
+                        var result = controller.Privacy();
+
+                        Assert.IsType<ViewResult>(result);
+        }
+
+        [Fact]
+        public void Error_ReturnsViewResult_WithErrorViewModel()
+        {
+                        var context = GetDatabaseContext();
+            var loggerMock = new Mock<ILogger<HomeController>>();
+            var userManagerMock = GetMockUserManager();
+            var signInManagerMock = new Mock<SignInManager<IdentityUser>>(userManagerMock.Object, new Mock<Microsoft.AspNetCore.Http.IHttpContextAccessor>().Object, new Mock<IUserClaimsPrincipalFactory<IdentityUser>>().Object, null, null, null, null);
+            var webHostEnvironmentMock = new Mock<IWebHostEnvironment>();
+
+            var controller = new HomeController(loggerMock.Object, context, userManagerMock.Object, signInManagerMock.Object, webHostEnvironmentMock.Object);
+            controller.ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() };
+
+                        var result = controller.Error();
+
+                        var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsType<ErrorViewModel>(viewResult.ViewData.Model);
+            Assert.NotNull(model.RequestId);
         }
     }
 }
